@@ -34,6 +34,10 @@ debug:
 	# Inserir o pdb no codigo e o método pdb.set_trace() (n, s, l)
 	docker attach pocs
 
+run:
+	# Roda o script
+	docker compose exec pocs python3 scripts/${script}
+
 ### QUALIDADE ###############################################################
 
 path := .

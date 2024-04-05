@@ -148,10 +148,11 @@ services:
       - pocs
     stdin_open: true
     tty: true
+    command: uvicorn main:app --workers 1 --host 0.0.0.0 --port 8000 --reload
     volumes:
-      - ./pocs:/pocs
+      - .:/software
     ports:
-      - 8080:8080
+      - 8000:8000
     environment:
       - PYTHONUNBUFFERED=1
       - LOG_LEVEL=DEBUG
