@@ -1,0 +1,147 @@
+version: '3'
+services:
+  mongodb:
+    image: mongo:4.0.8
+    container_name: mongodb
+    profiles:
+      - all
+      - mongodb
+    restart: unless-stopped
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: poc
+      MONGO_INITDB_ROOT_PASSWORD: poc
+      MONGO_INITDB_DATABASE: health-check
+      MONGODB_DATA_DIR: /data/db
+      MONDODB_LOG_DIR: /dev/null
+    volumes:
+      - mongodb_data:/data/db
+
+  mongo-express:
+    image: mongo-express
+    container_name: mongodb_admin
+    profiles:
+      - all
+      - mongodb
+    restart: unless-stopped
+    ports:
+      - 8081:8081
+    environment:
+      ME_CONFIG_OPTIONS_EDITORTHEME: dracula
+      ME_CONFIG_MONGODB_URL: mongodb://poc:poc@mongodb:27017/
+    depends_on:
+      - mongodb
+
+  postgres:
+    image: postgres
+    container_name: postgres
+    profiles:
+      - all
+      - postgres
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - postgres_backup:/backup
+    environment:
+      - POSTGRES_DB=poc
+      - POSTGRES_USER=poc
+      - POSTGRES_PASSWORD=poc
+    ports:
+      - "5434:5432"
+
+  pgadmin:
+    image: dpage/pgadmin4
+    container_name: postgres_admin
+    profiles:
+      - all
+      - postgres
+    ports:
+      - "8082:80"
+    environment:
+      - PGADMIN_DEFAULT_EMAIL=poc@poc.com
+      - PGADMIN_DEFAULT_PASSWORD=poc
+    depends_on:
+      - postgres
+
+  mysql:
+    image: mysql:5.6
+    container_name: mysql
+    profiles:
+      - all
+      - mysql
+    restart: always
+    environment:
+      - MYSQL_ROOT_PASSWORD=poc
+    volumes:
+      - mysql_data:/var/lib/mysql
+
+  mysqladmin:
+    image: phpmyadmin/phpmyadmin
+    container_name: mysql_admin
+    profiles:
+      - all
+      - mysql
+    ports:
+      - "8083:80"
+    environment:
+      - PMA_ARBITRARY=1
+    volumes:
+      - mysql_admin:/etc/phpmyadmin
+    depends_on:
+      - mysql
+
+  redis:
+    image: redis/redis-stack-server:latest
+    container_name: redis
+    profiles:
+      - all
+      - redis
+    # Save after 1hr if 1 write, after 5min if 100 writes, after 60 sec if 10000 writes
+    environment:
+      - REDIS_ARGS=--save 3600 1 --save 300 100 --save 60 10000
+    ports:
+      - 6379:6379
+    volumes:
+      - redis_data:/data
+
+  redis-ui:
+    image: rediscommander/redis-commander:latest
+    container_name: redis_admin
+    profiles:
+      - all
+      - redis
+    ports:
+      - 8084:8081
+    environment:
+      - REDIS_HOSTS=local:redis:6379
+    depends_on:
+      - redis
+
+  pocs:
+    image: vksoftware/pocs:latest
+    container_name: pocs
+    profiles:
+      - all
+      - pocs
+    build: .
+    stdin_open: true
+    tty: true
+    volumes:
+      - ./pocs:/pocs
+    ports:
+      - 8080:8080
+    environment:
+      - PYTHONUNBUFFERED=1
+      - LOG_LEVEL=DEBUG
+    networks:
+      - vksoftware
+
+networks:
+  vksoftware:
+    name: vksoftware
+
+volumes:
+  mongodb_data:
+  postgres_data:
+  postgres_backup:
+  mysql_data:
+  mysql_admin:
+  redis_data:
