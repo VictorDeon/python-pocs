@@ -6,6 +6,7 @@ services:
     profiles:
       - all
       - mongodb
+      - emulators
     restart: unless-stopped
     environment:
       MONGO_INITDB_ROOT_USERNAME: poc
@@ -15,6 +16,8 @@ services:
       MONDODB_LOG_DIR: /dev/null
     volumes:
       - mongodb_data:/data/db
+    networks:
+      - vksoftware
 
   mongo-express:
     image: mongo-express
@@ -22,6 +25,7 @@ services:
     profiles:
       - all
       - mongodb
+      - emulators
     restart: unless-stopped
     ports:
       - 8081:8081
@@ -30,6 +34,8 @@ services:
       ME_CONFIG_MONGODB_URL: mongodb://poc:poc@mongodb:27017/
     depends_on:
       - mongodb
+    networks:
+      - vksoftware
 
   postgres:
     image: postgres
@@ -37,6 +43,7 @@ services:
     profiles:
       - all
       - postgres
+      - emulators
     volumes:
       - postgres_data:/var/lib/postgresql/data
       - postgres_backup:/backup
@@ -46,6 +53,8 @@ services:
       - POSTGRES_PASSWORD=poc
     ports:
       - "5434:5432"
+    networks:
+      - vksoftware
 
   pgadmin:
     image: dpage/pgadmin4
@@ -53,6 +62,7 @@ services:
     profiles:
       - all
       - postgres
+      - emulators
     ports:
       - "8082:80"
     environment:
@@ -60,6 +70,8 @@ services:
       - PGADMIN_DEFAULT_PASSWORD=poc
     depends_on:
       - postgres
+    networks:
+      - vksoftware
 
   mysql:
     image: mysql:5.6
@@ -67,11 +79,14 @@ services:
     profiles:
       - all
       - mysql
+      - emulators
     restart: always
     environment:
       - MYSQL_ROOT_PASSWORD=poc
     volumes:
       - mysql_data:/var/lib/mysql
+    networks:
+      - vksoftware
 
   mysqladmin:
     image: phpmyadmin/phpmyadmin
@@ -79,6 +94,7 @@ services:
     profiles:
       - all
       - mysql
+      - emulators
     ports:
       - "8083:80"
     environment:
@@ -87,6 +103,8 @@ services:
       - mysql_admin:/etc/phpmyadmin
     depends_on:
       - mysql
+    networks:
+      - vksoftware
 
   redis:
     image: redis/redis-stack-server:latest
@@ -94,6 +112,7 @@ services:
     profiles:
       - all
       - redis
+      - emulators
     # Save after 1hr if 1 write, after 5min if 100 writes, after 60 sec if 10000 writes
     environment:
       - REDIS_ARGS=--save 3600 1 --save 300 100 --save 60 10000
@@ -101,6 +120,8 @@ services:
       - 6379:6379
     volumes:
       - redis_data:/data
+    networks:
+      - vksoftware
 
   redis-ui:
     image: rediscommander/redis-commander:latest
@@ -108,20 +129,23 @@ services:
     profiles:
       - all
       - redis
+      - emulators
     ports:
       - 8084:8081
     environment:
       - REDIS_HOSTS=local:redis:6379
     depends_on:
       - redis
+    networks:
+      - vksoftware
 
   pocs:
     image: vksoftware/pocs:latest
+    build: .
     container_name: pocs
     profiles:
       - all
       - pocs
-    build: .
     stdin_open: true
     tty: true
     volumes:
