@@ -1,7 +1,8 @@
 """
-Quando executamos a requisição http para o endpoint /async1 ele bloqueia
+Quando executamos a requisição http para algum endpoint sync ele bloqueia
 os outros endpoints até a finalização de sua execução devido ao time.sleep.
-Já o /async2 ele roda o time.sleep de forma que não bloqueie a execução dos coleguinhas.
+Já os endpoint totalmente async ele roda o time.sleep de forma que não bloqueie
+a execução dos coleguinhas.
 
 Rode cada um dos endpoints um em seguida do outro para verificar os que bloqueia a execução do outro.
 """
@@ -23,7 +24,11 @@ def io_bound_method(seconds: int) -> None:
     logging.info(f"Finalizando o método de sleep {seconds}")
 
 
-@router.get("/async1")
+@router.get(
+    "/blocking-request-async",
+    summary="Blocking Request Async",
+    tags=['Requests']
+)
 async def blocking_request1():
     """
     Aqui iremos testar uma requisição assincrona com código
@@ -39,7 +44,11 @@ async def blocking_request1():
     return {"result": f"Requisição executada em {round(end_time, 2)} segundos"}
 
 
-@router.get("/async2")
+@router.get(
+    "/not-blockeing-request-async-with-sync",
+    summary="Not Blocking Request Async With Sync code",
+    tags=['Requests']
+)
 async def not_blocking_request1():
     """
     Aqui iremos testar uma requisição assincrona com código
@@ -53,7 +62,11 @@ async def not_blocking_request1():
     return {"result": f"Requisição executada em {round(end_time, 2)} segundos"}
 
 
-@router.get("/async3")
+@router.get(
+    "/not-blocking-request-async",
+    summary="Not Blocking Request All Async",
+    tags=['Requests']
+)
 async def not_blocking_request2():
     """
     Realizando a requisição com o método de sleep assincrono.    
@@ -66,7 +79,11 @@ async def not_blocking_request2():
     return {"result": f"Requisição executada em {round(end_time, 2)} segundos"}
 
 
-@router.get("/async4")
+@router.get(
+    "/not-blocking-request-task",
+    summary="Not Blocking Request Async Task",
+    tags=['Requests']
+)
 async def not_blocking_request3():
     """
     Essa requisição executa códigos de forma assincrona.
@@ -79,7 +96,11 @@ async def not_blocking_request3():
     return {"result": f"Requisição executada em {round(end_time, 2)} segundos"}
 
 
-@router.get("/sync")
+@router.get(
+    "/blocking-request-sync",
+    summary="Blocking Request Sync",
+    tags=['Requests']
+)
 def blocking_request2():
     """
     Realiza uma requisição sincrona qualquer que bloqueia as outras requisições.
