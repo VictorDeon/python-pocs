@@ -7,12 +7,42 @@ a execução dos coleguinhas.
 Rode cada um dos endpoints um em seguida do outro para verificar os que bloqueia a execução do outro.
 """
 
+from pydantic import BaseModel, Field
 from . import router
 import asyncio
 import asyncer
 import logging
 import time
 
+
+class Error(BaseModel):
+    """
+    Retorna os dados de error.
+    """
+
+    message: str = Field(..., title="Mensagem", description="Mensagem de erro.")
+
+    class Config:
+        schema_extra = {
+            "example": {
+                "message": "Parâmetro nome obrigatório.",
+            }
+        }
+
+
+class Response(BaseModel):
+    """
+    Retorna os dados de sucesso.
+    """
+
+    result: str = Field(..., title="Resultado", description="Tempo de execução da requisição.")
+
+    class Config:
+        schema_extra = {
+            "example": {
+                "result": "Requisição executada em 5.4 segundos",
+            }
+        }
 
 def io_bound_method(seconds: int) -> None:
     """
@@ -27,6 +57,10 @@ def io_bound_method(seconds: int) -> None:
 @router.get(
     "/blocking-request-async",
     summary="Blocking Request Async",
+    responses={
+        200: {'model': Response},
+        422: {'model': Error},
+    },
     tags=['Requests']
 )
 async def blocking_request1():
@@ -47,6 +81,10 @@ async def blocking_request1():
 @router.get(
     "/not-blockeing-request-async-with-sync",
     summary="Not Blocking Request Async With Sync code",
+    responses={
+        200: {'model': Response},
+        422: {'model': Error},
+    },
     tags=['Requests']
 )
 async def not_blocking_request1():
@@ -65,6 +103,10 @@ async def not_blocking_request1():
 @router.get(
     "/not-blocking-request-async",
     summary="Not Blocking Request All Async",
+    responses={
+        200: {'model': Response},
+        422: {'model': Error},
+    },
     tags=['Requests']
 )
 async def not_blocking_request2():
@@ -82,6 +124,10 @@ async def not_blocking_request2():
 @router.get(
     "/not-blocking-request-task",
     summary="Not Blocking Request Async Task",
+    responses={
+        200: {'model': Response},
+        422: {'model': Error},
+    },
     tags=['Requests']
 )
 async def not_blocking_request3():
@@ -99,6 +145,10 @@ async def not_blocking_request3():
 @router.get(
     "/blocking-request-sync",
     summary="Blocking Request Sync",
+    responses={
+        200: {'model': Response},
+        422: {'model': Error},
+    },
     tags=['Requests']
 )
 def blocking_request2():
