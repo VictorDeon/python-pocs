@@ -44,6 +44,7 @@ class Response(BaseModel):
             }
         }
 
+
 def io_bound_method(seconds: int) -> None:
     """
     Método que bloqueia.
