@@ -1,127 +1,158 @@
+from google.api_core.exceptions import GoogleAPIError
 from asyncio import Queue, Event
+from engines import PubsubSingleton
 import time
 import random
 import asyncio
 import logging
+import asyncer
 import signal
+import os
 
 
 logging.basicConfig(level=logging.INFO)
 
-# Quantidade de trabalhadores rodando, podemos colocar como a quantidade
-# de itens do pubsub que pegaremos por vez para processar.
-MAX_PARALLEL_TASKS = 10
+
+PROJECT_ID = os.environ.get("GOOGLE_CLOUD_PROJECT")
+TOPIC_ID = os.environ.get("TOPIC_ID")
+SUBSCRIPTION_ID = os.environ.get("SUBSCRIPTION_ID")
+MAX_MESSAGES = os.environ.get("MAX_MESSAGES", 1)
+EVALUATE_MESSAGE_TIMEOUT = os.environ.get("EVALUATE_MESSAGE_TIMEOUT", 600)
+QUEUE = f"projects/{PROJECT_ID}/subscriptions/{SUBSCRIPTION_ID}"
 
 
-async def get_external_messages(messages) -> list[int]:
+def force_shutdown():
     """
-    Método para gerar mensagens aleatórias.
-    Pode ser um método que pega as mensagens de um pubsub. 
-    """
-
-    logging.info(f"Gerando {messages} números randomicos.")
-    return [random.randint(0, 15) for _ in range(messages)]
-
-
-async def task_processor(message: int) -> None:
-    """
-    Método que processa a mensagem, colocamos um sleep para
-    simular o processamento.
+    Força o shutdown do serviço.
     """
 
-    logging.info(f'Processando mensagem: {message}')
-    await asyncio.sleep(message)
-    if not random.randint(0, 10):
-        raise Exception(f"Mensagem {message} deu um error interno.")
-
-    logging.info(f'Processamento da mensagem {message} finalizada com sucesso.')
+    os.kill(os.getpid(), signal.SIGINT)
 
 
-async def task_subscriber(queue: Queue, stop_event: Event) -> None:
+def write_health_check():
     """
-    Tarefa que observa preenche a fila interna do python com mais mensagens
-    que vierem externamente.    
+    Escrevendo o arquivo de health check.
     """
 
-    total_messages = 0
-    start = time.time()
-    while True:
-        if stop_event.is_set():
-            return
-
-        messages_to_get = MAX_PARALLEL_TASKS - queue.qsize()
-        if messages_to_get <= 0:
-            await asyncio.sleep(1)
-            continue
-
-        total_messages += messages_to_get
-        print(f"{time.time() - start} - Total de mensagens: {total_messages}")
-
-        try:
-            # Como se fosse o pubsub
-            messages = await asyncio.wait_for(get_external_messages(messages_to_get), timeout=10)
-        except asyncio.TimeoutError:
-            logging.error("Disparou um timeout quando ao receber as mensagens externas.")
-            await asyncio.sleep(1)
-            stop_event.set()
-            continue
-        except Exception:
-            logging.exception("Ocorreu um error interno.")
-            await asyncio.sleep(5)
-            continue
-
-        if not messages:
-            await asyncio.sleep(1)
-            continue
-
-        for message in messages:
-            await queue.put(message)
+    with open(".timestamp.healthcheck", "w") as file:
+        file.write(str(time.time()))
 
 
-async def task_worker(queue: Queue, stop_event: Event) -> None:
+async def get_messages_from_pubsub_and_put_in_queue(message_queue: Queue, pubsub: PubsubSingleton):
     """
-    Processa as mensagens que chega na fila interna.
+    Pega as mensagens do pubsub da google e envia para a fila do python.
     """
+
+    messages_to_get = MAX_MESSAGES - message_queue.qsize()
+    logging.debug(f"Pegando {messages_to_get} mensagens do pubsub")
+
+    if messages_to_get <= 0:
+        return
+    
+    try:
+        logging.debug("Pegando mensagens do pubsub.")
+        response = await asyncio.wait_for(pubsub.pull(QUEUE, messages_to_get), timeout=10)
+    except asyncio.TimeoutError:
+        logging.error("A fila deu timeout. Desligando o serviço.")
+        await asyncer.asyncify(force_shutdown)
+        return
+    except GoogleAPIError as error:
+        logging.error(f"Fila bloqueada: {str(error)}. Desligando o serviço.")
+        await asyncer.asyncify(force_shutdown)
+        return
+    except Exception as error:
+        logging.exception(f"Fila morreu: {str(error)}. Desligando o serviço.")
+        await asyncer.asyncify(force_shutdown)
+        return
+
+    if len(response.received_messages) == 0:
+        return
+    
+    logging.debug(f"Foi recebido {len(response.received_messages)} mensagens para inserção na fila local.")
+    for message in response.received_messages:
+        logging.debug(f"Inserindo a mensagem {message.ack_id} na fila local")
+        await message_queue.put(message)
+
+
+async def subscribe_worker(message_queue: Queue, stop_event: Event):
+    """
+    Inicia o consumidor da fila de avaliação.
+    """
+
+    pubsub = PubsubSingleton.get_instance()
 
     while True:
+        logging.debug("SUBSCRIBER WORKER: Checando o evento de parada.")
         if stop_event.is_set():
-            return
+            logging.warning("SUBSCRIBER WORKER: Evento de parada ativado. Desligando serviço.")
+            break
+
+        logging.debug("SUBSCRIBER WORKER: Escrevendo arquivo health check")
+        await asyncer.asyncify(write_health_check)
+
+        logging.debug("SUBSCRIBER WORKER: Pegando as mensagens do pubsub e inserindo na fila local")
+        await get_messages_from_pubsub_and_put_in_queue(message_queue, pubsub)
+        await asyncio.sleep(1)
+
+
+async def process_message(message, pubsub: PubsubSingleton):
+    """
+    Processa a mensagem
+    """
+
+    try:
+        # Simular o processamento da mensagem com 90% de sucesso.
+        success = True
+        random_number = random.randint(0, 10)
+        await asyncio.sleep(random_number)
+        if not random_number:
+            success = False
+
+        if success:
+            logging.info(f"Mensagem {message.ack_id} processada com sucesso.")
+            await asyncio.wait_for(pubsub.ack(QUEUE, message.ack_id), timeout=10)
+        else:
+            logging.error(f"Mensagem {message.ack_id} processada com erros.")
+            await asyncio.wait_for(pubsub.unack(QUEUE, message.ack_id), timeout=10)
+    except Exception as error:
+        logging.error(f'Error na mensagem: {str(message.ack_id)} error {str(error)}')
+        await asyncio.wait_for(pubsub.unack(QUEUE, message.ack_id), timeout=10)
+
+
+async def process_message_worker(queue: Queue, stop_event: Event):
+    """
+    Dispara o worker que vai processar as mensagens
+    """
+
+    pubsub = PubsubSingleton.get_instance()
+
+    while True:
+        logging.debug("PROCESS MESSAGE WORKER: Checando o evento de parada.")
+        if stop_event.is_set():
+            logging.warning("PROCESS MESSAGE WORKER: Evento de parada ativado. Desligando serviço.")
+            break
 
         try:
-            value = queue.get_nowait()
+            logging.debug("PROCESS MESSAGE WORKER: Pegando mensagens da fila local.")
+            message = queue.get_nowait()
+            try:
+                logging.debug(f"Processando messagem {message.ack_id}")
+                await asyncio.wait_for(process_message(message, pubsub), timeout=EVALUATE_MESSAGE_TIMEOUT)
+                logging.debug(f"Mensagem {message.ack_id} processada com sucesso.")
+            except asyncio.TimeoutError:
+                logging.error(f'Timeout no processamento da mensagem {message.ack_id}.')
+                await asyncio.wait_for(pubsub.unack(queue, message.ack_id), timeout=10)
+            except Exception as error:
+                logging.error(f'Error no processamento da mensagem {message.ack_id}: {error}')
+                await asyncio.wait_for(pubsub.unack(queue, message.ack_id), timeout=10)
         except asyncio.QueueEmpty:
-            await asyncio.sleep(0.5)
-            continue
-
-        try:
-            await asyncio.wait_for(task_processor(value), timeout=300)
-        except Exception:
-            logging.exception(f"Ocorreu um error ao processar a mensagem: {value}")
-            await asyncio.sleep(1)
-            # colocar mensagem na fila novamente, no caso do pubsub, acho que é melhor deixar dar
-            # erro e ir pra dlq
-            # await queue.put(value)
-            continue
-
-
-def setup_signal_handler(stop_event: Event) -> None:
-    """
-    Configura o gracefull shutdown caso algum sinal externo acabe
-    desligando o código no momento em que as mensagens estão processando.    
-    """
-
-    loop = asyncio.get_event_loop()
-
-    def shutdown(sig):
-        if stop_event.is_set():
-            logging.info(f"Foi recebido o sinal {sig.name}, já estamos parando o script.")
+            logging.debug("PROCESS MESSAGE WORKER: Queue empty.")
+        except Exception as error:
+            logging.error(f'Error ao processar mensagem: {str(error)}. Desligando o serviço.')
+            await asyncer.asyncify(force_shutdown)
             return
-
-        logging.info(f"Foi recebido o sinal {sig.name}, parando o script.")
-        stop_event.set()
-
-    for sig in (signal.SIGHUP, signal.SIGTERM, signal.SIGINT):
-        loop.add_signal_handler(sig, shutdown, sig)
+        
+        await asyncio.sleep(0.5)
 
 
 async def main() -> None:
@@ -130,19 +161,24 @@ async def main() -> None:
     """
 
     stop_event: Event = Event()
-    setup_signal_handler(stop_event)
+    pubsub = PubsubSingleton.get_instance()
+    message_queue = Queue(maxsize=MAX_MESSAGES + 1)
+    all_tasks = []
 
-    queue: Queue = Queue()
-    tasks = []
+    if os.environ.get("PUBSUB_EMULATOR_HOST"):
+        await pubsub.create_topic(PROJECT_ID, TOPIC_ID)
+        await pubsub.create_subscription(PROJECT_ID, SUBSCRIPTION_ID)
 
-    subscriber_task = asyncio.create_task(task_subscriber(queue, stop_event))
-    tasks.append(subscriber_task)
-    for i in range(MAX_PARALLEL_TASKS):
-        worker_task = asyncio.create_task(task_worker(queue, stop_event))
-        tasks.append(worker_task)
+    all_tasks.append(
+        asyncio.create_task(subscribe_worker(message_queue, stop_event))
+    )
 
-    await asyncio.gather(*tasks)
+    for _ in range(MAX_MESSAGES):
+        all_tasks.append(
+            asyncio.create_task(process_message_worker(message_queue, stop_event))
+        )
 
+    await asyncio.gather(*all_tasks)
 
 if __name__ == '__main__':
     asyncio.run(main())

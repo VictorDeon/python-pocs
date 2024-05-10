@@ -176,6 +176,7 @@ services:
       - TOPIC_ID=general-input
       - SUBSCRIPTION_ID=general-input-sub
       - MAX_MESSAGES=1
+      - EVALUATE_MESSAGE_TIMEOUT=600
       - REDIS_HOST=host.docker.internal
       - REDIS_PORT=6379
       - POSTGRES_HOST=postgres
