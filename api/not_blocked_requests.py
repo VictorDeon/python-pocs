@@ -23,7 +23,7 @@ class Error(BaseModel):
     message: str = Field(..., title="Mensagem", description="Mensagem de erro.")
 
     class Config:
-        schema_extra = {
+        json_schema_extra = {
             "example": {
                 "message": "Parâmetro nome obrigatório.",
             }
@@ -38,7 +38,7 @@ class Response(BaseModel):
     result: str = Field(..., title="Resultado", description="Tempo de execução da requisição.")
 
     class Config:
-        schema_extra = {
+        json_schema_extra = {
             "example": {
                 "result": "Requisição executada em 5.4 segundos",
             }

@@ -2,7 +2,7 @@ version: '3'
 services:
   mongodb:
     image: mongo:4.0.8
-    container_name: mongodb
+    container_name: poc_mongodb
     profiles:
       - all
       - mongodb
@@ -15,13 +15,13 @@ services:
       MONGODB_DATA_DIR: /data/db
       MONDODB_LOG_DIR: /dev/null
     volumes:
-      - mongodb_data:/data/db
+      - poc_mongodb_data:/data/db
     networks:
       - vksoftware
 
   mongo-express:
     image: mongo-express
-    container_name: mongodb_admin
+    container_name: poc_mongodb_admin
     profiles:
       - all
       - mongodb
@@ -39,14 +39,14 @@ services:
 
   postgres:
     image: postgres
-    container_name: postgres
+    container_name: poc_postgres
     profiles:
       - all
       - postgres
       - emulators
     volumes:
-      - postgres_data:/var/lib/postgresql/data
-      - postgres_backup:/backup
+      - poc_postgres_data:/var/lib/postgresql/data
+      - poc_postgres_backup:/backup
     environment:
       - POSTGRES_DB=poc
       - POSTGRES_USER=poc
@@ -58,7 +58,7 @@ services:
 
   pgadmin:
     image: dpage/pgadmin4
-    container_name: postgres_admin
+    container_name: poc_postgres_admin
     profiles:
       - all
       - postgres
@@ -75,7 +75,7 @@ services:
 
   mysql:
     image: mysql:5.6
-    container_name: mysql
+    container_name: poc_mysql
     profiles:
       - all
       - mysql
@@ -84,13 +84,13 @@ services:
     environment:
       - MYSQL_ROOT_PASSWORD=poc
     volumes:
-      - mysql_data:/var/lib/mysql
+      - poc_mysql_data:/var/lib/mysql
     networks:
       - vksoftware
 
   mysqladmin:
     image: phpmyadmin/phpmyadmin
-    container_name: mysql_admin
+    container_name: poc_mysql_admin
     profiles:
       - all
       - mysql
@@ -100,7 +100,7 @@ services:
     environment:
       - PMA_ARBITRARY=1
     volumes:
-      - mysql_admin:/etc/phpmyadmin
+      - poc_mysql_admin:/etc/phpmyadmin
     depends_on:
       - mysql
     networks:
@@ -108,7 +108,7 @@ services:
 
   redis:
     image: redis/redis-stack-server:latest
-    container_name: redis
+    container_name: poc_redis
     profiles:
       - all
       - redis
@@ -119,13 +119,13 @@ services:
     ports:
       - 6379:6379
     volumes:
-      - redis_data:/data
+      - poc_redis_data:/data
     networks:
       - vksoftware
 
   redis-ui:
     image: rediscommander/redis-commander:latest
-    container_name: redis_admin
+    container_name: poc_redis_admin
     profiles:
       - all
       - redis
@@ -164,9 +164,9 @@ networks:
     name: vksoftware
 
 volumes:
-  mongodb_data:
-  postgres_data:
-  postgres_backup:
-  mysql_data:
-  mysql_admin:
-  redis_data:
+  poc_mongodb_data:
+  poc_postgres_data:
+  poc_postgres_backup:
+  poc_mysql_data:
+  poc_mysql_admin:
+  poc_redis_data:
