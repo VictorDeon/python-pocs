@@ -38,12 +38,12 @@ def insert_pdf_into_bucket(pdf: Response, now: datetime, trace_id: str, bucket: 
     Pega o pdf e insere no bucket.
     """
 
-    path = "pdfs/invoices"
-    new_filename = f"{now.year}_{now.month:02}-invoice-{trace_id}.pdf"
-    new_path = "/".join([*path, new_filename])
-    new_blob = Blob(new_path, bucket)
-    new_blob.upload_from_string(pdf.body, content_type=pdf.media_type, timeout=600)
-    return new_blob
+    path_splited = "pdfs/invoices".split("/")
+    filename = f"{now.year}_{now.month:02}-invoice-{trace_id}.pdf"
+    path = "/".join([*path_splited, filename])
+    blob = Blob(path, bucket)
+    blob.upload_from_string(pdf.body, content_type=pdf.media_type, timeout=600)
+    return blob
 
 
 @router.post("/invoice", tags=["PDF"], name="Geração de Invoice")
@@ -72,6 +72,6 @@ async def invoice(data: InvoiceInput):
     )
     response = await asyncify(builder.get_response)()
 
-    await asyncify(insert_pdf_into_bucket(response, now, trace_id, bucket))
+    await asyncify(insert_pdf_into_bucket)(response, now, trace_id, bucket)
 
     return response
