@@ -1,7 +1,11 @@
+from google.cloud.storage import Blob, Bucket
+from fastapi.responses import Response
+from engines.storage import StorageSingleton
 from asyncer import asyncify
 from datetime import datetime
 from pydantic import BaseModel, Field
 from engines.pdf import GeneratePDF
+from uuid import uuid4
 from typing import List
 from . import router
 
@@ -29,16 +33,33 @@ class InvoiceInput(BaseModel):
     account: str = Field(..., description="Conta bancária")
 
 
+def insert_pdf_into_bucket(pdf: Response, now: datetime, trace_id: str, bucket: Bucket) -> Blob:
+    """
+    Pega o pdf e insere no bucket.
+    """
+
+    path = "pdfs/invoices"
+    new_filename = f"{now.year}_{now.month:02}-invoice-{trace_id}.pdf"
+    new_path = "/".join([*path, new_filename])
+    new_blob = Blob(new_path, bucket)
+    new_blob.upload_from_string(pdf.body, content_type=pdf.media_type, timeout=600)
+    return new_blob
+
+
 @router.post("/invoice", tags=["PDF"], name="Geração de Invoice")
 async def invoice(data: InvoiceInput):
     """
     Endpoint que gera um pdf a partir dos dados inseridos como parâmetro.
     """
 
+    now = datetime.now()
+    trace_id = str(uuid4())
+    bucket = StorageSingleton.get_bucket()
+
     builder = GeneratePDF(
         template="invoice.html",
         context={
-            "now": datetime.now().strftime("%B %d, %Y"),
+            "now": now.strftime("%B %d, %Y"),
             "invoice_number": data.invoice_number,
             "from_address": data.from_address,
             "to_address": data.to_address,
@@ -51,7 +72,6 @@ async def invoice(data: InvoiceInput):
     )
     response = await asyncify(builder.get_response)()
 
-    with open("invoice.pdf", "wb") as f:
-        f.write(response.body)
+    await asyncify(insert_pdf_into_bucket(response, now, trace_id, bucket))
 
     return response

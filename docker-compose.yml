@@ -170,9 +170,10 @@ services:
       - "host.docker.internal:host-gateway"
     environment:
       - APP_ENV=development
-      - GOOGLE_CLOUD_PROJECT=cerc2-kyp-stg-01
+      - GOOGLE_CLOUD_PROJECT=vksoftware
       - GOOGLE_APPLICATION_CREDENTIALS=service_account.json
       - PUBSUB_EMULATOR_HOST=pubsub:8085
+      - BUCKET_NAME=vksofware-documents
       - TOPIC_ID=general-input
       - SUBSCRIPTION_ID=general-input-sub
       - MAX_MESSAGES=1
