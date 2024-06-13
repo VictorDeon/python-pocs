@@ -4,13 +4,22 @@ POCs criadas em python para testar scripts e libs em python
 
 TODO:
 
-* CRUD de usuários (Criar, Listar, Visualizar, Deletar, Atualizar, Autenticar) - vwauth
-* CRUD de usuários usando mongodb
-* CRUD de usuários usando mysql
-* CRUD de usuários usando postgres
-* CRUD de usuários usando sqlite
-* Testes automatizados do CRUD de usuários
-
+* Endpoints que faz o upload de um arquivo excel com dados de usuários.
+* Script que consume todos os arquivos excel da pasta de upload, pegar os dados e armazenar em varios bancos de dados
+e arquivos e enviar o excel para outra pasta de processados.
+    - Mongodb
+    - MySql
+    - Postgres
+    - SqLite
+    - CSV
+    - JSON
+* Endpoints de consulta desses dados de usuários pelos diversos meios acima.
+* Sistema de autenticação e autorização
+* Endpoint com o CRUD de usuários (Criar, Listar, Visualizar, Deletar, Atualizar, Autenticar) - vwauth
+* Testes automatizados
+* Desenvolver vários tipos de consumos de APIs usando corotines, threads e processos
+* Inserir um sistema de logs inteligentes
+* Criar um interface com o tkinter para o CRUD de usuários.
 
 ***
 ### Visual Studio Code

@@ -48,7 +48,7 @@ def insert_pdf_into_bucket(pdf: Response, now: datetime, trace_id: str, bucket: 
 
 @router.post(
     "/invoices",
-    tags=["PDF"],
+    tags=["PDFs"],
     name="Geração de Invoice"
 )
 async def create_invoice(data: InvoiceInput):

@@ -22,8 +22,8 @@ logging.getLogger('urllib3').propagate = False
 app = FastAPI(
     title="VKSoftware",
     version="1.0.0",
-    redoc_url="/docs",
-    docs_url=None,
+    redoc_url="/redocs",
+    docs_url="/docs",
 )
 
 
@@ -71,4 +71,16 @@ async def validation_exception_handler(request: Request, exc: RequestValidationE
     return JSONResponse(
         status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
         content=result,
+    )
+
+
+@app.exception_handler(Exception)
+def generic_exception(request: Request, error: Exception) -> JSONResponse:
+    """
+    Mapeia as exceções genêricas.
+    """
+
+    return JSONResponse(
+        status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+        content={"message": str(error)}
     )

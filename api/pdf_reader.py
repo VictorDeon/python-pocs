@@ -65,7 +65,7 @@ def handler_path(trace_id: str = None, year: int = None, month: int = None) -> s
 
 @router.get(
     "/invoices",
-    tags=["PDF"],
+    tags=["PDFs"],
     name="Lista de Invoices",
     response_model=List[InvoiceFileResponse]
 )

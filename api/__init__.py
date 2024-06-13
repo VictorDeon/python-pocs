@@ -10,3 +10,4 @@ from .not_blocked_requests import (
 )
 from .pdf_generator import create_invoice
 from .pdf_reader import list_invoices
+from .create_user import create_user
