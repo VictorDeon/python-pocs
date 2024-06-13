@@ -46,8 +46,12 @@ def insert_pdf_into_bucket(pdf: Response, now: datetime, trace_id: str, bucket: 
     return blob
 
 
-@router.post("/invoice", tags=["PDF"], name="Geração de Invoice")
-async def invoice(data: InvoiceInput):
+@router.post(
+    "/invoices",
+    tags=["PDF"],
+    name="Geração de Invoice"
+)
+async def create_invoice(data: InvoiceInput):
     """
     Endpoint que gera um pdf a partir dos dados inseridos como parâmetro.
     """
