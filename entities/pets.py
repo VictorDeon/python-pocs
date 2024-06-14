@@ -27,7 +27,7 @@ class Pet(Base):
     age = Column(Integer)
     user_id = Column(Integer, ForeignKey("users.id"))
 
-    def __rep__(self):
+    def __repr__(self) -> str:
         """
         Objeto como string.
         """

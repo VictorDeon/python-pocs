@@ -9,14 +9,13 @@ class User(Base):
 
     __tablename__ = "users"
 
-    id = Column(Integer, primary_key=True)
+    id = Column(Integer, primary_key=True, autoincrement=True)
     email = Column(String, nullable=False, unique=True)
     password = Column(String, nullable=False)
     name = Column(String(20), nullable=False)
-    phone = Column(String(11))
     pet_id = relationship("Pet")
 
-    def __rep__(self):
+    def __repr__(self) -> str:
         """
         Objeto como string.
         """
