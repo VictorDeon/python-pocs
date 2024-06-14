@@ -1,6 +1,6 @@
 # python-pocs
 
-POCs criadas em python para testar scripts e libs em python
+POCs criadas em python para testar scripts e libs em python usando a Clean Architecture
 
 TODO:
 
