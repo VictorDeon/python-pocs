@@ -48,7 +48,7 @@ flake8:
 
 coverage:
 	# Roda os testes no container
-	docker compose exec pocs coverage run --source='.' -m pytest -s -vv --maxfail=1 -p no:warnings test/${path}
+	docker compose exec pocs coverage run --source='.' -m pytest -s -vv --maxfail=1 -p no:warnings tests/${path}
 
 report:
 	# Relatório da cobertura de testes
