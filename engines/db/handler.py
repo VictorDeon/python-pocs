@@ -21,16 +21,17 @@ class DBConnectionHandler:
         Pega a engine do SQL Alquimy.
         """
 
-        engine = create_engine(self.__connection_string)
+        engine: Engine = create_engine(self.__connection_string)
         return engine
-    
+
     def __enter__(self):
         """
         Executado ao criar um contexto com o with.
         """
 
-        engine = create_engine(self.__connection_string)
-        self.session = sessionmaker(bind=engine)
+        engine: Engine = create_engine(self.__connection_string)
+        Session = sessionmaker(bind=engine)
+        self.session = Session()
         return self
 
     def __exit__(self, exc_type, exc_val, exc_tb):
