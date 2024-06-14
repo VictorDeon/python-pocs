@@ -37,3 +37,23 @@ class UserRepository(Repository):
                 database.session.close()
 
         return user
+
+    @classmethod
+    def retrieve(cls, email: str) -> User:
+        """
+        Pesquisa o usuário pelo email.
+        """
+
+        user = None
+        with DBConnectionHandler() as database:
+            try:
+                user_object: EntityUser = database.session.query(EntityUser).filter(EntityUser.email == email).first()
+                if user_object:
+                    user = cls.User(id=user_object.id, name=user_object.name, email=user_object.email)
+            except Exception as e:
+                logging.error(f"Ocorreu um problema ao buscar o usuário: {e}")
+                raise e
+            finally:
+                database.session.close()
+
+        return user
