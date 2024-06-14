@@ -6,6 +6,32 @@ from adapters import UserRepository
 faker = Faker()
 
 
+def test_user_list():
+    """
+    Testando a pesquisa dos usuários.
+    """
+
+    email = faker.email()
+    name = faker.name()
+    password = faker.password(8)
+
+    created_user = UserRepository.create(
+        email=email,
+        name=name,
+        password=password
+    )
+
+    users = UserRepository.list(email=created_user.email)
+
+    assert created_user.id == users[0].id
+    assert created_user.name == users[0].name
+    assert created_user.email == users[0].email
+
+    with DBConnectionHandler() as database:
+        database.session.execute(text(f"DELETE FROM users WHERE id={created_user.id}"))
+        database.session.commit()
+
+
 def test_user_retrieve():
     """
     Testando a pesquisa de um usuário.
@@ -21,14 +47,14 @@ def test_user_retrieve():
         password=password
     )
 
-    user = UserRepository.retrieve(email=created_user.email)
+    user = UserRepository.retrieve(id=created_user.id)
 
     assert created_user.id == user.id
     assert created_user.name == user.name
     assert created_user.email == user.email
 
     with DBConnectionHandler() as database:
-        database.session.execute(text(f"DELETE FROM users WHERE id={user.id}"))
+        database.session.execute(text(f"DELETE FROM users WHERE id={created_user.id}"))
         database.session.commit()
 
 

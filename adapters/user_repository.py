@@ -1,5 +1,6 @@
 import logging
 from collections import namedtuple
+from typing import List
 from engines.db import DBConnectionHandler
 from entities import User as EntityUser
 from .repository import Repository
@@ -39,7 +40,7 @@ class UserRepository(Repository):
         return user
 
     @classmethod
-    def retrieve(cls, email: str) -> User:
+    def retrieve(cls, id: int) -> User:
         """
         Pesquisa o usuário pelo email.
         """
@@ -47,9 +48,9 @@ class UserRepository(Repository):
         user = None
         with DBConnectionHandler() as database:
             try:
-                user_object: EntityUser = database.session.query(EntityUser).filter(EntityUser.email == email).first()
-                if user_object:
-                    user = cls.User(id=user_object.id, name=user_object.name, email=user_object.email)
+                _user: EntityUser = database.session.query(EntityUser).get(id)
+                if _user:
+                    user = cls.User(id=_user.id, name=_user.name, email=_user.email)
             except Exception as e:
                 logging.error(f"Ocorreu um problema ao buscar o usuário: {e}")
                 raise e
@@ -57,3 +58,23 @@ class UserRepository(Repository):
                 database.session.close()
 
         return user
+
+    @classmethod
+    def list(cls, email: int = None) -> List[User]:
+        """
+        Pesquisa o usuário pelo email.
+        """
+
+        users = []
+        with DBConnectionHandler() as database:
+            try:
+                _users: EntityUser = database.session.query(EntityUser).filter(EntityUser.email == email)
+                for user in _users:
+                    users.append(cls.User(id=user.id, name=user.name, email=user.email))
+            except Exception as e:
+                logging.error(f"Ocorreu um problema ao buscar o usuário: {e}")
+                raise e
+            finally:
+                database.session.close()
+
+        return users
