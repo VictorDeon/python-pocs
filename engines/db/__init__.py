@@ -1,4 +1,4 @@
 from .base import Base
-from .handler import DBConnectionHandler
+from .connection import DBConnectionHandler
 
 __all__ = ["Base", "DBConnectionHandler"]

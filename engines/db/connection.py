@@ -1,6 +1,6 @@
+import os
 from sqlalchemy import create_engine, Engine
 from sqlalchemy.orm import sessionmaker
-import os
 
 
 class DBConnectionHandler:
@@ -8,7 +8,7 @@ class DBConnectionHandler:
     Realiza a lógica de conexão com o banco de dados usando SQL ALQUEMY.
     """
 
-    def __init__(self):
+    def __init__(self) -> None:
         """
         Construtor.
         """
@@ -22,8 +22,8 @@ class DBConnectionHandler:
         """
 
         engine: Engine = create_engine(self.__connection_string)
-        Session = sessionmaker(bind=engine)
-        self.session = Session()
+        session_class = sessionmaker(bind=engine)
+        self.session = session_class()
         return self
 
     def __exit__(self, exc_type, exc_val, exc_tb):

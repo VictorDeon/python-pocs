@@ -13,6 +13,7 @@ class User(Base):
     email = Column(String, nullable=False, unique=True)
     password = Column(String, nullable=False)
     name = Column(String(20), nullable=False)
+    phone = Column(String(11))
     pet_id = relationship("Pet")
 
     def __rep__(self):

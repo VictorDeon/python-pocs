@@ -13,7 +13,7 @@ class Repository(ABC):
         Criação do objeto.
         """
 
-        pass
+        raise ValueError("Implementação do método create é obrigatória")
 
     @classmethod
     @abstractmethod
@@ -22,7 +22,7 @@ class Repository(ABC):
         Visualização dos dados de um objeto.
         """
 
-        pass
+        raise ValueError("Implementação do método retrieve é obrigatória")
 
     @classmethod
     @abstractmethod
@@ -31,7 +31,7 @@ class Repository(ABC):
         Listagem de objetos.
         """
 
-        pass
+        raise ValueError("Implementação do método list é obrigatória")
 
     @classmethod
     @abstractmethod
@@ -40,7 +40,7 @@ class Repository(ABC):
         Atualização de um objeto.
         """
 
-        pass
+        raise ValueError("Implementação do método update é obrigatória")
 
     @classmethod
     @abstractmethod
@@ -49,4 +49,4 @@ class Repository(ABC):
         Deleção de um objeto.
         """
 
-        pass
+        raise ValueError("Implementação do método delete é obrigatória")
