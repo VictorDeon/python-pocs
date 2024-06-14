@@ -1,7 +1,7 @@
+import logging
 from engines.db import DBConnectionHandler
 from entities import User
 from .repository import Repository
-import logging
 
 
 class UserRepository(Repository):

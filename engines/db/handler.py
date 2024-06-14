@@ -16,14 +16,6 @@ class DBConnectionHandler:
         self.__connection_string = os.environ.get("DB_CONNECTION_STRING")
         self.session = None
 
-    def get_engine(self) -> Engine:
-        """
-        Pega a engine do SQL Alquimy.
-        """
-
-        engine: Engine = create_engine(self.__connection_string)
-        return engine
-
     def __enter__(self):
         """
         Executado ao criar um contexto com o with.

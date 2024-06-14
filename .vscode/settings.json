@@ -1,0 +1,14 @@
+{
+    "files.exclude": {
+        ".pytest_cache": true,
+        "**/__pycache__": true
+    },
+    "python.analysis.extraPaths": [
+        ".ignore/site-packages"
+    ],
+    "python.autoComplete.extraPaths": [
+        ".ignore/site-packages"
+    ],
+    "python.linting.enabled": true,
+    "python.linting.pylintEnabled": true,
+}
