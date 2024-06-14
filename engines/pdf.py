@@ -21,7 +21,7 @@ class GeneratePDF:
         Render html to string
         """
 
-        env = Environment(autoescape=True, loader=FileSystemLoader('templates'))
+        env = Environment(autoescape=True, loader=FileSystemLoader('assets/templates'))
         template = env.get_template(template_name)
         return template.render(context)
 

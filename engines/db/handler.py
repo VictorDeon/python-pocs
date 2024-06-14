@@ -1,4 +1,5 @@
 from sqlalchemy import create_engine, Engine
+from sqlalchemy.orm import sessionmaker
 import os
 
 
@@ -22,3 +23,19 @@ class DBConnectionHandler:
 
         engine = create_engine(self.__connection_string)
         return engine
+    
+    def __enter__(self):
+        """
+        Executado ao criar um contexto com o with.
+        """
+
+        engine = create_engine(self.__connection_string)
+        self.session = sessionmaker(bind=engine)
+        return self
+
+    def __exit__(self, exc_type, exc_val, exc_tb):
+        """
+        Executado ao sair de um contexto with.
+        """
+
+        self.session.close()
