@@ -9,3 +9,16 @@ class User(BaseModel):
     id: int = Field(..., description="Identificador único do usuário.")
     name: str = Field(..., description="Nome completo do usuário.")
     email: str = Field(..., description="Email do usuário.")
+
+    class Config:
+        """
+        Metadados da modelo
+        """
+
+        schema_extra_json = {
+            "example": {
+                "id": 1,
+                "name": "Fulano 01",
+                "email": "fulano@gmail.com"
+            }
+        }

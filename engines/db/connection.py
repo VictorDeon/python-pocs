@@ -1,3 +1,5 @@
+#pylint: disable=invalid-name
+
 import os
 from sqlalchemy import create_engine, Engine
 from sqlalchemy.orm import sessionmaker
@@ -22,8 +24,8 @@ class DBConnectionHandler:
         """
 
         engine: Engine = create_engine(self.__connection_string)
-        session_class = sessionmaker(bind=engine)
-        self.session = session_class()
+        Session = sessionmaker(bind=engine)
+        self.session = Session()
         return self
 
     def __exit__(self, exc_type, exc_val, exc_tb):
