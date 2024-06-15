@@ -2,6 +2,7 @@
 from abc import ABC, abstractmethod
 from presentations.rest.scheme import HttpResponse, HttpRequest
 
+
 class ControllerInterface(ABC):
     """
     Interface que irá controlar a camada de apresentação que irá interagir

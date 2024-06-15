@@ -6,12 +6,12 @@ class HttpRequest:
     def __init__(
         self,
         url,
-        body = None,
-        query = None,
-        path = None,
-        headers = None,
-        files = None,
-        auth = None) -> None:
+        body=None,
+        query=None,
+        path=None,
+        headers=None,
+        files=None,
+        auth=None) -> None:
         """
         Construtor.
         """
