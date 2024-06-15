@@ -1,6 +1,6 @@
 #pylint: disable=no-name-in-module
 from engines.db.repositories import UserRepository
-from data.user_cases import UserRetrieve
+from domains.user_cases import UserRetrieve
 
 
 def test_user_retrieve():
