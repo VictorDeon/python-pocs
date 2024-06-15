@@ -4,7 +4,7 @@ POCs criadas em python para testar scripts e libs em python usando a Clean Archi
 
 ### Clean Architecture
 
-
+![clean-architecture](https://github.com/VictorDeon/python-notebook/assets/14116020/cd51c91a-a0cb-405a-b90c-5b47b54ba5b5)
 
 #### Entities
 
@@ -12,11 +12,24 @@ A pasta **models** e **interfaces** do domínio do nosso projeto é a camada de 
 Ou seja, é a camada que encapsula as regras de negócio de toda a empresa. É o espelho de todos os dados da empresa
 e a definição de todos os casos de uso a ser implementados.
 
+Também está ligado a camada **Entities** a pasta onde estão os **repositories** e **entities** dentro de **engine.db**.
+Lá é definido a modela do banco de dados.
+
 #### User Cases
 
 A pasta **user_cases** do domínio do nosso projeto é a camada **User Cases** do clean architecture. Esse contém as regras
 de negócios específicas do aplicativo. Ele encapsula e implementa todos os casos de uso do sistema definidos na camada de
 **Entities** pelas **interfaces**.
+
+#### Interface Adapters
+
+Nesta camada temos a pasta **presentations** com suas respectivas **controllers**. É a camada específica que a gente retira os dados
+de entrada, por exemplo, os dados HTTP trata eles para jogar nos casos de uso.
+
+#### Frameworks & Drivers
+
+A camada mais externa geralmente é composta por frameworks e ferramentas como banco de dados, arquivos, UI, entre outros tipos de entradas
+de dados que o usuário pode enviar. Essa camada está na pasta **main**
 
 
 ### TODO:
