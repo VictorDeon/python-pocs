@@ -1,7 +1,7 @@
 from sqlalchemy import text
 from faker import Faker
 from engines.db import DBConnectionHandler
-from adapters import UserRepository
+from engines.db.repositories import UserRepository
 
 faker = Faker()
 
@@ -47,7 +47,7 @@ def test_user_retrieve():
         password=password
     )
 
-    user = UserRepository.retrieve(id=created_user.id)
+    user = UserRepository.retrieve(_id=created_user.id)
 
     assert created_user.id == user.id
     assert created_user.name == user.name

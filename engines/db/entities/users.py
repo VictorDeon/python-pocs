@@ -2,6 +2,7 @@ from sqlalchemy import Column, String, Integer
 from sqlalchemy.orm import relationship
 from engines.db import Base
 
+
 class User(Base):
     """
     Classe de usuários.

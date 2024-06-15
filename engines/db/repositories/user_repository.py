@@ -2,7 +2,7 @@ import logging
 from collections import namedtuple
 from typing import List
 from engines.db import DBConnectionHandler
-from entities import User as EntityUser
+from engines.db.entities import User as EntityUser
 from .repository import Repository
 
 
@@ -40,7 +40,7 @@ class UserRepository(Repository):
         return user
 
     @classmethod
-    def retrieve(cls, id: int) -> User:
+    def retrieve(cls, _id: int) -> User:
         """
         Pesquisa o usuário pelo email.
         """
@@ -48,7 +48,7 @@ class UserRepository(Repository):
         user = None
         with DBConnectionHandler() as database:
             try:
-                _user: EntityUser = database.session.query(EntityUser).get(id)
+                _user: EntityUser = database.session.query(EntityUser).get(_id)
                 if _user:
                     user = cls.User(id=_user.id, name=_user.name, email=_user.email)
             except Exception as e:
@@ -68,7 +68,9 @@ class UserRepository(Repository):
         users = []
         with DBConnectionHandler() as database:
             try:
-                _users: EntityUser = database.session.query(EntityUser).filter(EntityUser.email == email)
+                _users: EntityUser = database.session.query(EntityUser).filter(
+                    EntityUser.email == email
+                )
                 for user in _users:
                     users.append(cls.User(id=user.id, name=user.name, email=user.email))
             except Exception as e:
