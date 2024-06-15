@@ -1,6 +1,6 @@
 from typing import List
-from faker import Faker
 from copy import deepcopy
+from faker import Faker
 from engines.db.interfaces import UserRepositoryInterface
 from domains.models import User
 
