@@ -1,7 +1,7 @@
 from pydantic import BaseModel, Field
 from fastapi import status, Request
-from main.adapters import fastapi_adapter
-from main.composers import user_retriever_compose
+from main.rest.adapters import fastapi_adapter
+from main.rest.composers import user_retriever_compose
 from . import router
 
 
