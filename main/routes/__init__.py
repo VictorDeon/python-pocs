@@ -1,4 +1,5 @@
 # flake8: noqa
+# pylint: disable=wrong-import-position
 from fastapi import APIRouter
 router = APIRouter()
 from .not_blocked_requests import (
@@ -10,4 +11,6 @@ from .not_blocked_requests import (
 )
 from .pdf_generator import create_invoice
 from .pdf_reader import list_invoices
-from .create_user import create_user
+from .retrieve_user import retrieve_user
+
+__all__ = ["router"]

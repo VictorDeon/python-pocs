@@ -20,7 +20,10 @@ class UserRetrieveController(ControllerInterface):
         Lida com a entrada e saida dos dados.
         """
 
-        user_id = http_request.path['user_id']
+        user_id = http_request.path.get('user_id')
+
+        if not user_id:
+            raise ValueError("O user id é obrigatório.")
 
         response = self.__user_case.find(user_id)
 

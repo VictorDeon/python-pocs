@@ -1,12 +1,12 @@
+import logging
+from datetime import datetime
+from pytz import timezone
 from fastapi import Request, status, HTTPException
 from fastapi.responses import JSONResponse
 from fastapi.encoders import jsonable_encoder
 from fastapi.exceptions import RequestValidationError
 from fastapi import FastAPI
-from api import router
-from datetime import datetime
-from pytz import timezone
-import logging
+from main.routes import router
 
 sp = timezone("America/Sao_Paulo")
 logging.Formatter.converter = lambda *args: datetime.now(tz=sp).timetuple()
@@ -29,6 +29,10 @@ app = FastAPI(
 
 @app.get("/")
 def health_check():
+    """
+    Health check da aplicação.
+    """
+
     return {"success": True}
 
 
@@ -36,7 +40,7 @@ app.include_router(router)
 
 
 @app.exception_handler(HTTPException)
-def handle_http_exception(request: Request, error: HTTPException) -> JSONResponse:
+def handle_http_exception(_: Request, error: HTTPException) -> JSONResponse:
     """
     Mapeia as exceções.
     """
@@ -49,7 +53,7 @@ def handle_http_exception(request: Request, error: HTTPException) -> JSONRespons
 
 
 @app.exception_handler(RequestValidationError)
-async def validation_exception_handler(request: Request, exc: RequestValidationError) -> JSONResponse:
+async def validation_exception_handler(_: Request, exc: RequestValidationError) -> JSONResponse:
     """
     Melhora os inputs de error.
     """
@@ -75,7 +79,7 @@ async def validation_exception_handler(request: Request, exc: RequestValidationE
 
 
 @app.exception_handler(Exception)
-def generic_exception(request: Request, error: Exception) -> JSONResponse:
+def generic_exception(_: Request, error: Exception) -> JSONResponse:
     """
     Mapeia as exceções genêricas.
     """

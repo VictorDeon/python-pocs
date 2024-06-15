@@ -4,15 +4,16 @@ os outros endpoints até a finalização de sua execução devido ao time.sleep.
 Já os endpoint totalmente async ele roda o time.sleep de forma que não bloqueie
 a execução dos coleguinhas.
 
-Rode cada um dos endpoints um em seguida do outro para verificar os que bloqueia a execução do outro.
+Rode cada um dos endpoints um em seguida do outro para verificar os que bloqueia a execução do
+outro.
 """
 
-from pydantic import BaseModel, Field
-from . import router
 import asyncio
-import asyncer
 import logging
 import time
+import asyncer
+from pydantic import BaseModel, Field
+from . import router
 
 
 class Error(BaseModel):
@@ -23,6 +24,10 @@ class Error(BaseModel):
     message: str = Field(..., title="Mensagem", description="Mensagem de erro.")
 
     class Config:
+        """
+        Metadados de configuração.
+        """
+
         json_schema_extra = {
             "example": {
                 "message": "Parâmetro nome obrigatório.",
@@ -38,6 +43,10 @@ class Response(BaseModel):
     result: str = Field(..., title="Resultado", description="Tempo de execução da requisição.")
 
     class Config:
+        """
+        Metadados de configuração.
+        """
+
         json_schema_extra = {
             "example": {
                 "result": "Requisição executada em 5.4 segundos",
