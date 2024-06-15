@@ -1,3 +1,4 @@
+# pylint: disable=unused-argument
 from pydantic import BaseModel, Field
 from fastapi import status, Request
 from main.rest.adapters import fastapi_adapter
@@ -37,7 +38,7 @@ class UserResponse(BaseModel):
     },
     status_code=status.HTTP_200_OK
 )
-async def retrieve_user(request: Request):
+async def retrieve_user(request: Request, user_id: int):
     """
     Endpoint que retorna os dados de um usuário.
     """
