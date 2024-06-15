@@ -14,14 +14,15 @@ def test_user_list():
     email = faker.email()
     name = faker.name()
     password = faker.password(8)
+    repository = UserRepository()
 
-    created_user = UserRepository.create(
+    created_user = repository.create(
         email=email,
         name=name,
         password=password
     )
 
-    users = UserRepository.list(email=created_user.email)
+    users = repository.list(email=created_user.email)
 
     assert created_user.id == users[0].id
     assert created_user.name == users[0].name
@@ -40,14 +41,15 @@ def test_user_retrieve():
     email = faker.email()
     name = faker.name()
     password = faker.password(8)
+    repository = UserRepository()
 
-    created_user = UserRepository.create(
+    created_user = repository.create(
         email=email,
         name=name,
         password=password
     )
 
-    user = UserRepository.retrieve(_id=created_user.id)
+    user = repository.retrieve(_id=created_user.id)
 
     assert created_user.id == user.id
     assert created_user.name == user.name
@@ -66,8 +68,9 @@ def test_user_create():
     email = faker.email()
     name = faker.name()
     password = faker.password(8)
+    repository = UserRepository()
 
-    user = UserRepository.create(
+    user = repository.create(
         email=email,
         name=name,
         password=password

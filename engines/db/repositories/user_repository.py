@@ -13,8 +13,7 @@ class UserRepository(Repository):
 
     User = namedtuple("User", "id, name, email")
 
-    @classmethod
-    def create(cls, email: str, name: str, password: str) -> User:
+    def create(self, email: str, name: str, password: str) -> User:
         """
         Cria o usuário passando como argumento os dados do mesmo.
         """
@@ -29,7 +28,7 @@ class UserRepository(Repository):
                 )
                 database.session.add(new_user)
                 database.session.commit()
-                user = cls.User(id=new_user.id, name=new_user.name, email=new_user.email)
+                user = self.User(id=new_user.id, name=new_user.name, email=new_user.email)
             except Exception as e:
                 logging.error(f"Ocorreu um problema ao criar o usuário: {e}")
                 database.session.rollback()
@@ -39,8 +38,7 @@ class UserRepository(Repository):
 
         return user
 
-    @classmethod
-    def retrieve(cls, _id: int) -> User:
+    def retrieve(self, _id: int) -> User:
         """
         Pesquisa o usuário pelo email.
         """
@@ -50,7 +48,7 @@ class UserRepository(Repository):
             try:
                 _user: EntityUser = database.session.query(EntityUser).get(_id)
                 if _user:
-                    user = cls.User(id=_user.id, name=_user.name, email=_user.email)
+                    user = self.User(id=_user.id, name=_user.name, email=_user.email)
             except Exception as e:
                 logging.error(f"Ocorreu um problema ao buscar o usuário: {e}")
                 raise e
@@ -59,8 +57,7 @@ class UserRepository(Repository):
 
         return user
 
-    @classmethod
-    def list(cls, email: int = None) -> List[User]:
+    def list(self, email: int = None) -> List[User]:
         """
         Pesquisa o usuário pelo email.
         """
@@ -72,7 +69,7 @@ class UserRepository(Repository):
                     EntityUser.email == email
                 )
                 for user in _users:
-                    users.append(cls.User(id=user.id, name=user.name, email=user.email))
+                    users.append(self.User(id=user.id, name=user.name, email=user.email))
             except Exception as e:
                 logging.error(f"Ocorreu um problema ao buscar o usuário: {e}")
                 raise e
@@ -80,3 +77,17 @@ class UserRepository(Repository):
                 database.session.close()
 
         return users
+
+    def update(self, *args, **kwargs):
+        """
+        Atualização de um objeto.
+        """
+
+        return None
+
+    def delete(self, *args, **kwargs):
+        """
+        Deleção de um objeto.
+        """
+
+        return None
