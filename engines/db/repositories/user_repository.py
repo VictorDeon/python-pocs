@@ -1,17 +1,15 @@
 import logging
-from collections import namedtuple
 from typing import List
 from engines.db import DBConnectionHandler
 from engines.db.entities import User as EntityUser
-from .repository import Repository
+from engines.db.interfaces import UserRepositoryInterface
+from domains.models import User
 
 
-class UserRepository(Repository):
+class UserRepository(UserRepositoryInterface):
     """
     Repositorio de manipulação da entidade user
     """
-
-    User = namedtuple("User", "id, name, email")
 
     def create(self, email: str, name: str, password: str) -> User:
         """
@@ -28,7 +26,7 @@ class UserRepository(Repository):
                 )
                 database.session.add(new_user)
                 database.session.commit()
-                user = self.User(id=new_user.id, name=new_user.name, email=new_user.email)
+                user = User(id=new_user.id, name=new_user.name, email=new_user.email)
             except Exception as e:
                 logging.error(f"Ocorreu um problema ao criar o usuário: {e}")
                 database.session.rollback()
@@ -48,7 +46,7 @@ class UserRepository(Repository):
             try:
                 _user: EntityUser = database.session.query(EntityUser).get(_id)
                 if _user:
-                    user = self.User(id=_user.id, name=_user.name, email=_user.email)
+                    user = User(id=_user.id, name=_user.name, email=_user.email)
             except Exception as e:
                 logging.error(f"Ocorreu um problema ao buscar o usuário: {e}")
                 raise e
@@ -69,7 +67,7 @@ class UserRepository(Repository):
                     EntityUser.email == email
                 )
                 for user in _users:
-                    users.append(self.User(id=user.id, name=user.name, email=user.email))
+                    users.append(User(id=user.id, name=user.name, email=user.email))
             except Exception as e:
                 logging.error(f"Ocorreu um problema ao buscar o usuário: {e}")
                 raise e
@@ -78,14 +76,14 @@ class UserRepository(Repository):
 
         return users
 
-    def update(self, *args, **kwargs):
+    def update(self, *args, **kwargs) -> User:
         """
         Atualização de um objeto.
         """
 
         return None
 
-    def delete(self, *args, **kwargs):
+    def delete(self, *args, **kwargs) -> None:
         """
         Deleção de um objeto.
         """

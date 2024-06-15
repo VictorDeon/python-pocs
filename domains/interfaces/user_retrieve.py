@@ -1,3 +1,4 @@
+#pylint: disable=missing-function-docstring
 from abc import ABC, abstractmethod
 
 
@@ -7,7 +8,4 @@ class UserRetrieveInterface(ABC):
     """
 
     @abstractmethod
-    def find(self, email: str) -> dict:
-        """
-        Encontra o usuário pelo email.
-        """
+    def find(self, email: str) -> dict: pass
