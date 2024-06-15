@@ -48,7 +48,7 @@ async def get_messages_from_pubsub_and_put_in_queue(message_queue: Queue, pubsub
 
     if messages_to_get <= 0:
         return
-    
+
     try:
         logging.debug("Pegando mensagens do pubsub.")
         response = await asyncio.wait_for(pubsub.pull(QUEUE, messages_to_get), timeout=10)
@@ -67,7 +67,7 @@ async def get_messages_from_pubsub_and_put_in_queue(message_queue: Queue, pubsub
 
     if len(response.received_messages) == 0:
         return
-    
+
     logging.debug(f"Foi recebido {len(response.received_messages)} mensagens para inserção na fila local.")
     for message in response.received_messages:
         logging.debug(f"Inserindo a mensagem {message.ack_id} na fila local")
@@ -151,13 +151,13 @@ async def process_message_worker(queue: Queue, stop_event: Event):
             logging.error(f'Error ao processar mensagem: {str(error)}. Desligando o serviço.')
             await asyncer.asyncify(force_shutdown)
             return
-        
+
         await asyncio.sleep(0.5)
 
 
 async def main() -> None:
     """
-    Método principal de execução.    
+    Método principal de execução.
     """
 
     stop_event: Event = Event()

@@ -67,7 +67,7 @@ def io_bound_method(seconds: int) -> None:
 async def blocking_request1():
     """
     Aqui iremos testar uma requisição assincrona com código
-    sincrono, ao executar ele bloqueia as outras requisições.    
+    sincrono, ao executar ele bloqueia as outras requisições.
     """
 
     start_time = time.time()
@@ -91,7 +91,7 @@ async def blocking_request1():
 async def not_blocking_request1():
     """
     Aqui iremos testar uma requisição assincrona com código
-    sincrono, porém sem bloquear as outras requisições.    
+    sincrono, porém sem bloquear as outras requisições.
     """
 
     start_time = time.time()
@@ -112,7 +112,7 @@ async def not_blocking_request1():
 )
 async def not_blocking_request2():
     """
-    Realizando a requisição com o método de sleep assincrono.    
+    Realizando a requisição com o método de sleep assincrono.
     """
 
     start_time = time.time()

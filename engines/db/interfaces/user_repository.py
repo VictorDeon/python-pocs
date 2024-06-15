@@ -1,4 +1,4 @@
-#pylint: disable=missing-function-docstring
+# pylint: disable=missing-function-docstring
 from typing import List
 from abc import ABC, abstractmethod
 from domains.models import User

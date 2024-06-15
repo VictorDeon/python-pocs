@@ -7,7 +7,7 @@ stop_event = asyncio.Event()
 
 def shutdown(sig: signal.Signals) -> None:
     """
-    Setando o evento de parada.    
+    Setando o evento de parada.
     """
 
     print(f"Sinal de sair recebido: {sig.name}")
@@ -18,7 +18,7 @@ def shutdown(sig: signal.Signals) -> None:
 def setup_signal_handler() -> None:
     """
     Observador de sinais como o Ctrl + C para parada
-    do script ou graceful shutdown.    
+    do script ou graceful shutdown.
     """
 
     loop = asyncio.get_running_loop()
@@ -36,7 +36,7 @@ def setup_signal_handler() -> None:
 async def worker(n, stop_event) -> None:
     """
     Trabalhador processando algo de forma simulada com o
-    sleep de 1 a 15 de forma randomica.    
+    sleep de 1 a 15 de forma randomica.
     """
 
     while True:

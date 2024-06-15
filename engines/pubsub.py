@@ -3,7 +3,6 @@ from google.api_core.retry_async import AsyncRetry
 from google.api_core.exceptions import AlreadyExists
 from typing import List, Any
 import json
-import os
 
 
 class PubsubSingleton:
@@ -104,7 +103,7 @@ class PubsubSingleton:
         )
 
         return response
-    
+
     async def ack(self, queue: str, ack_id: str):
         """
         Realiza o ack da mensagem.

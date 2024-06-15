@@ -1,8 +1,25 @@
 # python-pocs
 
-POCs criadas em python para testar scripts e libs em python usando a Clean Architecture
+POCs criadas em python para testar scripts e libs em python usando a Clean Architecture.
 
-TODO:
+### Clean Architecture
+
+
+
+#### Entities
+
+A pasta **models** e **interfaces** do domínio do nosso projeto é a camada de **Entities** do clean architeture.
+Ou seja, é a camada que encapsula as regras de negócio de toda a empresa. É o espelho de todos os dados da empresa
+e a definição de todos os casos de uso a ser implementados.
+
+#### User Cases
+
+A pasta **user_cases** do domínio do nosso projeto é a camada **User Cases** do clean architecture. Esse contém as regras
+de negócios específicas do aplicativo. Ele encapsula e implementa todos os casos de uso do sistema definidos na camada de
+**Entities** pelas **interfaces**.
+
+
+### TODO:
 
 * Endpoints que faz o upload de um arquivo excel com dados de usuários.
 * Script que consume todos os arquivos excel da pasta de upload, pegar os dados e armazenar em varios bancos de dados
