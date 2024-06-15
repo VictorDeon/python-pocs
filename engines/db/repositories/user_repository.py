@@ -75,17 +75,3 @@ class UserRepository(UserRepositoryInterface):
                 database.session.close()
 
         return users
-
-    def update(self, *args, **kwargs) -> User:
-        """
-        Atualização de um objeto.
-        """
-
-        return None
-
-    def delete(self, *args, **kwargs) -> None:
-        """
-        Deleção de um objeto.
-        """
-
-        return None

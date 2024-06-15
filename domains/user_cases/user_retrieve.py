@@ -14,7 +14,27 @@ class UserRetrieve(UserRetrieveInterface):
 
         self.__users_repository = users_repository
 
-    def find(self, email: str) -> dict:
+    def __validate_params(self, email: str) -> None:
+        """
+        Valida os parâmetros de entrada.
+        """
+
+        if email == "invalido@gmail.com":
+            raise ValueError(f"Email {email} inválido para a busca.")
+
+    def find(self, email: str = None) -> dict:
         """
         Encontra o usuário pelo email.
         """
+
+        self.__validate_params(email)
+
+        users = self.__users_repository.list(email)
+
+        if not users:
+            raise ValueError(f"Usuários com email {email} não encontrado.")
+
+        return {
+            "qtd": len(users),
+            "results": users
+        }

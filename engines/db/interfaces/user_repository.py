@@ -10,16 +10,10 @@ class UserRepositoryInterface(ABC):
     """
 
     @abstractmethod
-    def create(self, *args, **kwargs) -> User: pass
+    def create(self, email: str, name: str, password: str) -> User: pass
 
     @abstractmethod
-    def retrieve(self, *args, **kwargs) -> User: pass
+    def retrieve(self, _id: int) -> User: pass
 
     @abstractmethod
-    def list(self, *args, **kwargs) -> List[User]: pass
-
-    @abstractmethod
-    def update(self, *args, **kwargs) -> User: pass
-
-    @abstractmethod
-    def delete(self, *args, **kwargs) -> None: pass
+    def list(self, email: str = None) -> List[User]: pass
