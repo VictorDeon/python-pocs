@@ -5,7 +5,6 @@ from engines.pdf import GeneratePDF
 from engines.storage.interfaces import StorageSingletonInterface
 from domains.interfaces import PDFGeneratorInterface
 from domains.models import Invoice
-from engines.pdf import GeneratePDF
 
 
 class PDFGenerator(PDFGeneratorInterface):

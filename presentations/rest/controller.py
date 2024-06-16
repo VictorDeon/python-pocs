@@ -1,7 +1,6 @@
 # pylint: disable=missing-function-docstring
 from abc import ABC, abstractmethod
 from fastapi import Response
-from typing import Any
 
 
 class ControllerInterface(ABC):
