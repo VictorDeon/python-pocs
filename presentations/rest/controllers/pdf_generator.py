@@ -1,4 +1,4 @@
-from fastapi import Response
+from fastapi import Response, status
 from presentations.rest.controller import ControllerInterface
 from domains.models import Invoice
 from domains.interfaces import PDFGeneratorInterface
@@ -26,5 +26,5 @@ class PDFGeneratorController(ControllerInterface):
         return Response(
             content=pdf,
             media_type='application/pdf',
-            status_code=200
+            status_code=status.HTTP_201_CREATED
         )

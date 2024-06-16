@@ -1,5 +1,6 @@
 from google.cloud.storage import Client, Blob, Bucket
 from asyncer import asyncify
+from typing import List
 from engines.storage.interfaces import StorageSingletonInterface
 import os
 
@@ -25,3 +26,10 @@ class GCPStorageSingleton(StorageSingletonInterface):
         blob = Blob(path, self.bucket)
         await asyncify(blob.upload_from_string)(string_content, content_type=content_type, timeout=timeout)
         return blob
+
+    async def list_blobs(self, path: str) -> List[str]:
+        """
+        Lista todos os arquivos de uma caminho específico.
+        """
+
+        return []

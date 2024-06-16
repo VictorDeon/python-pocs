@@ -55,3 +55,20 @@ class Invoice(BaseModel):
                 ]
             }
         }
+
+
+class InvoiceResponse(Invoice):
+    """
+    Dados da invoice.
+    """
+
+    total: float = Field(..., description="Valor total da invoice.")
+
+
+class InvoiceFileResponse(BaseModel):
+    """
+    Dados de saída.
+    """
+
+    filename: str = Field(..., description="Nome do arquivo no bucket.")
+    invoice: InvoiceResponse = Field(None, description="Dados da invoice.")

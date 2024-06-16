@@ -1,4 +1,5 @@
 from io import TextIOWrapper
+from typing import List
 from engines.storage.interfaces import StorageSingletonInterface
 
 
@@ -23,3 +24,10 @@ class LocalStorageSingleton(StorageSingletonInterface):
             file.write(content)
 
         return file
+
+    async def list_blobs(self, path: str) -> List[str]:
+        """
+        Lista todos os arquivos de uma caminho específico.
+        """
+
+        return []

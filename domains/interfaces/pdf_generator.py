@@ -1,6 +1,5 @@
 # pylint: disable=missing-function-docstring
 from abc import ABC, abstractmethod
-from datetime import datetime
 from domains.models import Invoice
 
 
