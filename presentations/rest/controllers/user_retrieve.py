@@ -1,4 +1,4 @@
-from fastapi import Request, Response
+from fastapi import Response
 from presentations.rest.controller import ControllerInterface
 from domains.interfaces import UserRetrieveInterface
 
@@ -15,12 +15,10 @@ class UserRetrieveController(ControllerInterface):
 
         self.__user_case = user_case
 
-    def receive(self, request: Request) -> Response:
+    def send(self, user_id: int) -> Response:
         """
         Lida com a entrada e saida dos dados.
         """
-
-        user_id = request.path_params.get('user_id')
 
         if not user_id:
             raise ValueError("O user id é obrigatório.")

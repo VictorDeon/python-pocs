@@ -1,8 +1,6 @@
 # pylint: disable=unused-argument
 from pydantic import BaseModel, Field
-from fastapi import status, Request
-from main.input_mediator import InputAdapterMediator
-from main.adapters import ApiAdapter
+from fastapi import status
 from engines.db.repositories import UserRepository
 from domains.user_cases import UserRetrieve
 from presentations.rest.controllers import UserRetrieveController
@@ -41,19 +39,13 @@ class UserResponse(BaseModel):
     },
     status_code=status.HTTP_200_OK
 )
-async def retrieve_user(request: Request, user_id: int):
+async def retrieve_user(user_id: int):
     """
     Endpoint que retorna os dados de um usuário.
     """
 
-    mediator = InputAdapterMediator()
-    adapter = ApiAdapter(mediator)
-
     repository = UserRepository()
     user_case = UserRetrieve(users_repository=repository)
     controller = UserRetrieveController(user_case=user_case)
-
-    mediator.add(controller)
-    response = adapter.send(request)
-
+    response = controller.send(user_id)
     return response

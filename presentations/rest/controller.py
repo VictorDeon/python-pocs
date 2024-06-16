@@ -1,6 +1,7 @@
 # pylint: disable=missing-function-docstring
 from abc import ABC, abstractmethod
-from fastapi import Request, Response
+from fastapi import Response
+from typing import Any
 
 
 class ControllerInterface(ABC):
@@ -10,4 +11,9 @@ class ControllerInterface(ABC):
     """
 
     @abstractmethod
-    def receive(self, request: Request) -> Response: pass
+    def send(self, *args, **kwargs) -> Response:
+        """
+        Lida com a entrada e da uma saida.
+        """
+
+        pass
