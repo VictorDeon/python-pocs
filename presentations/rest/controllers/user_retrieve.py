@@ -1,4 +1,4 @@
-from presentations.rest.interfaces import ControllerInterface
+from presentations.rest.controller import ControllerInterface
 from presentations.rest.scheme import HttpResponse, HttpRequest
 from domains.interfaces import UserRetrieveInterface
 
