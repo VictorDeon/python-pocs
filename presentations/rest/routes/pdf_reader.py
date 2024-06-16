@@ -1,7 +1,7 @@
 from typing import Optional, List
 from fastapi import Query
 from pydantic import BaseModel, Field
-from engines.storage import StorageSingleton
+from engines.storage.repositories import LocalStorageSingleton
 from . import router
 
 
@@ -78,15 +78,16 @@ async def list_invoices(
     TODO: Fazer a lógica para extrair os dados do PDF
     """
 
-    bucket = StorageSingleton.get_bucket()
-    path = handler_path(trace_id, year, month)
-    blobs = list(bucket.list_blobs(match_glob=path))
-    response = []
-    for blob in blobs:
-        blob_path_splited = blob.name.split("/")
-        filename = blob_path_splited[-1]
-        data = {"filename": filename}
-        # Extrair dados do pdf e inserir no response
-        response.append(data)
+    # bucket = StorageSingleton.get_bucket()
+    # path = handler_path(trace_id, year, month)
+    # blobs = list(bucket.list_blobs(match_glob=path))
+    # response = []
+    # for blob in blobs:
+    #     blob_path_splited = blob.name.split("/")
+    #     filename = blob_path_splited[-1]
+    #     data = {"filename": filename}
+    #     # Extrair dados do pdf e inserir no response
+    #     response.append(data)
 
-    return response
+    # return response
+    return None

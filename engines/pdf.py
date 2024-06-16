@@ -1,5 +1,4 @@
 from jinja2 import Environment, FileSystemLoader
-from fastapi.responses import Response
 from weasyprint import HTML
 
 
@@ -25,17 +24,9 @@ class GeneratePDF:
         template = env.get_template(template_name)
         return template.render(context)
 
-    def get_response(self) -> Response:
+    def generate_pdf(self) -> bytes:
         """
         Pega a resposta com o documento.
         """
 
-        pdf = HTML(string=self.html_string).write_pdf(presentational_hints=True)
-
-        response = Response(
-            content=pdf,
-            media_type='application/pdf',
-            headers={"Content-Disposition": f"inline; filename={self.filename}.pdf"}
-        )
-
-        return response
+        return HTML(string=self.html_string).write_pdf(presentational_hints=True)
