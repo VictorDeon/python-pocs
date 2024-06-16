@@ -1,39 +1,24 @@
 from google.pubsub_v1 import SubscriberAsyncClient, PublisherAsyncClient, PubsubMessage, PublishRequest, AcknowledgeRequest
 from google.api_core.retry_async import AsyncRetry
 from google.api_core.exceptions import AlreadyExists
+from engines.pubsub.interfaces import PubsubSingletonInterface
 from typing import List, Any
 import json
 
 
-class PubsubSingleton:
+class GCPPubsubSingleton(PubsubSingletonInterface):
     """
     Singleton para mapeamento de filas do pubsub
     """
 
-    __instance = None
-
-    def __init__(self):
+    async def create_pubsub(self):
         """
-        Construtor do cliente.
+        Cria as instâncias do pubsub a partir do cloud escolhido.
         """
-
-        if self.__instance is not None:
-            raise RuntimeError("A instância do pubsub já existe! Utilize a função get_instance()")
 
         self.publisher = PublisherAsyncClient()
         self.subscriber = SubscriberAsyncClient()
         self.retry = AsyncRetry()
-
-    @classmethod
-    def get_instance(cls):
-        """
-        Pega a instância de cache.
-        """
-
-        if cls.__instance is None:
-            cls.__instance = PubsubSingleton()
-
-        return cls.__instance
 
     async def create_topic(self, project_id: str, topic_id: str) -> str:
         """

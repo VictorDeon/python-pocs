@@ -1,6 +1,6 @@
 from google.api_core.exceptions import GoogleAPIError
 from asyncio import Queue, Event
-from engines import PubsubSingleton
+from engines.pubsub.repositories import GCPPubsubSingleton
 import time
 import random
 import asyncio
@@ -38,7 +38,7 @@ def write_health_check():
         file.write(str(time.time()))
 
 
-async def get_messages_from_pubsub_and_put_in_queue(message_queue: Queue, pubsub: PubsubSingleton):
+async def get_messages_from_pubsub_and_put_in_queue(message_queue: Queue, pubsub: GCPPubsubSingleton):
     """
     Pega as mensagens do pubsub da google e envia para a fila do python.
     """
@@ -79,7 +79,7 @@ async def subscribe_worker(message_queue: Queue, stop_event: Event):
     Inicia o consumidor da fila de avaliação.
     """
 
-    pubsub = PubsubSingleton.get_instance()
+    pubsub = GCPPubsubSingleton.get_instance()
 
     while True:
         logging.debug("SUBSCRIBER WORKER: Checando o evento de parada.")
@@ -95,7 +95,7 @@ async def subscribe_worker(message_queue: Queue, stop_event: Event):
         await asyncio.sleep(1)
 
 
-async def process_message(message, pubsub: PubsubSingleton):
+async def process_message(message, pubsub: GCPPubsubSingleton):
     """
     Processa a mensagem
     """
@@ -124,7 +124,7 @@ async def process_message_worker(queue: Queue, stop_event: Event):
     Dispara o worker que vai processar as mensagens
     """
 
-    pubsub = PubsubSingleton.get_instance()
+    pubsub = GCPPubsubSingleton.get_instance()
 
     while True:
         logging.debug("PROCESS MESSAGE WORKER: Checando o evento de parada.")
@@ -161,7 +161,7 @@ async def main() -> None:
     """
 
     stop_event: Event = Event()
-    pubsub = PubsubSingleton.get_instance()
+    pubsub = GCPPubsubSingleton.get_instance()
     message_queue = Queue(maxsize=MAX_MESSAGES + 1)
     all_tasks = []
 
