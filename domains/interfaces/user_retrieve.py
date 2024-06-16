@@ -8,4 +8,4 @@ class UserRetrieveInterface(ABC):
     """
 
     @abstractmethod
-    def find(self, _id: int) -> dict: pass
+    async def find(self, _id: int) -> dict: pass

@@ -14,11 +14,11 @@ class UserRetrieve(UserRetrieveInterface):
 
         self.__users_repository = users_repository
 
-    def find(self, _id: int) -> dict:
+    async def find(self, _id: int) -> dict:
         """
         Encontra o usuário pelo email.
         """
 
-        user = self.__users_repository.retrieve(_id)
+        user = await self.__users_repository.retrieve(_id)
 
         return user.model_dump()

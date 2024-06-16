@@ -11,7 +11,7 @@ class UserRepository(UserRepositoryInterface):
     Repositorio de manipulação da entidade user
     """
 
-    def create(self, email: str, name: str, password: str) -> User:
+    async def create(self, email: str, name: str, password: str) -> User:
         """
         Cria o usuário passando como argumento os dados do mesmo.
         """
@@ -36,7 +36,7 @@ class UserRepository(UserRepositoryInterface):
 
         return user
 
-    def retrieve(self, _id: int) -> User:
+    async def retrieve(self, _id: int) -> User:
         """
         Pesquisa o usuário pelo email.
         """
@@ -55,7 +55,7 @@ class UserRepository(UserRepositoryInterface):
 
         return user
 
-    def list(self, email: int = None) -> List[User]:
+    async def list(self, email: int = None) -> List[User]:
         """
         Pesquisa o usuário pelo email.
         """

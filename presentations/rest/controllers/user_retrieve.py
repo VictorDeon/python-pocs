@@ -15,7 +15,7 @@ class UserRetrieveController(ControllerInterface):
 
         self.__user_case = user_case
 
-    def send(self, user_id: int) -> Response:
+    async def send(self, user_id: int) -> Response:
         """
         Lida com a entrada e saida dos dados.
         """
@@ -23,7 +23,7 @@ class UserRetrieveController(ControllerInterface):
         if not user_id:
             raise ValueError("O user id é obrigatório.")
 
-        response = self.__user_case.find(user_id)
+        response = await self.__user_case.find(user_id)
 
         return Response(
             content=response,

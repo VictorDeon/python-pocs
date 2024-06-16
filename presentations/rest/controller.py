@@ -11,7 +11,7 @@ class ControllerInterface(ABC):
     """
 
     @abstractmethod
-    def send(self, *args, **kwargs) -> Response:
+    async def send(self, *args, **kwargs) -> Response:
         """
         Lida com a entrada e da uma saida.
         """

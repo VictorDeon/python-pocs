@@ -47,5 +47,5 @@ async def retrieve_user(user_id: int):
     repository = UserRepository()
     user_case = UserRetrieve(users_repository=repository)
     controller = UserRetrieveController(user_case=user_case)
-    response = controller.send(user_id)
+    response = await controller.send(user_id)
     return response

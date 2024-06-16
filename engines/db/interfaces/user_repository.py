@@ -10,10 +10,10 @@ class UserRepositoryInterface(ABC):
     """
 
     @abstractmethod
-    def create(self, email: str, name: str, password: str) -> User: pass
+    async def create(self, email: str, name: str, password: str) -> User: pass
 
     @abstractmethod
-    def retrieve(self, _id: int) -> User: pass
+    async def retrieve(self, _id: int) -> User: pass
 
     @abstractmethod
-    def list(self, email: str = None) -> List[User]: pass
+    async def list(self, email: str = None) -> List[User]: pass
