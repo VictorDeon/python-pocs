@@ -1,8 +1,11 @@
 # pylint: disable=unused-argument
 from pydantic import BaseModel, Field
 from fastapi import status, Request
-from main.rest.adapters import fastapi_adapter
-from main.rest.composers import user_retriever_compose
+from main.input_mediator import InputAdapterMediator
+from main.adapters import ApiAdapter
+from engines.db.repositories import UserRepository
+from domains.user_cases import UserRetrieve
+from presentations.rest.controllers import UserRetrieveController
 from . import router
 
 
@@ -43,5 +46,14 @@ async def retrieve_user(request: Request, user_id: int):
     Endpoint que retorna os dados de um usuário.
     """
 
-    response = await fastapi_adapter(request, user_retriever_compose())
+    mediator = InputAdapterMediator()
+    adapter = ApiAdapter(mediator)
+
+    repository = UserRepository()
+    user_case = UserRetrieve(users_repository=repository)
+    controller = UserRetrieveController(user_case=user_case)
+
+    mediator.add(controller)
+    response = adapter.send(request)
+
     return response

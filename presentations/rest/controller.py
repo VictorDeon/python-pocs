@@ -1,6 +1,6 @@
 # pylint: disable=missing-function-docstring
 from abc import ABC, abstractmethod
-from presentations.rest.scheme import HttpResponse, HttpRequest
+from fastapi import Request, Response
 
 
 class ControllerInterface(ABC):
@@ -10,4 +10,4 @@ class ControllerInterface(ABC):
     """
 
     @abstractmethod
-    def handle(self, http_request: HttpRequest) -> HttpResponse: pass
+    def receive(self, request: Request) -> Response: pass

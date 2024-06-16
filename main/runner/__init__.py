@@ -1,3 +1,3 @@
-from .fastapi_runner import app
+from .api_runner import app
 
 __all__ = ["app"]
