@@ -3,7 +3,7 @@ from datetime import datetime
 from asyncer import asyncify
 from src.infrastructure.pdf import GeneratePDF
 from src.infrastructure.storage import StorageSingletonInterface
-from domains.interfaces import PDFGeneratorInterface
+from src.domains.interfaces import PDFGeneratorInterface
 from src.domains.entities import Invoice
 
 

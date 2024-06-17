@@ -1,5 +1,5 @@
-from domains.interfaces import UserRetrieveInterface
-from engines.db.interfaces import UserRepositoryInterface
+from src.domains.interfaces import UserRetrieveInterface
+from src.infrastructure.databases.interfaces import UserDAOInterface
 
 
 class UserRetrieve(UserRetrieveInterface):
@@ -7,7 +7,7 @@ class UserRetrieve(UserRetrieveInterface):
     Caso de uso de procura de um usuários.
     """
 
-    def __init__(self, users_repository: UserRepositoryInterface) -> None:
+    def __init__(self, users_repository: UserDAOInterface) -> None:
         """
         Construtor.
         """

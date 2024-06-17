@@ -44,11 +44,11 @@ path := .
 
 flake8:
 	# Roda a folha de estilo
-	docker compose exec api flake8 . --count
+	docker compose exec api flake8 src --count
 
 coverage:
 	# Roda os testes no container
-	docker compose exec api coverage run --source='.' -m pytest -s -vv --maxfail=1 -p no:warnings tests/${path}
+	docker compose exec api coverage run --source='src' -m pytest -s -vv --maxfail=1 -p no:warnings ${path}
 
 report:
 	# Relatório da cobertura de testes

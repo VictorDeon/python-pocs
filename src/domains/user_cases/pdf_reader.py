@@ -1,6 +1,6 @@
-from engines.storage.interfaces import StorageSingletonInterface
-from domains.interfaces import PDFReaderInterface
-from domains.models import InvoiceFileResponse
+from src.infrastructure.storage import StorageSingletonInterface
+from src.domains.interfaces import PDFReaderInterface
+from src.domains.entities import InvoiceFileResponse
 
 
 class PDFReader(PDFReaderInterface):
