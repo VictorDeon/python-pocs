@@ -3,8 +3,8 @@ from ..presenters import FindPokemonPresenter
 from ..dtos import FindPokemonInputDto
 from src.infrastructure.caches.repositories import RedisCache
 from src.infrastructure.clients.repositories import HTTPxClient
+from src.infrastructure.requests.repositories import PokemonPokeAPIRepository
 from src.domains.user_cases import FindPokemonUseCase
-from src.infrastructure.databases.repositories import PokemonPokeAPIRepository
 
 
 class FindPokemonController(ControllerInterface):

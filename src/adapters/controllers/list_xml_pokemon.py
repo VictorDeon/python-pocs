@@ -3,7 +3,7 @@ from ..presenters import ListXMLPokemonsPresenter
 from ..dtos import ListPokemonsInputDto
 from src.infrastructure.caches.repositories import RedisCache
 from src.infrastructure.clients.repositories import HTTPxClient
-from src.infrastructure.databases.repositories import PokemonPokeAPIRepository
+from src.infrastructure.requests.repositories import PokemonPokeAPIRepository
 from src.domains.user_cases import ListPokemonsUseCase
 
 

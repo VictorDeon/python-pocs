@@ -1,6 +1,6 @@
 from src.adapters.dtos import FindPokemonInputDto, FindPokemonOutputDto
 from src.adapters.interfaces import PresenterInterface
-from src.infrastructure.databases.interfaces import PokemonRepositoryInterface
+from src.infrastructure.requests.interfaces import PokemonRepositoryInterface
 
 
 class FindPokemonUseCase:
