@@ -1,11 +1,10 @@
 import asyncio
-import json
 import os
 from typing import List
 from src.infrastructure.constants import POKEAPI_URL
 from src.domains.entities.pokemon import Pokemon
-from src.infrastructure.caches.cache_interface import CacheSingletonInterface
-from src.infrastructure.clients.client_interface import HttpClientSingletonInterface
+from src.infrastructure.caches.cache_interface import CacheInterface
+from src.infrastructure.clients.client_interface import HttpClientInterface
 from src.infrastructure.requests.interfaces import PokemonRepositoryInterface
 
 
@@ -14,7 +13,7 @@ class PokemonPokeAPIRepository(PokemonRepositoryInterface):
     Repositorio que faz a lógica de consulta de pesquisa do pokemon.
     """
 
-    def __init__(self, client: HttpClientSingletonInterface, cache: CacheSingletonInterface) -> None:
+    def __init__(self, client: HttpClientInterface, cache: CacheInterface) -> None:
         """
         Construtor.
         """
@@ -35,11 +34,9 @@ class PokemonPokeAPIRepository(PokemonRepositoryInterface):
                 break
 
             print(f"Buscando dados do pokemon: {pokemon['name']}")
-            cached = await self.cache_client.get(pokemon['url'])
+            response = await self.cache_client.get(pokemon['url'])
 
-            if cached:
-                response = json.loads(cached)
-            else:
+            if not response:
                 response = await self.http_client.get(pokemon['url'])
                 await self.cache_client.set(pokemon['url'], response, exp=3600)
 

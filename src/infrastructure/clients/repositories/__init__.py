@@ -1,5 +1,5 @@
-from .httpx_client import HTTPxClientSingleton
+from .httpx_client import HTTPxClient
 
 __all__ = [
-    HTTPxClientSingleton
+    HTTPxClient
 ]

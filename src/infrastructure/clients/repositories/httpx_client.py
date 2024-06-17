@@ -1,20 +1,21 @@
 import httpx
 import logging
 import json
-from ..client_interface import HttpClientSingletonInterface
+from ..client_interface import HttpClientInterface
 
 
-class HTTPxClientSingleton(HttpClientSingletonInterface):
+class HTTPxClient(HttpClientInterface):
     """
     Client HTTP.
     """
 
-    def start_connection(self) -> None:
+    async def __aenter__(self) -> None:
         """
         Iniciando o poll de conexões.
         """
 
         self.client = httpx.AsyncClient()
+        return self
 
     async def get(self, url: str, params: dict = None, headers: dict = None, timeout: int = 600) -> dict:
         """
@@ -106,7 +107,7 @@ class HTTPxClientSingleton(HttpClientSingletonInterface):
 
         return result
 
-    async def close_connection(self):
+    async def __aexit__(self, exc_type, exc_val, exc_tb):
         """
         Fecha a conexão.
         """

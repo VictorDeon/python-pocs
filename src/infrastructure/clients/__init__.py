@@ -1,5 +1,5 @@
-from .client_interface import HttpClientSingletonInterface
+from .client_interface import HttpClientInterface
 
 __all__ = [
-    HttpClientSingletonInterface
+    HttpClientInterface
 ]

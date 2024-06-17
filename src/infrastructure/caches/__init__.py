@@ -1,5 +1,5 @@
-from .cache_interface import CacheSingletonInterface
+from .cache_interface import CacheInterface
 
 __all__ = [
-    CacheSingletonInterface
+    CacheInterface
 ]

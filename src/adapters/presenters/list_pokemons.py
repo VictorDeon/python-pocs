@@ -18,8 +18,8 @@ class ListPokemonsPresenter(PresenterInterface):
                 {
                     'id': pokemon.id,
                     'name': pokemon.name,
-                    'sprites': pokemon.sprites,
-                    'types': pokemon.types,
+                    'sprite': pokemon.sprites['front_default'],
+                    'types': ", ".join([_type['type']['name'] for _type in pokemon.types]),
                 } for pokemon in sorted_pokemons
             ]
         }

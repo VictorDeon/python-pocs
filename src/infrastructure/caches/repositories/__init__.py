@@ -1,5 +1,5 @@
-from .redis_cache import RedisCacheSingleton
+from .redis_cache import RedisCache
 
 __all__ = [
-    RedisCacheSingleton
+    RedisCache
 ]

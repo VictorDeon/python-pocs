@@ -4,16 +4,16 @@ import logging
 from redis.asyncio import Redis
 from redis.exceptions import ConnectionError
 from src.domains.utils.formatters import JsonFormatter
-from src.infrastructure.caches.cache_interface import CacheSingletonInterface
+from src.infrastructure.caches.cache_interface import CacheInterface
 from typing import Any, Union
 
 
-class RedisCacheSingleton(CacheSingletonInterface):
+class RedisCache(CacheInterface):
     """
     Modulo de cache do redis.
     """
 
-    def start_connection(self) -> None:
+    async def __aenter__(self) -> None:
         """
         Cria a instância de cache.
         """
@@ -23,6 +23,8 @@ class RedisCacheSingleton(CacheSingletonInterface):
             port=os.environ.get("CACHE_PORT"),
             decode_responses=True
         )
+
+        return self
 
     async def set(self, key: str, value: Any, exp: int = 86400) -> bool:
         """
@@ -77,7 +79,7 @@ class RedisCacheSingleton(CacheSingletonInterface):
 
         await self.cache.delete(*await self.cache.keys())
 
-    async def close_connection(self) -> None:
+    async def __aexit__(self, exc_type, exc_val, exc_tb) -> None:
         """
         Fecha a conexão com o cache.
         """
