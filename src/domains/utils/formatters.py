@@ -8,7 +8,7 @@ class JsonFormatter(json.JSONEncoder):
     Transforma alguns dados do python em json.
     """
 
-    def default(self, obj: json.Any) -> json.Any:
+    def default(self, obj: json) -> json:
         """
         Valor padrão de formatação
         """

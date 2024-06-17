@@ -13,7 +13,7 @@ class RedisCacheSingleton(CacheSingletonInterface):
     Modulo de cache do redis.
     """
 
-    def create_instance(self) -> None:
+    def start_connection(self) -> None:
         """
         Cria a instância de cache.
         """
@@ -35,8 +35,6 @@ class RedisCacheSingleton(CacheSingletonInterface):
         except ConnectionError as error:
             logging.error(f"Conexão com o redis falhou: {error}")
             success = False
-        finally:
-            await self.close()
 
         return success
 
@@ -51,8 +49,6 @@ class RedisCacheSingleton(CacheSingletonInterface):
         except ConnectionError as error:
             logging.error(f"Conexão com o redis falhou: {error}")
             success = False
-        finally:
-            await self.close()
 
         return success
 
@@ -69,8 +65,6 @@ class RedisCacheSingleton(CacheSingletonInterface):
                 logging.error(f"Conexão com o redis falhou: {error}")
             except json.JSONDecodeError as error:
                 logging.error(f"Ocorreu um error ao puxar os dados do cache: {error}")
-            finally:
-                await self.close()
 
         return result
 
@@ -81,7 +75,7 @@ class RedisCacheSingleton(CacheSingletonInterface):
 
         await self.cache.delete(*await self.cache.keys())
 
-    async def close(self) -> None:
+    async def close_connection(self) -> None:
         """
         Fecha a conexão com o cache.
         """

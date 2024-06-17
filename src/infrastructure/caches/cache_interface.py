@@ -25,12 +25,12 @@ class CacheSingletonInterface(ABC):
 
         if cls.__instance is None:
             cls.__instance = cls()
-            cls.__instance.create_instance()
+            cls.__instance.start_connection()
 
         return cls.__instance
 
     @abstractmethod
-    def create_instance(self) -> None:
+    def start_connection(self) -> None:
         """
         Cria a instância de cache.
         """
@@ -70,7 +70,7 @@ class CacheSingletonInterface(ABC):
         pass
 
     @abstractmethod
-    async def close(self) -> None:
+    async def close_connection(self) -> None:
         """
         Fecha a conexão com o cache.
         """

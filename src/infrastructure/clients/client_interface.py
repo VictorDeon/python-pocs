@@ -1,5 +1,4 @@
 from abc import ABC, abstractmethod
-import httpx
 
 
 class HttpClientSingletonInterface(ABC):
@@ -14,8 +13,6 @@ class HttpClientSingletonInterface(ABC):
         if self.__instance is not None:
             raise RuntimeError("A instância do http client já existe. Utilize o método get_instance().")
 
-        self.client = httpx.AsyncClient()
-
     @classmethod
     def get_instance(cls):
         """
@@ -24,8 +21,17 @@ class HttpClientSingletonInterface(ABC):
 
         if cls.__instance is None:
             cls.__instance = cls()
+            cls.__instance.start_connection()
 
         return cls.__instance
+
+    @abstractmethod
+    def start_connection(self) -> None:
+        """
+        Iniciando o poll de conexões.
+        """
+
+        pass
 
     @abstractmethod
     async def get(self, url: str, params: dict = None, headers: dict = None, timeout: int = 600) -> dict:
@@ -33,11 +39,15 @@ class HttpClientSingletonInterface(ABC):
         Realiza requisição do tipo GET.
         """
 
+        pass
+
     @abstractmethod
     async def post(self, url: str, data: dict, params: dict = None, headers: dict = None, timeout: int = 600) -> dict:
         """
         Realiza requisição do tipo POST.
         """
+
+        pass
 
     @abstractmethod
     async def put(self, url: str, data: dict, params: dict = None, headers: dict = None, timeout: int = 600) -> dict:
@@ -45,14 +55,28 @@ class HttpClientSingletonInterface(ABC):
         Realiza requisição do tipo PUT.
         """
 
+        pass
+
     @abstractmethod
     async def patch(self, url: str, data: dict, params: dict = None, headers: dict = None, timeout: int = 600) -> dict:
         """
         Realiza requisição do tipo PATCH.
         """
 
+        pass
+
     @abstractmethod
     async def delete(self, url: str, params: dict = None, headers: dict = None, timeout: int = 600) -> dict:
         """
         Realiza requisição do tipo DELETE.
         """
+
+        pass
+
+    @abstractmethod
+    async def close_connection(self) -> None:
+        """
+        Fecha a conexão.
+        """
+
+        pass

@@ -24,9 +24,20 @@ class FindPokemonController(ControllerInterface):
         Executa os comandos para gerar o resultado.
         """
 
+        results = None
         client = HTTPxClientSingleton.get_instance()
         cache = RedisCacheSingleton.get_instance()
         repository = PokemonPokeAPIRepository(client, cache)
         output = FindPokemonPresenter()
         use_case = FindPokemonUseCase(output, repository)
-        return await use_case.execute(self.input)
+
+        try:
+            results = await use_case.execute(self.input)
+        except Exception as error:
+            # Instrumentalizar
+            raise error
+        finally:
+            await client.close_connection()
+            await cache.close_connection()
+
+        return results

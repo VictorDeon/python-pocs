@@ -9,6 +9,13 @@ class HTTPxClientSingleton(HttpClientSingletonInterface):
     Client HTTP.
     """
 
+    def start_connection(self) -> None:
+        """
+        Iniciando o poll de conexões.
+        """
+
+        self.client = httpx.AsyncClient()
+
     async def get(self, url: str, params: dict = None, headers: dict = None, timeout: int = 600) -> dict:
         """
         Realiza requisição do tipo GET.
@@ -20,12 +27,10 @@ class HTTPxClientSingleton(HttpClientSingletonInterface):
             result = response.json()
         except (httpx.HTTPStatusError, httpx.RequestError) as error:
             logging.error(f"Ocorreu um error na requisição a GET url {url}: {error}")
-            raise error
+            result = None
         except json.JSONDecodeError as error:
             logging.error(f"Ocorreu um error ao decodificar o json no GET da url {url}: {error}")
             result = None
-        finally:
-            await self.client.aclose()
 
         return result
 
@@ -40,12 +45,10 @@ class HTTPxClientSingleton(HttpClientSingletonInterface):
             result = response.json()
         except (httpx.HTTPStatusError, httpx.RequestError) as error:
             logging.error(f"Ocorreu um error na requisição a POST url {url}: {error}")
-            raise error
+            result = None
         except json.JSONDecodeError as error:
             logging.error(f"Ocorreu um error ao decodificar o json no POST da url {url}: {error}")
             result = None
-        finally:
-            await self.client.aclose()
 
         return result
 
@@ -60,12 +63,10 @@ class HTTPxClientSingleton(HttpClientSingletonInterface):
             result = response.json()
         except (httpx.HTTPStatusError, httpx.RequestError) as error:
             logging.error(f"Ocorreu um error na requisição a PUT url {url}: {error}")
-            raise error
+            result = None
         except json.JSONDecodeError as error:
             logging.error(f"Ocorreu um error ao decodificar o json no PUT da url {url}: {error}")
             result = None
-        finally:
-            await self.client.aclose()
 
         return result
 
@@ -80,12 +81,10 @@ class HTTPxClientSingleton(HttpClientSingletonInterface):
             result = response.json()
         except (httpx.HTTPStatusError, httpx.RequestError) as error:
             logging.error(f"Ocorreu um error na requisição a PATCH url {url}: {error}")
-            raise error
+            result = None
         except json.JSONDecodeError as error:
             logging.error(f"Ocorreu um error ao decodificar o json no PATCH da url {url}: {error}")
             result = None
-        finally:
-            await self.client.aclose()
 
         return result
 
@@ -100,11 +99,16 @@ class HTTPxClientSingleton(HttpClientSingletonInterface):
             result = response.json()
         except (httpx.HTTPStatusError, httpx.RequestError) as error:
             logging.error(f"Ocorreu um error na requisição a DELETE url {url}: {error}")
-            raise error
+            result = None
         except json.JSONDecodeError as error:
             logging.error(f"Ocorreu um error ao decodificar o json no DELETE da url {url}: {error}")
             result = None
-        finally:
-            await self.client.aclose()
 
         return result
+
+    async def close_connection(self):
+        """
+        Fecha a conexão.
+        """
+
+        await self.client.aclose()
