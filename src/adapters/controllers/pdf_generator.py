@@ -1,7 +1,7 @@
 from fastapi import Response, status
 from src.adapters.interfaces import ControllerInterface
 from src.domains.entities import Invoice
-from domains.interfaces import PDFGeneratorInterface
+from src.domains.interfaces import PDFGeneratorInterface
 
 
 class PDFGeneratorController(ControllerInterface):

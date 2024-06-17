@@ -1,6 +1,6 @@
 # pylint: disable=missing-function-docstring
 from abc import ABC, abstractmethod
-from domains.models import Invoice
+from src.domains.entities import Invoice
 
 
 class PDFGeneratorInterface(ABC):

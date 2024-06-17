@@ -9,6 +9,7 @@ Jinja2==3.1.4
 SQLAlchemy==2.0.30
 aioredis==2.0.1
 redis==5.0.5
+httpx==0.26.0
 # Development dependecies
 ipython==8.25.0
 flake8==7.0.0

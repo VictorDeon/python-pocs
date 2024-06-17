@@ -1,7 +1,7 @@
 # pylint: disable=unused-argument
 from fastapi import status
-from engines.db.repositories import UserRepository
-from domains.user_cases import UserRetrieve
+from src.infrastructure.databases.daos import UserDAO
+from src.domains.user_cases import UserRetrieve
 from src.domains.entities import User
 from src.adapters.controllers import UserRetrieveController
 from . import router
@@ -21,7 +21,7 @@ async def retrieve_user(user_id: int):
     Endpoint que retorna os dados de um usuário.
     """
 
-    repository = UserRepository()
+    repository = UserDAO()
     user_case = UserRetrieve(users_repository=repository)
     controller = UserRetrieveController(user_case=user_case)
     response = await controller.send(user_id)

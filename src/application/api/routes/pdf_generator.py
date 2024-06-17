@@ -1,6 +1,6 @@
 from src.domains.entities import Invoice
 from src.infrastructure.storage.repositories import LocalStorageSingleton
-from domains.user_cases import PDFGenerator
+from src.domains.user_cases import PDFGenerator
 from src.adapters.controllers import PDFGeneratorController
 from . import router
 

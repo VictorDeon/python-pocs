@@ -1,8 +1,8 @@
 from typing import Optional, List
 from fastapi import Query
-from domains.models import InvoiceFileResponse
-from engines.storage.repositories import LocalStorageSingleton
-from domains.user_cases import PDFReader
+from src.domains.entities import InvoiceFileResponse
+from src.infrastructure.storage.repositories import LocalStorageSingleton
+from src.domains.user_cases import PDFReader
 from src.adapters.controllers import PDFReaderController
 from . import router
 

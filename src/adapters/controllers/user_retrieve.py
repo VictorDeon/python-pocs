@@ -1,6 +1,6 @@
 from fastapi import Response
 from src.adapters.interfaces import ControllerInterface
-from domains.interfaces import UserRetrieveInterface
+from src.domains.interfaces import UserRetrieveInterface
 
 
 class UserRetrieveController(ControllerInterface):
