@@ -1,25 +1,27 @@
 from uuid import uuid4
 from datetime import datetime
 from asyncer import asyncify
+from src.adapters.interfaces import PresenterInterface
+from src.adapters.dtos import PDFGeneratorInputDTO, PDFGeneratorOutputDTO
+from src.domains.interfaces import UserCaseInterface
 from src.infrastructure.pdf import GeneratePDF
 from src.infrastructure.storage import StorageSingletonInterface
-from src.domains.interfaces import PDFGeneratorInterface
-from src.domains.entities import Invoice
 
 
-class PDFGenerator(PDFGeneratorInterface):
+class PDFGenerator(UserCaseInterface):
     """
     Caso de uso de procura de um usuários.
     """
 
-    def __init__(self, storage_repository: StorageSingletonInterface) -> None:
+    def __init__(self, presenter: PresenterInterface, repository: StorageSingletonInterface):
         """
-        Construtor.
+        Constructor.
         """
 
-        self.storage_repository = storage_repository
+        self.presenter = presenter
+        self.repository = repository
 
-    async def create_invoice(self, data: Invoice) -> bytes:
+    async def execute(self, input_dto: PDFGeneratorInputDTO) -> bytes:
         """
         Endpoint que gera um pdf a partir dos dados inseridos como parâmetro.
         """
@@ -35,23 +37,24 @@ class PDFGenerator(PDFGeneratorInterface):
             template="invoice.html",
             context={
                 "now": now.strftime("%B %d, %Y"),
-                "invoice_number": data.invoice_number,
-                "from_address": data.from_address,
-                "to_address": data.to_address,
-                "products": data.products,
-                "due_date": datetime.strptime(data.due_date, "%Y-%m-%d").strftime("%B %d, %Y"),
-                "account": data.account,
-                "total": sum([product.price * product.quantity for product in data.products])
+                "invoice_number": input_dto.invoice_number,
+                "from_address": input_dto.from_address,
+                "to_address": input_dto.to_address,
+                "products": input_dto.products,
+                "due_date": datetime.strptime(input_dto.due_date, "%Y-%m-%d").strftime("%B %d, %Y"),
+                "account": input_dto.account,
+                "total": sum([product.price * product.quantity for product in input_dto.products])
             },
             filename=path
         )
         pdf = await asyncify(builder.generate_pdf)()
 
-        await self.storage_repository.upload_from_string(
+        await self.repository.upload_from_string(
             path=path,
             content=pdf,
             content_type="application/pdf",
             timeout=600
         )
 
-        return pdf
+        output_dto = PDFGeneratorOutputDTO(filename=path)
+        return self.presenter.present(output_dto)

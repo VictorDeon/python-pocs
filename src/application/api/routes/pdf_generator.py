@@ -1,6 +1,4 @@
-from src.domains.entities import Invoice
-from src.infrastructure.storage.repositories import LocalStorageSingleton
-from src.domains.user_cases import PDFGenerator
+from src.adapters.dtos import PDFGeneratorInputDTO, PDFGeneratorOutputDTO
 from src.adapters.controllers import PDFGeneratorController
 from . import router
 
@@ -8,15 +6,13 @@ from . import router
 @router.post(
     "/invoices",
     tags=["PDFs"],
+    response_model=PDFGeneratorOutputDTO,
     name="Geração de Invoice"
 )
-async def create_invoice(data: Invoice):
+async def create_invoice(data: PDFGeneratorInputDTO):
     """
     Endpoint que gera um pdf a partir dos dados inseridos como parâmetro.
     """
 
-    storage = await LocalStorageSingleton.get_instance()
-    pdf_generator = PDFGenerator(storage_repository=storage)
-    controller = PDFGeneratorController(user_case=pdf_generator)
-    await controller.send(data)
-    return {"success": True}
+    controller = PDFGeneratorController(invoice=data)
+    return await controller.execute()
