@@ -2,6 +2,7 @@
 from .find_pokemon import FindPokemonInputDTO, FindPokemonOutputDTO
 from .list_pokemons import ListPokemonsInputDTO, ListPokemonsOutputDTO
 from .pdf_generator import PDFGeneratorInputDTO, PDFGeneratorOutputDTO
+from .pdf_reader import PDFReaderInputDTO, PDFReaderOutputDTO
 
 __all__ = [
     FindPokemonInputDTO,
@@ -9,5 +10,7 @@ __all__ = [
     ListPokemonsInputDTO,
     ListPokemonsOutputDTO,
     PDFGeneratorInputDTO,
-    PDFGeneratorOutputDTO
+    PDFGeneratorOutputDTO,
+    PDFReaderInputDTO,
+    PDFReaderOutputDTO
 ]

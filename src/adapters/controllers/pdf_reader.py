@@ -1,7 +1,8 @@
-from fastapi import Response
 from src.adapters.interfaces import ControllerInterface
-from src.domains.interfaces import PDFReaderInterface
-import json
+from src.adapters.dtos import PDFReaderInputDTO
+from src.infrastructure.storage.repositories import LocalStorageSingleton
+from src.adapters.presenters import PDFReaderPresenter
+from src.domains.user_cases import PDFReader
 
 
 class PDFReaderController(ControllerInterface):
@@ -9,22 +10,19 @@ class PDFReaderController(ControllerInterface):
     Controladora de acesso externo para buscar os dados de uma API.
     """
 
-    def __init__(self, user_case: PDFReaderInterface) -> None:
+    def __init__(self, trace_id: str, year: int, month: int) -> None:
         """
         Construtor
         """
 
-        self.__user_case = user_case
+        self.input_dto = PDFReaderInputDTO(trace_id=trace_id, year=year, month=month)
 
-    async def execute(self, trace_id: str, year: int, month: int) -> Response:
+    async def execute(self) -> dict:
         """
         Lida com a entrada e saida dos dados.
         """
 
-        data = await self.__user_case.list_invoices(trace_id, year, month)
-
-        return Response(
-            content=json.dumps(data),
-            media_type='application/json',
-            status_code=200
-        )
+        repository = await LocalStorageSingleton.get_instance()
+        output = PDFReaderPresenter()
+        use_case = PDFReader(output, repository)
+        return await use_case.execute(self.input_dto)

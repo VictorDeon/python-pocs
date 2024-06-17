@@ -1,52 +1,56 @@
 from src.infrastructure.storage import StorageSingletonInterface
-from src.domains.interfaces import PDFReaderInterface
-from src.domains.entities import InvoiceFileResponse
+from src.domains.interfaces import UserCaseInterface
+from src.adapters.interfaces import PresenterInterface
+from src.adapters.dtos import PDFReaderOutputDTO, PDFReaderInputDTO
 
 
-class PDFReader(PDFReaderInterface):
+class PDFReader(UserCaseInterface):
     """
     Caso de uso de procura de um usuários.
     """
 
-    def __init__(self, storage_repository: StorageSingletonInterface) -> None:
+    def __init__(self, presenter: PresenterInterface, repository: StorageSingletonInterface):
         """
-        Construtor.
+        Constructor.
         """
 
-        self.storage_repository = storage_repository
+        self.presenter = presenter
+        self.repository = repository
 
-    def handler_path(self, trace_id: str = None, year: int = None, month: int = None) -> str:
+    def handler_path(self, input_dto: PDFReaderInputDTO) -> str:
         """
         Cria o caminho de filtro do bucket.
         """
 
-        if trace_id and year and month:
-            path = "pdfs/invoices/%d_%02d-invoice-%s.pdf" % (year, month, trace_id)
-        elif trace_id and year:
-            path = "pdfs/invoices/%d_*-invoice-%s.pdf" % (year, trace_id)
-        elif trace_id and month:
-            path = "pdfs/invoices/*_%02d-invoice-%s.pdf" % (month, trace_id)
-        elif year and month:
-            path = "pdfs/invoices/%d_%02d-*.pdf" % (year, month)
-        elif trace_id:
-            path = "pdfs/invoices/*-invoice-%s.pdf" % trace_id
-        elif year:
-            path = "pdfs/invoices/%d_*.pdf" % year
-        elif month:
-            path = "pdfs/invoices/*_%02d-*.pdf" % month
+        if input_dto.trace_id and input_dto.year and input_dto.month:
+            path = "assets/docs/%d_%02d-invoice-%s.pdf" % (input_dto.year, input_dto.month, input_dto.trace_id)
+        elif input_dto.trace_id and input_dto.year:
+            path = "assets/docs/%d_*-invoice-%s.pdf" % (input_dto.year, input_dto.trace_id)
+        elif input_dto.trace_id and input_dto.month:
+            path = "assets/docs/*_%02d-invoice-%s.pdf" % (input_dto.month, input_dto.trace_id)
+        elif input_dto.year and input_dto.month:
+            path = "assets/docs/%d_%02d-*.pdf" % (input_dto.year, input_dto.month)
+        elif input_dto.trace_id:
+            path = "assets/docs/*-invoice-%s.pdf" % input_dto.trace_id
+        elif input_dto.year:
+            path = "assets/docs/%d_*.pdf" % input_dto.year
+        elif input_dto.month:
+            path = "assets/docs/*_%02d-*.pdf" % input_dto.month
         else:
-            path = "pdfs/invoices/*.pdf"
+            path = "assets/docs/*.pdf"
 
         return path
 
-    async def list_invoices(self, trace_id: str, year: int, month: int) -> InvoiceFileResponse:
+    async def execute(self, input_dto: PDFReaderInputDTO) -> list[dict]:
         """
         Le um pdf e retorna a lista de dados.
         TODO: Fazer a lógica para extrair os dados do PDF
+        TODO: Fazer a lógica para consultar os arquivos locais.
         """
 
-        path = self.handler_path(trace_id, year, month)
-        blobs = list(await self.storage_repository.list_blobs(path=path))
+        path = self.handler_path(input_dto)
+        # Fazer a consulta dos arquivos locais
+        blobs = list(await self.repository.list_blobs(path=path))
         response = []
         for blob in blobs:
             blob_path_splited = blob.name.split("/")
@@ -55,4 +59,5 @@ class PDFReader(PDFReaderInterface):
             # Extrair dados do pdf e inserir no response
             response.append(data)
 
-        return response
+        output_dto = PDFReaderOutputDTO(filename=path, invoices=response)
+        return self.presenter.present(output_dto)

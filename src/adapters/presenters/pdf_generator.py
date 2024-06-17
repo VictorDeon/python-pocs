@@ -1,4 +1,3 @@
-import math
 from ..dtos import PDFGeneratorOutputDTO
 from ..interfaces import PresenterInterface
 

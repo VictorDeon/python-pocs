@@ -1,8 +1,6 @@
 from typing import Optional, List
 from fastapi import Query
-from src.domains.entities import InvoiceFileResponse
-from src.infrastructure.storage.repositories import LocalStorageSingleton
-from src.domains.user_cases import PDFReader
+from src.adapters.dtos import PDFReaderOutputDTO
 from src.adapters.controllers import PDFReaderController
 from . import router
 
@@ -11,7 +9,7 @@ from . import router
     "/invoices",
     tags=["PDFs"],
     name="Lista de Invoices",
-    response_model=List[InvoiceFileResponse]
+    response_model=PDFReaderOutputDTO
 )
 async def list_invoices(
     trace_id: Optional[str] = Query(None, title="Trace ID", description="Identificador único da invoice"),
@@ -21,8 +19,5 @@ async def list_invoices(
     Endpoint que lista todos os pdfs inserido no bucket e puxa seus dados retornando em json.
     """
 
-    storage = await LocalStorageSingleton.get_instance()
-    user_case = PDFReader(storage_repository=storage)
-    controller = PDFReaderController(user_case=user_case)
-    response = await controller.send(trace_id, year, month)
-    return response
+    controller = PDFReaderController(trace_id, year, month)
+    return await controller.execute()

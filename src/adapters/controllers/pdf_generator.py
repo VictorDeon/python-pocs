@@ -1,4 +1,4 @@
-from fastapi import Response, status
+from fastapi import Response
 from src.adapters.interfaces import ControllerInterface
 from src.adapters.dtos import PDFGeneratorInputDTO
 from src.adapters.presenters import PDFGeneratorPresenter
@@ -18,7 +18,7 @@ class PDFGeneratorController(ControllerInterface):
 
         self.input_dto = invoice
 
-    async def execute(self) -> Response:
+    async def execute(self) -> dict:
         """
         Lida com a entrada e saida dos dados.
         """

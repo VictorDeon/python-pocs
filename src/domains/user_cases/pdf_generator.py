@@ -21,7 +21,7 @@ class PDFGenerator(UserCaseInterface):
         self.presenter = presenter
         self.repository = repository
 
-    async def execute(self, input_dto: PDFGeneratorInputDTO) -> bytes:
+    async def execute(self, input_dto: PDFGeneratorInputDTO) -> dict:
         """
         Endpoint que gera um pdf a partir dos dados inseridos como parâmetro.
         """
