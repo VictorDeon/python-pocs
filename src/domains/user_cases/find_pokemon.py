@@ -23,5 +23,5 @@ class FindPokemonUseCase(UserCaseInterface):
         """
 
         pokemon = await self.repository.find_by_id(input_dto.id)
-        output_dto = FindPokemonOutputDTO(pokemon)
+        output_dto = FindPokemonOutputDTO(pokemon=pokemon)
         return self.presenter.present(output_dto)
