@@ -1,6 +1,6 @@
 from typing import Any
 from httpx import AsyncClient
-from ..http_interface import HttpClientInterface
+from ..client_interface import HttpClientInterface
 
 
 class HTTPxClient(HttpClientInterface):

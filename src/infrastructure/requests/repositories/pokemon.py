@@ -3,7 +3,7 @@ import json
 from src.infrastructure.constants import POKEAPI_URL
 from src.domains.entities.pokemon import Pokemon
 from src.infrastructure.caches.cache_interface import CacheClientInterface
-from src.infrastructure.clients.http_interface import HttpClientInterface
+from src.infrastructure.clients.client_interface import HttpClientInterface
 from src.infrastructure.requests.interfaces import PokemonRepositoryInterface
 
 

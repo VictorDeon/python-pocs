@@ -1,4 +1,4 @@
-from .http_interface import HttpClientInterface
+from .client_interface import HttpClientInterface
 
 __all__ = [
     HttpClientInterface

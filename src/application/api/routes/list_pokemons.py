@@ -1,11 +1,15 @@
-from fastapi import APIRouter, Response
+from fastapi import Response
 from src.adapters.controllers import ListPokemonController
 from src.adapters.controllers import ListXMLPokemonController
+from . import router
 
-router = APIRouter()
 
-
-@router.get("/pokemons", summary="List pokemons", response_description="List of pokemons")
+@router.get(
+    "/pokemons",
+    summary="List pokemons",
+    tags=["Requests"],
+    response_description="List of pokemons"
+)
 async def list_pokemons(limit: int = None, offset: int = None):
     """
     Endpoint para listar todos os pokemons.
@@ -16,7 +20,12 @@ async def list_pokemons(limit: int = None, offset: int = None):
     return await controller.execute()
 
 
-@router.get("/pokemons/xml", summary="List pokemons in XML", response_description="List of pokemons in XML")
+@router.get(
+    "/pokemons/xml",
+    summary="List pokemons in XML",
+    tags=["Requests"],
+    response_description="List of pokemons in XML"
+)
 async def list_xml_pokemons(limit: int = None, offset: int = None):
     """
     Lista todos os pokemons no formato XML.
