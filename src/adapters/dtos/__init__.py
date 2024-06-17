@@ -1,10 +1,10 @@
 """ DATA TRANSFER OBJECT (DTO) """
 from .find_pokemon import FindPokemonInputDTO, FindPokemonOutputDTO
-from .list_pokemons import ListPokemonsInputDto, ListPokemonsOutputDto
+from .list_pokemons import ListPokemonsInputDTO, ListPokemonsOutputDTO
 
 __all__ = [
     FindPokemonInputDTO,
     FindPokemonOutputDTO,
-    ListPokemonsInputDto,
-    ListPokemonsOutputDto
+    ListPokemonsInputDTO,
+    ListPokemonsOutputDTO
 ]

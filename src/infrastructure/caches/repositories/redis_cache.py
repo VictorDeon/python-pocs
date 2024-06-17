@@ -45,7 +45,9 @@ class RedisCacheSingleton(CacheSingletonInterface):
 
         success = True
         try:
-            await self.cache.exists(key)
+            number = await self.cache.exists(key)
+            if number <= 0:
+                success = False
         except ConnectionError as error:
             logging.error(f"Conexão com o redis falhou: {error}")
             success = False
@@ -63,7 +65,7 @@ class RedisCacheSingleton(CacheSingletonInterface):
                 result = json.loads(await self.cache.get(key))
             except ConnectionError as error:
                 logging.error(f"Conexão com o redis falhou: {error}")
-            except json.JSONDecodeError as error:
+            except (TypeError, json.JSONDecodeError) as error:
                 logging.error(f"Ocorreu um error ao puxar os dados do cache: {error}")
 
         return result

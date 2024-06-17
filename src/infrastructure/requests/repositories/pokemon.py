@@ -1,5 +1,6 @@
 import asyncio
 import json
+import os
 from typing import List
 from src.infrastructure.constants import POKEAPI_URL
 from src.domains.entities.pokemon import Pokemon
@@ -21,6 +22,7 @@ class PokemonPokeAPIRepository(PokemonRepositoryInterface):
         self.base_url = POKEAPI_URL
         self.http_client = client
         self.cache_client = cache
+        self.qtd_workers = int(os.environ.get("QTD_WORKERS", 20))
 
     async def __worker(self, url_queue: asyncio.Queue, responses: List[dict]) -> None:
         """
@@ -28,17 +30,18 @@ class PokemonPokeAPIRepository(PokemonRepositoryInterface):
         """
 
         while True:
-            url = await url_queue.get()
-            if url is None:
+            pokemon = await url_queue.get()
+            if pokemon is None:
                 break
 
-            cached = await self.cache_client.get(url)
+            print(f"Buscando dados do pokemon: {pokemon['name']}")
+            cached = await self.cache_client.get(pokemon['url'])
 
             if cached:
                 response = json.loads(cached)
             else:
-                response = await self.http_client.get(url)
-                await self.cache_client.set(url, response, exp=3600)
+                response = await self.http_client.get(pokemon['url'])
+                await self.cache_client.set(pokemon['url'], response, exp=3600)
 
             responses.append(response)
             url_queue.task_done()
@@ -60,18 +63,24 @@ class PokemonPokeAPIRepository(PokemonRepositoryInterface):
         response = await self.http_client.get(f'{self.base_url}/pokemon?limit={limit}&offset={offset}')
         pokemons = response.get('results')
 
+        # Insere todas as urls dentro da fila.
         for pokemon in pokemons:
-            await url_queue.put(pokemon['url'])
+            await url_queue.put(pokemon)
 
-        for _ in range(20):
+        # Cria 20 trabalhadores para puxar todos os pokemons
+        for _ in range(self.qtd_workers):
             worker_tasks.append(asyncio.create_task(self.__worker(url_queue, responses)))
 
+        # Espera todos os itens da fila ser processados.
         await url_queue.join()
 
-        for _ in range(20):
+        # Enviar None para os 20 trabalhadores finalizar o processo.
+        for _ in range(self.qtd_workers):
             await url_queue.put(None)
 
+        # Dispara os trabalhadores de forma concorrent.
         await asyncio.gather(*worker_tasks)
+
         return [Pokemon.from_dict(pokemon) for pokemon in responses]
 
     async def find_by_id(self, pokemon_id: int) -> Pokemon:

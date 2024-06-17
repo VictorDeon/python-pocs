@@ -1,10 +1,18 @@
-from ..dtos import ListPokemonsOutputDto
+from ..dtos import ListPokemonsOutputDTO
 from ..interfaces import PresenterInterface
 
 
 class ListPokemonsPresenter(PresenterInterface):
-    def present(self, output_dto: ListPokemonsOutputDto) -> dict:
-        sorted_pokemons = sorted(output_dto.pokemons, key=lambda pokemon: pokemon.name)
+    """
+    Formatação de saída da API que lista os pokemons.
+    """
+
+    def present(self, output_dto: ListPokemonsOutputDTO) -> dict:
+        """
+        Forma final de apresentação dos dados.
+        """
+
+        sorted_pokemons = sorted(output_dto.pokemons, key=lambda pokemon: pokemon.id)
         return {
             'results': [
                 {

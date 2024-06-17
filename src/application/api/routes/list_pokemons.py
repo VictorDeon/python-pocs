@@ -1,4 +1,4 @@
-from fastapi import Response
+from fastapi import Response, Query
 from src.adapters.controllers import ListPokemonController
 from src.adapters.controllers import ListXMLPokemonController
 from . import router
@@ -6,17 +6,18 @@ from . import router
 
 @router.get(
     "/pokemons",
-    summary="List pokemons",
+    summary="Listar pokemons",
     tags=["Requests"],
-    response_description="List of pokemons"
+    response_description="Lista de pokemons"
 )
-async def list_pokemons(limit: int = None, offset: int = None):
+async def list_pokemons(
+    limit: int = Query(None, description="Quantidade limite de itens que irá aparecer na listagem."),
+    offset: int = Query(None, description="Pular os N primeiros itens da lista.")):
     """
     Endpoint para listar todos os pokemons.
     """
 
-    controller = ListPokemonController()
-    controller.get_search_params({"limit": limit, "offset": offset})
+    controller = ListPokemonController(limit=limit, offset=offset)
     return await controller.execute()
 
 

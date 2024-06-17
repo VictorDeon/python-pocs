@@ -1,10 +1,10 @@
 from xml.etree.ElementTree import Element, tostring
-from ..dtos import ListPokemonsOutputDto
+from ..dtos import ListPokemonsOutputDTO
 from ..interfaces import PresenterInterface
 
 
 class ListXMLPokemonsPresenter(PresenterInterface):
-    def present(self, output_dto: ListPokemonsOutputDto) -> str:
+    def present(self, output_dto: ListPokemonsOutputDTO) -> str:
         sorted_pokemons = sorted(output_dto.pokemons, key=lambda pokemon: pokemon.name)
         root = Element('pokemons')
         for pokemon in sorted_pokemons:
