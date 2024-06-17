@@ -71,7 +71,7 @@ def io_bound_method(seconds: int) -> None:
         200: {'model': Response},
         422: {'model': Error},
     },
-    tags=['Requests']
+    tags=['Others']
 )
 async def blocking_request1():
     """
@@ -95,7 +95,7 @@ async def blocking_request1():
         200: {'model': Response},
         422: {'model': Error},
     },
-    tags=['Requests']
+    tags=['Others']
 )
 async def not_blocking_request1():
     """
@@ -117,7 +117,7 @@ async def not_blocking_request1():
         200: {'model': Response},
         422: {'model': Error},
     },
-    tags=['Requests']
+    tags=['Others']
 )
 async def not_blocking_request2():
     """
@@ -138,7 +138,7 @@ async def not_blocking_request2():
         200: {'model': Response},
         422: {'model': Error},
     },
-    tags=['Requests']
+    tags=['Others']
 )
 async def not_blocking_request3():
     """
@@ -159,7 +159,7 @@ async def not_blocking_request3():
         200: {'model': Response},
         422: {'model': Error},
     },
-    tags=['Requests']
+    tags=['Others']
 )
 def blocking_request2():
     """

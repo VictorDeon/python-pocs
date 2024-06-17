@@ -6,8 +6,7 @@ from fastapi.responses import JSONResponse
 from fastapi.encoders import jsonable_encoder
 from fastapi.exceptions import RequestValidationError
 from fastapi import FastAPI
-from .routes.list_pokemons import router as list_pokemons
-from .routes.find_pokemon import router as find_pokemon
+from .routes import router
 
 sp = timezone("America/Sao_Paulo")
 logging.Formatter.converter = lambda *args: datetime.now(tz=sp).timetuple()
@@ -37,8 +36,7 @@ def health_check():
     return {"success": True}
 
 
-app.include_router(list_pokemons, tags=["Pokemons"])
-app.include_router(find_pokemon, tags=["Pokemons"])
+app.include_router(router)
 
 
 @app.exception_handler(HTTPException)
