@@ -1,5 +1,5 @@
 from pydantic import BaseModel, Field
-from src.domains.entities.pokemon import Pokemon
+from src.domains.entities import Pokemon
 
 
 class FindPokemonInputDTO(BaseModel):

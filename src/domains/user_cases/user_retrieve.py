@@ -1,24 +1,27 @@
-from src.domains.interfaces import UserRetrieveInterface
+from src.domains.interfaces import UserCaseInterface
 from src.infrastructure.databases.interfaces import UserDAOInterface
+from src.adapters.interfaces import PresenterInterface
+from src.adapters.dtos import FindUserInputDTO, FindUserOutputDTO
 
 
-class UserRetrieve(UserRetrieveInterface):
+class UserRetrieve(UserCaseInterface):
     """
     Caso de uso de procura de um usuários.
     """
 
-    def __init__(self, users_repository: UserDAOInterface) -> None:
+    def __init__(self, presenter: PresenterInterface, repository: UserDAOInterface):
         """
-        Construtor.
+        Constructor.
         """
 
-        self.__users_repository = users_repository
+        self.presenter = presenter
+        self.repository = repository
 
-    async def find(self, _id: int) -> dict:
+    async def execute(self, input_dto: FindUserInputDTO) -> dict:
         """
         Encontra o usuário pelo email.
         """
 
-        user = await self.__users_repository.retrieve(_id)
-
-        return user.model_dump()
+        user = await self.repository.retrieve(input_dto.id)
+        output_dto = FindUserOutputDTO(user=user)
+        return self.presenter.present(output_dto)

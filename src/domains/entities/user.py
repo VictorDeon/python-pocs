@@ -10,6 +10,13 @@ class User(BaseModel):
     name: str = Field(..., description="Nome completo do usuário.")
     email: str = Field(..., description="Email do usuário.")
 
+    def to_dict(self):
+        """
+        Transforma o objeto em dicionário.
+        """
+
+        return self.model_dump()
+
     class Config:
         """
         Metadados da modelo
