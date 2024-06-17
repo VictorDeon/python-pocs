@@ -2,7 +2,7 @@ from ..interfaces import ControllerInterface
 from ..presenters import ListPokemonsPresenter
 from ..dtos import ListPokemonsInputDto
 from src.infrastructure.caches.repositories import RedisCache
-from src.infrastructure.clients.repositories import HTTPxClient
+from src.infrastructure.clients.repositories import HTTPxClientSingleton
 from src.infrastructure.requests.repositories import PokemonPokeAPIRepository
 from src.domains.user_cases import ListPokemonsUseCase
 
@@ -18,9 +18,9 @@ class ListPokemonController(ControllerInterface):
         )
 
     async def execute(self) -> dict:
-        http_client = HTTPxClient()
+        client = HTTPxClientSingleton.get_instance()
         cache_client = RedisCache()
-        repository = PokemonPokeAPIRepository(http_client, cache_client)
+        repository = PokemonPokeAPIRepository(client, cache_client)
         presenter = ListPokemonsPresenter()
         use_case = ListPokemonsUseCase(presenter, repository)
         return await use_case.execute(self.input_dto)

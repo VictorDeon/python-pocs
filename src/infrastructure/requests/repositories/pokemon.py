@@ -3,12 +3,12 @@ import json
 from src.infrastructure.constants import POKEAPI_URL
 from src.domains.entities.pokemon import Pokemon
 from src.infrastructure.caches.cache_interface import CacheClientInterface
-from src.infrastructure.clients.client_interface import HttpClientInterface
+from src.infrastructure.clients.client_interface import HttpClientSingletonInterface
 from src.infrastructure.requests.interfaces import PokemonRepositoryInterface
 
 
 class PokemonPokeAPIRepository(PokemonRepositoryInterface):
-    def __init__(self, http_client: HttpClientInterface, cache_client: CacheClientInterface):
+    def __init__(self, http_client: HttpClientSingletonInterface, cache_client: CacheClientInterface):
         self.base_url = POKEAPI_URL
         self.http_client = http_client
         self.cache_client = cache_client

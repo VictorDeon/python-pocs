@@ -1,25 +1,32 @@
 from ..interfaces import ControllerInterface
 from ..presenters import FindPokemonPresenter
-from ..dtos import FindPokemonInputDto
+from ..dtos import FindPokemonInputDTO
 from src.infrastructure.caches.repositories import RedisCache
-from src.infrastructure.clients.repositories import HTTPxClient
+from src.infrastructure.clients.repositories import HTTPxClientSingleton
 from src.infrastructure.requests.repositories import PokemonPokeAPIRepository
 from src.domains.user_cases import FindPokemonUseCase
 
 
 class FindPokemonController(ControllerInterface):
-    def __init__(self):
-        self.input_dto: FindPokemonInputDto
+    """
+    Constroladora para encontrar um pokemon.
+    """
 
-    def get_pokemon_id(self, params: dict) -> None:
-        self.input_dto = FindPokemonInputDto(
-            id=params.get("id")
-        )
+    def __init__(self, pokemon_id: int):
+        """
+        Construtor.
+        """
+
+        self.input = FindPokemonInputDTO(id=pokemon_id)
 
     async def execute(self) -> dict:
-        http_client = HTTPxClient()
+        """
+        Executa os comandos para gerar o resultado.
+        """
+
+        client = HTTPxClientSingleton.get_instance()
         cache_client = RedisCache()
-        repository = PokemonPokeAPIRepository(http_client, cache_client)
-        presenter = FindPokemonPresenter()
-        use_case = FindPokemonUseCase(presenter, repository)
-        return await use_case.execute(self.input_dto)
+        repository = PokemonPokeAPIRepository(client, cache_client)
+        output = FindPokemonPresenter()
+        use_case = FindPokemonUseCase(output, repository)
+        return await use_case.execute(self.input)

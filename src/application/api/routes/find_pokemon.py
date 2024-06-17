@@ -1,3 +1,4 @@
+from fastapi import Path
 from src.adapters.controllers import FindPokemonController
 from . import router
 
@@ -5,13 +6,12 @@ from . import router
 @router.get(
     "/pokemons/{pokemon_id}",
     tags=["Requests"],
-    summary="Find a pokemon by id"
+    summary="Pesquisar pokemon pelo ID"
 )
-async def find_pokemon(pokemon_id: int):
+async def find_pokemon(pokemon_id: int = Path(..., description="Identificador do pokemon na pokedex.")):
     """
     Encontre um pokemon pelo seu ID.
     """
 
-    controller = FindPokemonController()
-    controller.get_pokemon_id({"id": pokemon_id})
+    controller = FindPokemonController(pokemon_id)
     return await controller.execute()

@@ -1,4 +1,4 @@
-from src.adapters.dtos import FindPokemonInputDto, FindPokemonOutputDto
+from src.adapters.dtos import FindPokemonInputDTO, FindPokemonOutputDTO
 from src.adapters.interfaces import PresenterInterface
 from src.infrastructure.requests.interfaces import PokemonRepositoryInterface
 
@@ -12,7 +12,7 @@ class FindPokemonUseCase:
         self.presenter = presenter
         self.repository = repository
 
-    async def execute(self, input_dto: FindPokemonInputDto) -> dict:
+    async def execute(self, input_dto: FindPokemonInputDTO) -> dict:
         pokemon = await self.repository.find_by_id(input_dto.id)
-        output_dto = FindPokemonOutputDto(pokemon)
+        output_dto = FindPokemonOutputDTO(pokemon)
         return self.presenter.present(output_dto)

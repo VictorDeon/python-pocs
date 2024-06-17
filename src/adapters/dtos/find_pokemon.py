@@ -1,15 +1,25 @@
-from dataclasses import dataclass, asdict
+from pydantic import BaseModel, Field
 from src.domains.entities.pokemon import Pokemon
 
 
-@dataclass
-class FindPokemonInputDto:
-    id: int
+class FindPokemonInputDTO(BaseModel):
+    """
+    Dados de entrada para encontrar um pokemon
+    """
+
+    id: int = Field(..., description="Identificador único do pokemon na pokedex.")
 
     def to_dict(self):
-        return asdict(self)
+        """
+        Transforma os dados em dicionário.
+        """
+
+        return self.model_dump()
 
 
-@dataclass
-class FindPokemonOutputDto:
-    pokemon: Pokemon
+class FindPokemonOutputDTO(BaseModel):
+    """
+    Dados de saída para encontrar um pokemon
+    """
+
+    pokemon: Pokemon = Field(..., description="Dados do pokemon.")

@@ -1,10 +1,10 @@
 import math
-from ..dtos import FindPokemonOutputDto
+from ..dtos import FindPokemonInputDTO
 from ..interfaces import PresenterInterface
 
 
 class FindPokemonPresenter(PresenterInterface):
-    def present(self, output_dto: FindPokemonOutputDto) -> dict:
+    def present(self, output_dto: FindPokemonInputDTO) -> dict:
         pokemon = output_dto.pokemon.to_dict()
         pokemon['weight'] = self.__convert_hectograms_to_pounds(output_dto.pokemon.weight)
         pokemon['height'] = self.__convert_decimeters_to_feet_and_inches(output_dto.pokemon.height)
