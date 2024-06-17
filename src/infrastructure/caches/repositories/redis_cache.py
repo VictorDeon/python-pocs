@@ -1,25 +1,89 @@
-from redis import asyncio
-from ..cache_interface import CacheClientInterface
-from ...constants import REDIS_URL
+import os
+import json
+import logging
+from redis.asyncio import Redis
+from redis.exceptions import ConnectionError
+from src.domains.utils.formatters import JsonFormatter
+from src.infrastructure.caches.cache_interface import CacheSingletonInterface
+from typing import Any, Union
 
 
-class RedisCache(CacheClientInterface):
-    def __init__(self):
-        self.redis_url = REDIS_URL
-        self.redis = None
+class RedisCacheSingleton(CacheSingletonInterface):
+    """
+    Modulo de cache do redis.
+    """
 
-    async def connect(self):
-        if self.redis is None:
-            self.redis = await asyncio.from_url(self.redis_url, encoding="utf-8", decode_responses=True)
+    def create_instance(self) -> None:
+        """
+        Cria a instância de cache.
+        """
 
-    async def set_value(self, key, value, expire=None):
-        await self.connect()
-        await self.redis.set(key, value, ex=expire)
+        self.cache = Redis(
+            host=os.environ.get("CACHE_HOST"),
+            port=os.environ.get("CACHE_PORT"),
+            decode_responses=True
+        )
 
-    async def get_value(self, key):
-        await self.connect()
-        return await self.redis.get(key)
+    async def set(self, key: str, value: Any, exp: int = 86400) -> bool:
+        """
+        Configura o cache com expiração de 1 dia.
+        """
 
-    async def close(self):
-        if self.redis:
-            await self.redis.close()
+        success = True
+        try:
+            await self.cache.setex(key, exp, json.dumps(value, cls=JsonFormatter, ensure_ascii=False))
+        except ConnectionError as error:
+            logging.error(f"Conexão com o redis falhou: {error}")
+            success = False
+        finally:
+            await self.close()
+
+        return success
+
+    async def is_cached(self, key: str) -> bool:
+        """
+        Verifica se a chave existe no cache.
+        """
+
+        success = True
+        try:
+            await self.cache.exists(key)
+        except ConnectionError as error:
+            logging.error(f"Conexão com o redis falhou: {error}")
+            success = False
+        finally:
+            await self.close()
+
+        return success
+
+    async def get(self, key: str) -> Union[dict, list]:
+        """
+        Pega o cache pela chave.
+        """
+
+        result = None
+        if await self.is_cached(key):
+            try:
+                result = json.loads(await self.cache.get(key))
+            except ConnectionError as error:
+                logging.error(f"Conexão com o redis falhou: {error}")
+            except json.JSONDecodeError as error:
+                logging.error(f"Ocorreu um error ao puxar os dados do cache: {error}")
+            finally:
+                await self.close()
+
+        return result
+
+    async def clean(self) -> None:
+        """
+        Limpa todo o cache.
+        """
+
+        await self.cache.delete(*await self.cache.keys())
+
+    async def close(self) -> None:
+        """
+        Fecha a conexão com o cache.
+        """
+
+        await self.cache.close()

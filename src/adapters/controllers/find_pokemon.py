@@ -1,7 +1,7 @@
 from ..interfaces import ControllerInterface
 from ..presenters import FindPokemonPresenter
 from ..dtos import FindPokemonInputDTO
-from src.infrastructure.caches.repositories import RedisCache
+from src.infrastructure.caches.repositories import RedisCacheSingleton
 from src.infrastructure.clients.repositories import HTTPxClientSingleton
 from src.infrastructure.requests.repositories import PokemonPokeAPIRepository
 from src.domains.user_cases import FindPokemonUseCase
@@ -25,8 +25,8 @@ class FindPokemonController(ControllerInterface):
         """
 
         client = HTTPxClientSingleton.get_instance()
-        cache_client = RedisCache()
-        repository = PokemonPokeAPIRepository(client, cache_client)
+        cache = RedisCacheSingleton.get_instance()
+        repository = PokemonPokeAPIRepository(client, cache)
         output = FindPokemonPresenter()
         use_case = FindPokemonUseCase(output, repository)
         return await use_case.execute(self.input)
