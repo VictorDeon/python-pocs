@@ -30,7 +30,7 @@ class PDFGenerator(UserCaseInterface):
         trace_id = str(uuid4())
 
         path_splited = "assets/docs".split("/")
-        filename = f"{now.year}_{now.month:02}-invoice-{trace_id}.pdf"
+        filename = f"{now.year}-{now.month:02}-invoice-{trace_id}.pdf"
         path = "/".join([*path_splited, filename])
 
         builder = GeneratePDF(

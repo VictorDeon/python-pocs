@@ -23,7 +23,7 @@ class PDFGeneratorController(ControllerInterface):
         Lida com a entrada e saida dos dados.
         """
 
-        repository = LocalStorageSingleton.get_instance()
+        repository = await LocalStorageSingleton.get_instance()
         output = PDFGeneratorPresenter()
         use_case = PDFGenerator(output, repository)
         return await use_case.execute(self.input_dto)

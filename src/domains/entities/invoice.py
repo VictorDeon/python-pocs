@@ -29,7 +29,7 @@ class Invoice(BaseModel):
         Metadados da modelo
         """
 
-        schema_extra_json = {
+        json_schema_extra = {
             "example": {
                 "from_address": "WeasyPrint 26 rue Emile Decorps 69100 Villeurbanne France",
                 "to_address": "Our awesome developers From all around the world Earth",

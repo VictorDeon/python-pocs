@@ -21,3 +21,14 @@ class PDFGeneratorOutputDTO(BaseModel):
     """
 
     filename: str = Field(..., description="Nome do arquivo no bucket.")
+
+    class Config:
+        """
+        Metadados da modelo
+        """
+
+        json_schema_extra = {
+            "example": {
+                "filename": "assets/docs/2024-05-invoice-abcd1234.pdf"
+            }
+        }

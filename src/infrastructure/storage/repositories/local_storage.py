@@ -20,7 +20,7 @@ class LocalStorageSingleton(StorageSingletonInterface):
         Insere um documento no bucket do GCP.
         """
 
-        with open("tests/" + path, "wb") as file:
+        with open(path, "wb") as file:
             file.write(content)
 
         return file

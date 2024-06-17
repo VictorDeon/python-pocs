@@ -15,7 +15,7 @@ class User(BaseModel):
         Metadados da modelo
         """
 
-        schema_extra_json = {
+        json_schema_extra = {
             "example": {
                 "id": 1,
                 "name": "Fulano 01",
