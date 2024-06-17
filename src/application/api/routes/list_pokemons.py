@@ -23,17 +23,18 @@ async def list_pokemons(
 
 @router.get(
     "/pokemons/xml",
-    summary="List pokemons in XML",
+    summary="Lista pokemons em XML",
     tags=["Requests"],
-    response_description="List of pokemons in XML"
+    response_description="Lista de pokemons em XML"
 )
-async def list_xml_pokemons(limit: int = None, offset: int = None):
+async def list_xml_pokemons(
+    limit: int = Query(None, description="Quantidade limite de itens que irá aparecer na listagem."),
+    offset: int = Query(None, description="Pular os N primeiros itens da lista.")):
     """
     Lista todos os pokemons no formato XML.
     """
 
-    controller = ListXMLPokemonController()
-    controller.get_search_params({"limit": limit, "offset": offset})
+    controller = ListXMLPokemonController(limit=limit, offset=offset)
     xml_str = await controller.execute()
     headers = {
         "Content-Disposition": "attachment; filename=pokemons.xml",
