@@ -32,3 +32,73 @@ class Pokemon(BaseModel):
         """
 
         return self.model_dump()
+
+    class Config:
+        """
+        Metadados da modelo
+        """
+
+        json_schema_extra = {
+            "example": {
+                "id": 1,
+                "name": "bulbasaur",
+                "sprite": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/1.png",
+                "height": 7,
+                "weight": 69,
+                "types": "grass, poison",
+                "weaknesses": ["flying", "poison", "bug", "fire", "ice", "ground", "psychic"],
+                "strengths": ["ground", "rock", "water", "grass", "fairy"],
+                "abilities": ["overgrow", "chlorophyll"],
+                "species": "Seed",
+                "stats": [
+                    {
+                        "base_stat": 45,
+                        "effort": 0,
+                        "stat": {
+                            "name": "hp",
+                            "url": "https://pokeapi.co/api/v2/stat/1/"
+                        }
+                    },
+                    {
+                        "base_stat": 49,
+                        "effort": 0,
+                        "stat": {
+                            "name": "attack",
+                            "url": "https://pokeapi.co/api/v2/stat/2/"
+                        }
+                    },
+                    {
+                        "base_stat": 49,
+                        "effort": 0,
+                        "stat": {
+                            "name": "defense",
+                            "url": "https://pokeapi.co/api/v2/stat/3/"
+                        }
+                    },
+                    {
+                        "base_stat": 65,
+                        "effort": 1,
+                        "stat": {
+                            "name": "special-attack",
+                            "url": "https://pokeapi.co/api/v2/stat/4/"
+                        }
+                    },
+                    {
+                        "base_stat": 65,
+                        "effort": 0,
+                        "stat": {
+                            "name": "special-defense",
+                            "url": "https://pokeapi.co/api/v2/stat/5/"
+                        }
+                    },
+                    {
+                        "base_stat": 45,
+                        "effort": 0,
+                        "stat": {
+                            "name": "speed",
+                            "url": "https://pokeapi.co/api/v2/stat/6/"
+                        }
+                    }
+                ]
+            }
+        }

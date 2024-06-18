@@ -1,6 +1,7 @@
 from fastapi import Response, Query
 from src.adapters.controllers import ListPokemonController
 from src.adapters.controllers import ListXMLPokemonController
+from src.adapters.dtos import ListPokemonsOutputDTO
 from . import router
 
 
@@ -8,6 +9,7 @@ from . import router
     "/pokemons",
     summary="Listar pokemons",
     tags=["Requests"],
+    response_model=ListPokemonsOutputDTO,
     response_description="Lista de pokemons"
 )
 async def list_pokemons(
@@ -25,6 +27,7 @@ async def list_pokemons(
     "/pokemons/xml",
     summary="Lista pokemons em XML",
     tags=["Requests"],
+    response_model=ListPokemonsOutputDTO,
     response_description="Lista de pokemons em XML"
 )
 async def list_xml_pokemons(

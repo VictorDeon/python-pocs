@@ -86,24 +86,30 @@ class PokemonPokeAPIRepository(PokemonRepositoryInterface):
         """
 
         response = await self.http_client.get(f'{self.base_url}/pokemon/{pokemon_id}')
-        response['weaknesses'] = await self.__get_weaknesses(response.get('types', []))
+        response['weaknesses'], response['strengths'] = await self.__get_weaknesses_and_strengths(
+            response.get('types', [])
+        )
         response['species'] = await self.__get_species(response.get('species', {}).get('url'))
 
         return Pokemon.from_dict(response)
 
-    async def __get_weaknesses(self, types: List[dict]) -> List[dict]:
+    async def __get_weaknesses_and_strengths(self, types: List[dict]) -> List[dict]:
         """
         Pega as fraquezas do pokemon
         """
 
         weaknesses = set()
+        strengths = set()
         for _type in types:
             type_url = _type['type']['url']
             type_data = await self.http_client.get(type_url)
             for damage_relation in type_data['damage_relations']['double_damage_from']:
                 weaknesses.add(damage_relation['name'])
 
-        return list(weaknesses)
+            for damage_relation in type_data['damage_relations']['double_damage_to']:
+                strengths.add(damage_relation['name'])
+
+        return list(weaknesses), list(strengths)
 
     async def __get_species(self, species_url: str):
         """
