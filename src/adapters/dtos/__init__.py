@@ -4,6 +4,7 @@ from .find_user import FindUserInputDTO, FindUserOutputDTO
 from .list_pokemons import ListPokemonsInputDTO, ListPokemonsOutputDTO
 from .pdf_generator import PDFGeneratorInputDTO, PDFGeneratorOutputDTO
 from .pdf_reader import PDFReaderInputDTO, PDFReaderOutputDTO
+from .blocked_requests import BlockedRequestsOutputDTO
 
 __all__ = [
     FindPokemonInputDTO,
@@ -15,5 +16,6 @@ __all__ = [
     PDFReaderInputDTO,
     PDFReaderOutputDTO,
     FindUserInputDTO,
-    FindUserOutputDTO
+    FindUserOutputDTO,
+    BlockedRequestsOutputDTO
 ]
