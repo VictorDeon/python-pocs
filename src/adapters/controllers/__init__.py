@@ -3,13 +3,13 @@ from .list_pokemon import ListPokemonController
 from .list_xml_pokemon import ListXMLPokemonController
 from .pdf_generator import PDFGeneratorController
 from .pdf_reader import PDFReaderController
-from .user_retrieve import UserRetrieveController
+from .find_user import FindUserController
 
 __all__ = [
     FindPokemonController,
     ListPokemonController,
     ListXMLPokemonController,
-    UserRetrieveController,
+    FindUserController,
     PDFReaderController,
     PDFGeneratorController
 ]

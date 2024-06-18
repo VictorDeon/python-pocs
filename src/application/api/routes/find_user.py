@@ -1,7 +1,7 @@
 from fastapi import status
 from src.application.api.routes import router
 from src.adapters.dtos import FindUserOutputDTO
-from src.adapters.controllers import UserRetrieveController
+from src.adapters.controllers import FindUserController
 
 
 @router.get(
@@ -18,5 +18,5 @@ async def retrieve_user(user_id: int):
     Endpoint que retorna os dados de um usuário.
     """
 
-    controller = UserRetrieveController(user_id=user_id)
+    controller = FindUserController(user_id=user_id)
     return await controller.execute()

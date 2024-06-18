@@ -1,11 +1,11 @@
 from src.adapters.interfaces import ControllerInterface
 from src.adapters.dtos import FindUserInputDTO
 from src.adapters.presenters import FindUserPresenter
-from src.domains.user_cases import UserRetrieve
+from src.domains.user_cases import FindUser
 from src.infrastructure.databases.daos import UserDAO
 
 
-class UserRetrieveController(ControllerInterface):
+class FindUserController(ControllerInterface):
     """
     Controladora de acesso externo para buscar os dados de uma API.
     """
@@ -24,5 +24,5 @@ class UserRetrieveController(ControllerInterface):
 
         repository = UserDAO()
         output = FindUserPresenter()
-        use_case = UserRetrieve(output, repository)
+        use_case = FindUser(output, repository)
         return await use_case.execute(self.input)

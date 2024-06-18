@@ -4,7 +4,7 @@ from src.domains.interfaces import UserCaseInterface
 from src.infrastructure.databases.interfaces import UserDAOInterface
 
 
-class UserRetrieve(UserCaseInterface):
+class FindUser(UserCaseInterface):
     """
     Caso de uso de procura de um usuários.
     """
@@ -23,5 +23,4 @@ class UserRetrieve(UserCaseInterface):
         """
 
         user = await self.repository.retrieve(input_dto.id)
-        output_dto = FindUserOutputDTO(user=user)
-        return self.presenter.present(output_dto)
+        return self.presenter.present(user)
