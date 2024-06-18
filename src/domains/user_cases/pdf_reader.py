@@ -59,5 +59,4 @@ class PDFReader(UserCaseInterface):
             # Extrair dados do pdf e inserir no response
             response.append(data)
 
-        output_dto = PDFReaderOutputDTO(filename=path, invoices=response)
-        return self.presenter.present(output_dto)
+        return self.presenter.present(path=path, invoices=response)
