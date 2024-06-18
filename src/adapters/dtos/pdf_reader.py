@@ -36,6 +36,13 @@ class PDFReaderOutputDTO(BaseModel):
     filename: str = Field(..., description="Nome do arquivo no bucket.")
     invoices: list[Invoice] = Field([], description="Lista de dados das invoices.")
 
+    def to_dict(self):
+        """
+        Transforma os dados em dicionário.
+        """
+
+        return self.model_dump()
+
     class Config:
         """
         Metadados da modelo

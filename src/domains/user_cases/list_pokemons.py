@@ -1,4 +1,4 @@
-from src.adapters.dtos import ListPokemonsOutputDTO, ListPokemonsInputDTO
+from src.adapters.dtos import ListPokemonsInputDTO
 from src.adapters.interfaces import PresenterInterface
 from src.infrastructure.requests.interfaces import PokemonRepositoryInterface
 
@@ -25,5 +25,4 @@ class ListPokemonsUseCase:
             limit=input_dto.limit,
             offset=input_dto.offset
         )
-        output_dto = ListPokemonsOutputDTO(pokemons=pokemons)
-        return self.presenter.present(output_dto)
+        return self.presenter.present(pokemons)
