@@ -56,5 +56,4 @@ class PDFGenerator(UserCaseInterface):
             timeout=600
         )
 
-        output_dto = PDFGeneratorOutputDTO(filename=path)
-        return self.presenter.present(output_dto)
+        return self.presenter.present(path)

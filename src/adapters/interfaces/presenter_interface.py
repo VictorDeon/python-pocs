@@ -8,7 +8,7 @@ class PresenterInterface(ABC):
     """
 
     @abstractmethod
-    def present(self, output_dto: Any) -> dict:
+    def present(self, output: Any) -> Any:
         """
         Forma final de apresentação dos dados.
         """
