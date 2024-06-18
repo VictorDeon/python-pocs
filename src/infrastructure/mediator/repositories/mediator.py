@@ -29,4 +29,7 @@ class Mediator(MediatorInterface):
 
         for receiver in self.receivers:
             if receiver.command == command:
-                return await receiver.execute(*args, **kwargs)
+                if command == "BlockingRequestSync":
+                    return receiver.execute(*args, **kwargs)
+                else:
+                    return await receiver.execute(*args, **kwargs)

@@ -1,5 +1,4 @@
 from pydantic import BaseModel, Field
-from src.domains.entities import User
 
 
 class BlockedRequestsOutputDTO(BaseModel):
@@ -8,3 +7,14 @@ class BlockedRequestsOutputDTO(BaseModel):
     """
 
     result: str = Field(..., description="Resultado dos testes de desempenho.")
+
+    class Config:
+        """
+        Metadados da modelo
+        """
+
+        json_schema_extra = {
+            "example": {
+                "result": "Requisição executada em 5 segundos"
+            },
+        }

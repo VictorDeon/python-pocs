@@ -5,6 +5,8 @@ import asyncio
 from src.adapters.interfaces import ControllerInterface
 from src.adapters.dtos import BlockedRequestsOutputDTO
 
+SLEEP = 20
+
 
 def io_bound_method(seconds: int) -> None:
     """
@@ -26,19 +28,18 @@ class BlockingRequestSyncController(ControllerInterface):
         Construtor.
         """
 
-        self.commmand = "BlockingRequestSync"
+        self.command = "BlockingRequestSync"
 
-    async def execute(self) -> BlockedRequestsOutputDTO:
+    def execute(self) -> BlockedRequestsOutputDTO:
         """
         Essa requisição executa códigos de forma assincrona usando tasks
         """
 
         start_time = time.time()
-        logging.info(f"Iniciando a chamada {self.commmand}")
-        io_bound_method(5)
+        logging.info(f"Iniciando a chamada {self.command}")
+        io_bound_method(SLEEP)
         end_time = time.time() - start_time
         return BlockedRequestsOutputDTO(result=f"Requisição executada em {round(end_time, 2)} segundos")
-
 
 
 class BlockingRequestAsyncWithSyncController(ControllerInterface):
@@ -52,7 +53,7 @@ class BlockingRequestAsyncWithSyncController(ControllerInterface):
         Construtor.
         """
 
-        self.commmand = "BlockingRequestAsyncWithSync"
+        self.command = "BlockingRequestAsyncWithSync"
 
     async def execute(self) -> BlockedRequestsOutputDTO:
         """
@@ -60,13 +61,10 @@ class BlockingRequestAsyncWithSyncController(ControllerInterface):
         """
 
         start_time = time.time()
-        logging.info(f"Iniciando a chamada {self.commmand}")
-        logging.info("Iniciando o código sync de sleep 5 segundos de forma sync")
-        io_bound_method(5)
-        logging.info("Finalizando o código sync de sleep 5 segundos de forma sync")
+        logging.info(f"Iniciando a chamada {self.command}")
+        io_bound_method(SLEEP)
         end_time = time.time() - start_time
         return BlockedRequestsOutputDTO(result=f"Requisição executada em {round(end_time, 2)} segundos")
-
 
 
 class NotBlockingRequestAsyncWithSyncController(ControllerInterface):
@@ -80,7 +78,7 @@ class NotBlockingRequestAsyncWithSyncController(ControllerInterface):
         Construtor.
         """
 
-        self.commmand = "NotBlockingRequestAsyncWithSync"
+        self.command = "NotBlockingRequestAsyncWithSync"
 
     async def execute(self) -> BlockedRequestsOutputDTO:
         """
@@ -88,8 +86,8 @@ class NotBlockingRequestAsyncWithSyncController(ControllerInterface):
         """
 
         start_time = time.time()
-        logging.info(f"Iniciando a chamada {self.commmand}")
-        await asyncer.asyncify(io_bound_method)(5)
+        logging.info(f"Iniciando a chamada {self.command}")
+        await asyncer.asyncify(io_bound_method)(SLEEP)
         end_time = time.time() - start_time
         return BlockedRequestsOutputDTO(result=f"Requisição executada em {round(end_time, 2)} segundos")
 
@@ -104,7 +102,7 @@ class NotBlockingRequestAsyncController(ControllerInterface):
         Construtor.
         """
 
-        self.commmand = "NotBlockingRequestAsync"
+        self.command = "NotBlockingRequestAsync"
 
     async def execute(self) -> BlockedRequestsOutputDTO:
         """
@@ -112,8 +110,8 @@ class NotBlockingRequestAsyncController(ControllerInterface):
         """
 
         start_time = time.time()
-        logging.info(f"Iniciando a chamada {self.commmand}")
-        await asyncio.sleep(5)
+        logging.info(f"Iniciando a chamada {self.command}")
+        await asyncio.sleep(SLEEP)
         end_time = time.time() - start_time
         return BlockedRequestsOutputDTO(result=f"Requisição executada em {round(end_time, 2)} segundos")
 
@@ -129,7 +127,7 @@ class NotBlockingRequestTaskController(ControllerInterface):
         Construtor.
         """
 
-        self.commmand = "NotBlockingRequestTask"
+        self.command = "NotBlockingRequestTask"
 
     async def execute(self) -> BlockedRequestsOutputDTO:
         """
@@ -137,7 +135,7 @@ class NotBlockingRequestTaskController(ControllerInterface):
         """
 
         start_time = time.time()
-        logging.info(f"Iniciando a chamada {self.commmand}")
-        asyncio.create_task(asyncio.sleep(5))
+        logging.info(f"Iniciando a chamada {self.command}")
+        asyncio.create_task(asyncio.sleep(SLEEP))
         end_time = time.time() - start_time
         return BlockedRequestsOutputDTO(result=f"Requisição executada em {round(end_time, 2)} segundos")

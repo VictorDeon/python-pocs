@@ -7,12 +7,14 @@ from src.adapters.controllers import (
     NotBlockingRequestAsyncController,
     NotBlockingRequestTaskController
 )
+from src.adapters.dtos import BlockedRequestsOutputDTO
 from src.infrastructure.mediator.repositories import Mediator
 
 
 @router.get(
     "/blocked-requests",
     tags=["Requests"],
+    response_model=BlockedRequestsOutputDTO,
     summary="Realiza requisições bloqueantes."
 )
 async def blocked_requests(command: str = Header(..., description="Comando de requisição.")):
@@ -20,25 +22,25 @@ async def blocked_requests(command: str = Header(..., description="Comando de re
     Quando executamos a requisição http para algum endpoint sync ele bloqueia
     os outros endpoints até a finalização de sua execução devido ao time.sleep
     ou qualquer outro método sync bloqueante. Já os endpoint totalmente async ele
-    roda o time.sleep de forma que não bloqueie a execução dos coleguinhas.
+    roda os métodos async de forma que não bloqueie a execução dos coleguinhas.
 
     Rode o endpoint uma vez com cada um dos headers "command" a seguir um em seguida do outro para verificar
-    os que bloqueia a execução do outro.
-    > BlockingRequestSync
-    > BlockingRequestAsyncWithSync
-    > NotBlockingRequestAsyncWithSync
-    > NotBlockingRequestAsync
-    > NotBlockingRequestTask
+    os que bloqueia a execução do outro, utilize o curl para fazer isso.
+
+    `curl -X GET http://localhost:8000/blocked-requests -H 'accept: application/json' -H 'command: ...'`
+
+    * BlockingRequestSync
+    * BlockingRequestAsyncWithSync
+    * NotBlockingRequestAsyncWithSync
+    * NotBlockingRequestAsync
+    * NotBlockingRequestTask
     """
 
     mediator = Mediator()
-
-    # Adicionar as controllers
     mediator.add(BlockingRequestSyncController()),
     mediator.add(BlockingRequestAsyncWithSyncController())
     mediator.add(NotBlockingRequestAsyncWithSyncController())
     mediator.add(NotBlockingRequestAsyncController())
     mediator.add(NotBlockingRequestTaskController())
 
-    response = mediator.send(command)
-    return response
+    return await mediator.send(command)
