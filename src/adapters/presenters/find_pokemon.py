@@ -1,6 +1,7 @@
 import math
-from src.adapters.dtos import FindPokemonOutputDTO
+from src.adapters.dtos.find_pokemon import FindPokemonOutputDTO, PokemonOutput
 from src.adapters.interfaces import PresenterInterface
+from src.domains.entities import Pokemon
 
 
 class FindPokemonPresenter(PresenterInterface):
@@ -8,23 +9,29 @@ class FindPokemonPresenter(PresenterInterface):
     Formatação de saída da API que busca um pokemon.
     """
 
-    def present(self, output_dto: FindPokemonOutputDTO) -> dict:
+    def present(self, pokemon: Pokemon) -> FindPokemonOutputDTO:
         """
         Forma final de apresentação dos dados.
         """
 
-        pokemon = output_dto.pokemon.to_dict()
-        pokemon['types'] = ", ".join(_type['type']['name'] for _type in output_dto.pokemon.types)
-        pokemon['sprites'] = output_dto.pokemon.sprites['front_default']
-        pokemon['weight'] = self.__convert_hectograms_to_pounds(output_dto.pokemon.weight)
-        pokemon['height'] = self.__convert_decimeters_to_feet_and_inches(output_dto.pokemon.height)
-        pokemon['species'] = self.__get_en_category(output_dto.pokemon.species)
-        pokemon['abilities'] = self.__get_abilities(pokemon['abilities'])
-        pokemon['stats'] = {}
-        for stat in output_dto.pokemon.stats:
-            pokemon['stats'][f"{stat['stat']['name']}"] = stat['base_stat']
+        output = PokemonOutput(
+            id=pokemon.id,
+            name=pokemon.name,
+            types=", ".join(_type['type']['name'] for _type in pokemon.types),
+            sprite=pokemon.sprites['front_default'],
+            weight=self.__convert_hectograms_to_pounds(pokemon.weight),
+            height=self.__convert_decimeters_to_feet_and_inches(pokemon.height),
+            category=self.__get_en_category(pokemon.species),
+            abilities=self.__get_abilities(pokemon.abilities),
+            weaknesses=pokemon.weaknesses,
+            strengths=pokemon.strengths,
+            status={}
+        )
 
-        return pokemon
+        for stat in pokemon.stats:
+            output.status[f"{stat['stat']['name']}"] = stat['base_stat']
+
+        return FindPokemonOutputDTO(pokemon=output)
 
     def __convert_decimeters_to_feet_and_inches(self, decimeters: int) -> str:
         """
@@ -61,4 +68,5 @@ class FindPokemonPresenter(PresenterInterface):
             if genus.get('language', {}).get('name') == 'en':
                 category = genus.get('genus').replace(' Pokémon', '')
                 break
+
         return category
