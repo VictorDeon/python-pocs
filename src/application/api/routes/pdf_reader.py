@@ -1,8 +1,8 @@
-from typing import Optional, List
+from typing import Optional
 from fastapi import Query
+from src.application.api.routes import router
 from src.adapters.dtos import PDFReaderOutputDTO
 from src.adapters.controllers import PDFReaderController
-from src.application.api.routes import router
 
 
 @router.get(

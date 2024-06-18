@@ -1,7 +1,7 @@
 from fastapi import status
+from src.application.api.routes import router
 from src.adapters.dtos import FindUserOutputDTO
 from src.adapters.controllers import UserRetrieveController
-from src.application.api.routes import router
 
 
 @router.get(
