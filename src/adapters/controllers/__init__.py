@@ -4,6 +4,13 @@ from .list_xml_pokemon import ListXMLPokemonController
 from .pdf_generator import PDFGeneratorController
 from .pdf_reader import PDFReaderController
 from .find_user import FindUserController
+from .blocked_requests import (
+    BlockingRequestSyncController,
+    BlockingRequestAsyncWithSyncController,
+    NotBlockingRequestAsyncWithSyncController,
+    NotBlockingRequestAsyncController,
+    NotBlockingRequestTaskController
+)
 
 __all__ = [
     FindPokemonController,
@@ -11,5 +18,10 @@ __all__ = [
     ListXMLPokemonController,
     FindUserController,
     PDFReaderController,
-    PDFGeneratorController
+    PDFGeneratorController,
+    BlockingRequestSyncController,
+    BlockingRequestAsyncWithSyncController,
+    NotBlockingRequestAsyncWithSyncController,
+    NotBlockingRequestAsyncController,
+    NotBlockingRequestTaskController
 ]

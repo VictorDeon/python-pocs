@@ -1,5 +1,12 @@
 from fastapi import Header
 from src.application.api.routes import router
+from src.adapters.controllers import (
+    BlockingRequestSyncController,
+    BlockingRequestAsyncWithSyncController,
+    NotBlockingRequestAsyncWithSyncController,
+    NotBlockingRequestAsyncController,
+    NotBlockingRequestTaskController
+)
 from src.infrastructure.mediator.repositories import Mediator
 
 
@@ -27,9 +34,11 @@ async def blocked_requests(command: str = Header(..., description="Comando de re
     mediator = Mediator()
 
     # Adicionar as controllers
+    mediator.add(BlockingRequestSyncController()),
+    mediator.add(BlockingRequestAsyncWithSyncController())
+    mediator.add(NotBlockingRequestAsyncWithSyncController())
+    mediator.add(NotBlockingRequestAsyncController())
+    mediator.add(NotBlockingRequestTaskController())
 
-    mediator.send(command)
-
-    # controller = FindPokemonController(pokemon_id)
-    # return await controller.execute()
-    return None
+    response = mediator.send(command)
+    return response
