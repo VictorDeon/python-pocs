@@ -1,6 +1,5 @@
 from pydantic import BaseModel, Field
 from typing import Optional
-from src.domains.entities.pokemon import Pokemon
 
 
 class ListPokemonsInputDTO(BaseModel):

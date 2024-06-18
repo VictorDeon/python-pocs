@@ -2,7 +2,7 @@ from uuid import uuid4
 from datetime import datetime
 from asyncer import asyncify
 from src.adapters.interfaces import PresenterInterface
-from src.adapters.dtos import PDFGeneratorInputDTO, PDFGeneratorOutputDTO
+from src.adapters.dtos import PDFGeneratorInputDTO
 from src.domains.interfaces import UserCaseInterface
 from src.infrastructure.pdf import GeneratePDF
 from src.infrastructure.storage import StorageSingletonInterface

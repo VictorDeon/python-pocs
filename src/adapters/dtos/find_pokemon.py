@@ -50,34 +50,33 @@ class FindPokemonOutputDTO(BaseModel):
                     "weight": 15.2,
                     "types": "grass, poison",
                     "weaknesses": [
-                    "psychic",
-                    "ground",
-                    "bug",
-                    "ice",
-                    "flying",
-                    "poison",
-                    "fire"
+                        "psychic",
+                        "ground",
+                        "bug",
+                        "ice",
+                        "flying",
+                        "poison",
+                        "fire"
                     ],
                     "strengths": [
-                    "ground",
-                    "rock",
-                    "water",
-                    "fairy",
-                    "grass"
+                        "ground",
+                        "rock",
+                        "water",
+                        "fairy",
+                        "grass"
                     ],
                     "status": {
-                    "hp": 45,
-                    "attack": 49,
-                    "defense": 49,
-                    "special-attack": 65,
-                    "special-defense": 65,
-                    "speed": 45
+                        "hp": 45,
+                        "attack": 49,
+                        "defense": 49,
+                        "special-attack": 65,
+                        "special-defense": 65,
+                        "speed": 45
                     },
                     "abilities": [
-                    "overgrow"
+                        "overgrow"
                     ],
                     "category": "Seed"
                 }
             },
         }
-
