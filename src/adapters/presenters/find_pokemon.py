@@ -1,6 +1,6 @@
 import math
-from ..dtos import FindPokemonOutputDTO
-from ..interfaces import PresenterInterface
+from src.adapters.dtos import FindPokemonOutputDTO
+from src.adapters.interfaces import PresenterInterface
 
 
 class FindPokemonPresenter(PresenterInterface):
@@ -14,10 +14,16 @@ class FindPokemonPresenter(PresenterInterface):
         """
 
         pokemon = output_dto.pokemon.to_dict()
+        pokemon['types'] = ", ".join(_type['type']['name'] for _type in output_dto.pokemon.types)
+        pokemon['sprites'] = output_dto.pokemon.sprites['front_default']
         pokemon['weight'] = self.__convert_hectograms_to_pounds(output_dto.pokemon.weight)
         pokemon['height'] = self.__convert_decimeters_to_feet_and_inches(output_dto.pokemon.height)
-        pokemon['category'] = self.__get_en_category(output_dto.pokemon.species)
+        pokemon['species'] = self.__get_en_category(output_dto.pokemon.species)
         pokemon['abilities'] = self.__get_abilities(pokemon['abilities'])
+        pokemon['stats'] = {}
+        for stat in output_dto.pokemon.stats:
+            pokemon['stats'][f"{stat['stat']['name']}"] = stat['base_stat']
+
         return pokemon
 
     def __convert_decimeters_to_feet_and_inches(self, decimeters: int) -> str:
@@ -29,7 +35,7 @@ class FindPokemonPresenter(PresenterInterface):
         total_inches = centimeters / 2.54
         feet = int(total_inches // 12)
         inches = math.ceil(total_inches % 12)
-        return f"{feet}' {inches:02}\""
+        return f"{feet} feet {inches:02} inches"
 
     def __convert_hectograms_to_pounds(self, hectograms: int) -> float:
         """

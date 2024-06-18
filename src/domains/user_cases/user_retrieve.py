@@ -1,7 +1,7 @@
-from src.domains.interfaces import UserCaseInterface
-from src.infrastructure.databases.interfaces import UserDAOInterface
 from src.adapters.interfaces import PresenterInterface
 from src.adapters.dtos import FindUserInputDTO, FindUserOutputDTO
+from src.domains.interfaces import UserCaseInterface
+from src.infrastructure.databases.interfaces import UserDAOInterface
 
 
 class UserRetrieve(UserCaseInterface):

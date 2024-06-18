@@ -13,7 +13,7 @@ import logging
 import time
 import asyncer
 from pydantic import BaseModel, Field
-from . import router
+from src.application.api.routes import router
 
 
 class Error(BaseModel):

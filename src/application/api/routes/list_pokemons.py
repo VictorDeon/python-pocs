@@ -2,7 +2,7 @@ from fastapi import Response, Query
 from src.adapters.controllers import ListPokemonController
 from src.adapters.controllers import ListXMLPokemonController
 from src.adapters.dtos import ListPokemonsOutputDTO
-from . import router
+from src.application.api.routes import router
 
 
 @router.get(

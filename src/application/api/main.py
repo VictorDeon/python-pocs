@@ -6,7 +6,7 @@ from fastapi.responses import JSONResponse
 from fastapi.encoders import jsonable_encoder
 from fastapi.exceptions import RequestValidationError
 from fastapi import FastAPI
-from .routes import router
+from src.application.api.routes import router
 
 sp = timezone("America/Sao_Paulo")
 logging.Formatter.converter = lambda *args: datetime.now(tz=sp).timetuple()

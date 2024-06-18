@@ -1,5 +1,5 @@
-from ..dtos import FindUserOutputDTO
-from ..interfaces import PresenterInterface
+from src.adapters.dtos import FindUserOutputDTO
+from src.adapters.interfaces import PresenterInterface
 
 
 class FindUserPresenter(PresenterInterface):

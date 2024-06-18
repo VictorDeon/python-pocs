@@ -1,6 +1,6 @@
 from io import TextIOWrapper
 from typing import List
-from ..storage_interface import StorageSingletonInterface
+from src.infrastructure.storage import StorageSingletonInterface
 
 
 class LocalStorageSingleton(StorageSingletonInterface):

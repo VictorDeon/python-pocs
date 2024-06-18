@@ -1,7 +1,7 @@
-from src.infrastructure.storage import StorageSingletonInterface
-from src.domains.interfaces import UserCaseInterface
 from src.adapters.interfaces import PresenterInterface
 from src.adapters.dtos import PDFReaderOutputDTO, PDFReaderInputDTO
+from src.domains.interfaces import UserCaseInterface
+from src.infrastructure.storage import StorageSingletonInterface
 
 
 class PDFReader(UserCaseInterface):

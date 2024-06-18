@@ -1,9 +1,9 @@
 import logging
 from typing import List
-from ..connection import DBConnectionHandler
-from ..models import User as EntityUser
-from ..interfaces import UserDAOInterface
 from src.domains.entities import User
+from src.infrastructure.databases.connection import DBConnectionHandler
+from src.infrastructure.databases.models import User as EntityUser
+from src.infrastructure.databases.interfaces import UserDAOInterface
 
 
 class UserDAO(UserDAOInterface):

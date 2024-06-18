@@ -1,10 +1,10 @@
 import asyncio
 import os
 from typing import List
-from src.infrastructure.constants import POKEAPI_URL
 from src.domains.entities.pokemon import Pokemon
-from src.infrastructure.caches.cache_interface import CacheInterface
-from src.infrastructure.clients.client_interface import HttpClientInterface
+from src.infrastructure.constants import POKEAPI_URL
+from src.infrastructure.caches import CacheInterface
+from src.infrastructure.clients import HttpClientInterface
 from src.infrastructure.requests.interfaces import PokemonRepositoryInterface
 
 

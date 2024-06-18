@@ -1,10 +1,10 @@
-from ..interfaces import ControllerInterface
-from ..presenters import ListPokemonsPresenter
-from ..dtos import ListPokemonsInputDTO
+from src.adapters.interfaces import ControllerInterface
+from src.adapters.presenters import ListPokemonsPresenter
+from src.adapters.dtos import ListPokemonsInputDTO
+from src.domains.user_cases import ListPokemonsUseCase
 from src.infrastructure.caches.repositories import RedisCache
 from src.infrastructure.clients.repositories import HTTPxClient
 from src.infrastructure.requests.repositories import PokemonPokeAPIRepository
-from src.domains.user_cases import ListPokemonsUseCase
 
 
 class ListPokemonController(ControllerInterface):

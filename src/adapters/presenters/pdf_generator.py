@@ -1,5 +1,5 @@
-from ..dtos import PDFGeneratorOutputDTO
-from ..interfaces import PresenterInterface
+from src.adapters.dtos import PDFGeneratorOutputDTO
+from src.adapters.interfaces import PresenterInterface
 
 
 class PDFGeneratorPresenter(PresenterInterface):

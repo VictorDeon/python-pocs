@@ -4,7 +4,7 @@ import logging
 from redis.asyncio import Redis
 from redis.exceptions import ConnectionError
 from src.domains.utils.formatters import JsonFormatter
-from src.infrastructure.caches.cache_interface import CacheInterface
+from src.infrastructure.caches import CacheInterface
 from typing import Any, Union
 
 

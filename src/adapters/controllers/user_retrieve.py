@@ -1,8 +1,8 @@
 from src.adapters.interfaces import ControllerInterface
 from src.adapters.dtos import FindUserInputDTO
-from src.infrastructure.databases.daos import UserDAO
 from src.adapters.presenters import FindUserPresenter
 from src.domains.user_cases import UserRetrieve
+from src.infrastructure.databases.daos import UserDAO
 
 
 class UserRetrieveController(ControllerInterface):

@@ -1,5 +1,4 @@
 from abc import ABC, abstractmethod
-from src.adapters.interfaces import PresenterInterface
 from typing import Any
 
 

@@ -1,7 +1,7 @@
 import httpx
 import logging
 import json
-from ..client_interface import HttpClientInterface
+from src.infrastructure.clients import HttpClientInterface
 
 
 class HTTPxClient(HttpClientInterface):

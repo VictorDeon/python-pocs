@@ -1,9 +1,8 @@
-from fastapi import Response
 from src.adapters.interfaces import ControllerInterface
 from src.adapters.dtos import PDFGeneratorInputDTO
 from src.adapters.presenters import PDFGeneratorPresenter
-from src.infrastructure.storage.repositories import LocalStorageSingleton
 from src.domains.user_cases import PDFGenerator
+from src.infrastructure.storage.repositories import LocalStorageSingleton
 
 
 class PDFGeneratorController(ControllerInterface):

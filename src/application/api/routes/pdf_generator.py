@@ -1,6 +1,6 @@
 from src.adapters.dtos import PDFGeneratorInputDTO, PDFGeneratorOutputDTO
 from src.adapters.controllers import PDFGeneratorController
-from . import router
+from src.application.api.routes import router
 
 
 @router.post(

@@ -1,5 +1,5 @@
-from ..dtos import PDFReaderOutputDTO
-from ..interfaces import PresenterInterface
+from src.adapters.dtos import PDFReaderOutputDTO
+from src.adapters.interfaces import PresenterInterface
 
 
 class PDFReaderPresenter(PresenterInterface):

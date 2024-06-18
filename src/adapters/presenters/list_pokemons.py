@@ -1,5 +1,5 @@
-from ..dtos import ListPokemonsOutputDTO
-from ..interfaces import PresenterInterface
+from src.adapters.dtos import ListPokemonsOutputDTO
+from src.adapters.interfaces import PresenterInterface
 
 
 class ListPokemonsPresenter(PresenterInterface):

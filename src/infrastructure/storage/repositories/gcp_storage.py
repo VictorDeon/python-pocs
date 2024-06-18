@@ -1,7 +1,7 @@
 from google.cloud.storage import Client, Blob, Bucket
 from asyncer import asyncify
 from typing import List
-from ..storage_interface import StorageSingletonInterface
+from src.infrastructure.storage import StorageSingletonInterface
 import os
 
 

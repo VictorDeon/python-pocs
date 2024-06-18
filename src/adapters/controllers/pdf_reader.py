@@ -1,8 +1,8 @@
 from src.adapters.interfaces import ControllerInterface
 from src.adapters.dtos import PDFReaderInputDTO
-from src.infrastructure.storage.repositories import LocalStorageSingleton
 from src.adapters.presenters import PDFReaderPresenter
 from src.domains.user_cases import PDFReader
+from src.infrastructure.storage.repositories import LocalStorageSingleton
 
 
 class PDFReaderController(ControllerInterface):
