@@ -13,8 +13,9 @@ class ListPokemonsPresenter(PresenterInterface):
         """
 
         sorted_pokemons = sorted(output_dto.pokemons, key=lambda pokemon: pokemon.id)
+
         return {
-            'results': [
+            'pokemons': [
                 {
                     'id': pokemon.id,
                     'name': pokemon.name,

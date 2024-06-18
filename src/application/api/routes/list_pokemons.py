@@ -9,7 +9,6 @@ from . import router
     "/pokemons",
     summary="Listar pokemons",
     tags=["Requests"],
-    response_model=ListPokemonsOutputDTO,
     response_description="Lista de pokemons"
 )
 async def list_pokemons(

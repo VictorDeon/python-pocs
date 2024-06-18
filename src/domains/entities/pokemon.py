@@ -14,6 +14,7 @@ class Pokemon(BaseModel):
     weight: Optional[float | int] = Field(None, description="Largura do pokemon.")
     types: Optional[list[dict[str, Any]]] = Field(None, description="Tipo do pokemon.")
     weaknesses: Optional[list[str]] = Field(None, description="Fraqueza do pokemon.")
+    strengths: Optional[list[str]] = Field([], description="Fortalizas do pokemon.")
     stats: Optional[list[dict[str, Any]]] = Field(None, description="Status do pokemon.")
     abilities: Optional[list[dict[str, Any]]] = Field(None, description="Habilidades do pokemon.")
     species: Optional[dict[str, Any]] = Field(None, description="Espécie do pokemon.")
