@@ -23,14 +23,14 @@ class Company(BaseModel):
     owner_id: Mapped[int] = Column(BigInteger, ForeignKey("users.id", name='fk_company_owner'))
     owner: Mapped[User] = relationship(
         "User",
-        back_populates='owned_companies',
+        back_populates='companies',
         foreign_keys=[owner_id]
     )
 
     employees = relationship(
         'User',
-        back_populates='company',
-        foreign_keys='User.company_cnpj'
+        back_populates='work_company',
+        foreign_keys='User.work_company_cnpj'
     )
 
     def __repr__(self) -> str:

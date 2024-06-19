@@ -5,7 +5,8 @@ from src.infrastructure.databases.models import (
     User as UserModel,
     Profile as ProfileModel,
     Permission as PermissionModel,
-    Group as GroupModel
+    Group as GroupModel,
+    Company as CompanyModel
 )
 from src.infrastructure.databases.interfaces import UserDAOInterface
 
@@ -22,6 +23,7 @@ class UserDAO(UserDAOInterface):
         password: str,
         phone: str = None,
         address: str = None,
+        work_company: CompanyModel = None,
         groups: list[GroupModel] = [],
         permissions: list[PermissionModel] = []) -> User:
         """
@@ -35,6 +37,7 @@ class UserDAO(UserDAOInterface):
             email=email,
             password=password,
             profile=profile,
+            work_company=work_company,
             groups=groups,
             permissions=permissions
         )

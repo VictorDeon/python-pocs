@@ -1,5 +1,10 @@
 from abc import ABC, abstractmethod
 from src.domains.entities import User
+from src.infrastructure.databases.models import (
+    Group as GroupModel,
+    Permission as PermissionModel,
+    Company as CompanyModel
+)
 
 
 class UserDAOInterface(ABC):
@@ -8,7 +13,16 @@ class UserDAOInterface(ABC):
     """
 
     @abstractmethod
-    async def create(self, email: str, name: str, password: str) -> User:
+    async def create(
+        self,
+        email: str,
+        name: str,
+        password: str,
+        phone: str = None,
+        address: str = None,
+        work_company: CompanyModel = None,
+        groups: list[GroupModel] = [],
+        permissions: list[PermissionModel] = []) -> User:
         """
         Cria o usuário passando como argumento os dados do mesmo.
         """

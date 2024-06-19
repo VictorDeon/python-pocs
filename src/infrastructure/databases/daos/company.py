@@ -18,7 +18,7 @@ class CompanyDAO(UserDAOInterface):
         cnpj: str,
         name: str,
         fantasy_name: str,
-        user: UserModel,
+        owner: UserModel,
         employees: list[UserModel]) -> Company:
         """
         Cria o grupo passando como argumento os dados do mesmo.
@@ -29,7 +29,7 @@ class CompanyDAO(UserDAOInterface):
             cnpj=cnpj,
             name=name,
             fantasy_name=fantasy_name,
-            user=user,
+            owner=owner,
             employees=employees
         )
 
@@ -49,7 +49,7 @@ class CompanyDAO(UserDAOInterface):
             cnpj=company.cnpj,
             name=company.name,
             fantasy_name=company.fantasy_name,
-            user=User(**company.user),
+            owner=User(**company.owner),
             employees=[
                 User(**user) for user in company.employees
             ]
