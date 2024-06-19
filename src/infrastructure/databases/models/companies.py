@@ -1,4 +1,5 @@
 from datetime import datetime
+from typing import Optional
 from sqlalchemy import Column, String, BigInteger, DateTime, Boolean, ForeignKey
 from sqlalchemy.orm import Mapped, relationship
 from src.infrastructure.databases import BaseModel
@@ -12,16 +13,25 @@ class Company(BaseModel):
 
     __tablename__ = "companies"
 
-    id: Mapped[int] = Column(BigInteger, primary_key=True, autoincrement=True)
-    cnpj: Mapped[str] = Column(String(14), nullable=False, index=True)
+    cnpj: Mapped[str] = Column(String(14), primary_key=True)
     name: Mapped[str] = Column(String(50), nullable=False)
     fantasy_name: Mapped[str] = Column(String(50), nullable=True)
     created_at: Mapped[datetime] = Column(DateTime, default=datetime.now, index=True)
     updated_at: Mapped[datetime] = Column(DateTime, nullable=True)
     is_actived: Mapped[bool] = Column(Boolean, default=True, index=True)
 
-    id_user: Mapped[int] = Column(BigInteger, ForeignKey("users.id"))
-    user: Mapped[User] = relationship("User", lazy="joined", backref='companies')
+    owner_id: Mapped[int] = Column(BigInteger, ForeignKey("users.id", name='fk_company_owner'))
+    owner: Mapped[User] = relationship(
+        "User",
+        back_populates='owned_companies',
+        foreign_keys=[owner_id]
+    )
+
+    employees = relationship(
+        'User',
+        back_populates='company',
+        foreign_keys='User.company_cnpj'
+    )
 
     def __repr__(self) -> str:
         """

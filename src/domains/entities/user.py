@@ -33,7 +33,7 @@ class User(BaseModel):
             "example": {
                 "id": 1,
                 "name": "Fulano 01",
-                "email": "fulano@gmail.com",
+                "email": "fulano01@gmail.com",
                 "profile": Profile.Config.json_schema_extra['example'],
                 "permissions": Permission.Config.json_schema_extra['example'],
                 "groups": Group.Config.json_schema_extra['example']

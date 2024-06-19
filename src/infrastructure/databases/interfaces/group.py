@@ -1,4 +1,3 @@
-from typing import List
 from abc import ABC, abstractmethod
 from src.infrastructure.databases.models import Permission as PermissionModel
 from src.domains.entities import Group
@@ -10,7 +9,7 @@ class GroupDAOInterface(ABC):
     """
 
     @abstractmethod
-    async def create(self, name: str, permissions: List[PermissionModel]) -> Group:
+    async def create(self, name: str, permissions: list[PermissionModel]) -> Group:
         """
         Cria o grupo passando como argumento os dados do mesmo.
         """

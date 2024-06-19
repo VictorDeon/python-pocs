@@ -34,6 +34,19 @@ class User(BaseModel):
         backref='user'
     )
 
+    owned_companies = relationship(
+        'Company',
+        back_populates='owner',
+        foreign_keys='Company.owner_id'
+    )
+
+    company_cnpj: str = Column(String(14), ForeignKey('companies.cnpj', name='fk_employee_company'))
+    company = relationship(
+        'Company',
+        back_populates='employees',
+        foreign_keys=[company_cnpj]
+    )
+
     groups: Mapped[Optional[list[Group]]] = relationship(
         "Group",
         secondary=user_group_many_to_many,

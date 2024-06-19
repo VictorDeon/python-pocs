@@ -1,4 +1,3 @@
-from typing import List
 from abc import ABC, abstractmethod
 from src.domains.entities import User
 
@@ -21,7 +20,7 @@ class UserDAOInterface(ABC):
         """
 
     @abstractmethod
-    async def list(self, email: str = None) -> List[User]:
+    async def list(self, email: str = None) -> list[User]:
         """
         Pesquisa o usuário pelo email.
         """
