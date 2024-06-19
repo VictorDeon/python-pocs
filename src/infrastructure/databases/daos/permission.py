@@ -1,0 +1,36 @@
+import logging
+from src.domains.entities import Permission
+from src.infrastructure.databases.connection import DBConnectionHandler
+from src.infrastructure.databases.models import Permission as PermissionModel
+from src.infrastructure.databases.interfaces import UserDAOInterface
+
+
+class PermissionDAO(UserDAOInterface):
+    """
+    Repositorio de manipulação da entidade de permissão
+    """
+
+    async def create(self, name: str) -> Permission:
+        """
+        Cria a permissão passando como argumento os dados da mesma.
+        """
+
+
+        permission = PermissionModel(name=name)
+
+        with DBConnectionHandler() as database:
+            try:
+                database.session.add(permission)
+                database.session.commit()
+                logging.info(f"Permissão {permission.name} criado com sucesso.")
+            except Exception as e:
+                logging.error(f"Ocorreu um problema ao criar a permissão: {e}")
+                database.session.rollback()
+                raise e
+            finally:
+                database.session.close()
+
+        return Permission(
+            id=permission.id,
+            name=permission.name
+        )

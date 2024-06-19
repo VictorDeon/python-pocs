@@ -1,9 +1,13 @@
 from .pokemon import Pokemon
 from .user import User
 from .invoice import Invoice
+from .group import Group
+from .permission import Permission
 
 __all__ = [
-    Pokemon,
-    User,
-    Invoice
+    "Pokemon",
+    "User",
+    "Invoice",
+    "Group",
+    "Permission"
 ]

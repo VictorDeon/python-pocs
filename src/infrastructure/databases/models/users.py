@@ -1,7 +1,7 @@
 from datetime import datetime
 from typing import Optional
 from sqlalchemy import Column, String, BigInteger, DateTime, Boolean, ForeignKey
-from sqlalchemy.orm import relationship
+from sqlalchemy.orm import Mapped, relationship
 from src.infrastructure.databases import BaseModel
 from src.infrastructure.databases.models.__many_to_many import (
     user_group_many_to_many,
@@ -18,31 +18,30 @@ class User(BaseModel):
     """
 
     __tablename__ = "users"
-    __allow_unmapped__ = True
 
-    id: int = Column(BigInteger, primary_key=True, autoincrement=True)
-    email: str = Column(String(50), nullable=False, index=True, unique=True)
-    password: str = Column(String(30), nullable=False)
-    name: str = Column(String(30), nullable=False)
-    created_at: datetime = Column(DateTime, default=datetime.now, index=True)
-    updated_at: datetime = Column(DateTime, nullable=True)
-    is_deleted: bool = Column(Boolean, default=False, index=True)
+    id: Mapped[int] = Column(BigInteger, primary_key=True, autoincrement=True)
+    email: Mapped[str] = Column(String(50), nullable=False, index=True, unique=True)
+    password: Mapped[str] = Column(String(30), nullable=False)
+    name: Mapped[str] = Column(String(30), nullable=False)
+    created_at: Mapped[datetime] = Column(DateTime, default=datetime.now, index=True)
+    updated_at: Mapped[datetime] = Column(DateTime, nullable=True)
+    is_deleted: Mapped[bool] = Column(Boolean, default=False, index=True)
 
-    profile_id = Column(BigInteger, ForeignKey('profiles.id'))
-    profile: Profile = relationship(
+    profile_id: Mapped[int] = Column(BigInteger, ForeignKey('profiles.id'))
+    profile: Mapped[Profile] = relationship(
         "Profile",
         uselist=False,
         backref='user'
     )
 
-    groups: Optional[list[Group]] = relationship(
+    groups: Mapped[Optional[list[Group]]] = relationship(
         "Group",
         secondary=user_group_many_to_many,
         backref='users',
         lazy='dynamic'
     )
 
-    permissions: Optional[list[Permission]] = relationship(
+    permissions: Mapped[Optional[list[Permission]]] = relationship(
         "Permission",
         secondary=user_permission_many_to_many,
         backref='users',
