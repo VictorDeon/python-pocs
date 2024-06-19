@@ -28,9 +28,8 @@ A camada mais externa geralmente é composta por frameworks e ferramentas como b
 ### TODO:
 
 * Arrumar banco de dados sqlalchemy find_user
-* Colocar o not_blocked_requests no mesmo modelo dos outros
 * Endpoint com o CRUD de usuários (Criar, Listar, Visualizar, Deletar, Atualizar, Autenticar) - vwauth
-* Desenvolver vários tipos de consumos de APIs usando corotines, threads e processos
+* Desenvolver vários tipos de consumos de APIs usando corotines, queues, threads e processos
 * Inserir um sistema de logs inteligentes
 * Finalizar o leitor de PDF
 * Criar um interface com o tkinter para o CRUD de usuários.
