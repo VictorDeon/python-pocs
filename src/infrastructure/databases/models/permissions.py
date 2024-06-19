@@ -1,5 +1,5 @@
 from datetime import datetime
-from sqlalchemy import Column, String, Integer, DateTime, Boolean
+from sqlalchemy import Column, String, BigInteger, DateTime, Boolean
 from src.infrastructure.databases import BaseModel
 
 
@@ -10,7 +10,7 @@ class Permission(BaseModel):
 
     __tablename__ = "permissions"
 
-    id: int = Column(Integer, primary_key=True, autoincrement=True)
+    id: int = Column(BigInteger, primary_key=True, autoincrement=True)
     name: str = Column(String(50), nullable=False)
     created_at: datetime = Column(DateTime, default=datetime.now, index=True)
     updated_at: datetime = Column(DateTime, nullable=True)

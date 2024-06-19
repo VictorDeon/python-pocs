@@ -1,7 +1,5 @@
-# pylint: disable=invalid-name
-
 import os
-from typing import Optional
+from typing import Optional, Any
 from pathlib import Path
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker, Session
@@ -73,7 +71,7 @@ class DBConnectionHandler:
 
         return self
 
-    def __exit__(self, exc_type, exc_val, exc_tb):
+    def __exit__(self, exc_type: Any, exc_val: Any, exc_tb: Any) -> None:
         """
         Executado ao sair de um contexto with.
         """
