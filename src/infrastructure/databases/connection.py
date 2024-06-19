@@ -30,7 +30,7 @@ class DBConnectionHandler:
             return self.__engine
 
         if sqlite:
-            db_path = "poc.sqlite"
+            db_path = "assets/db/poc.sqlite"
             folder = Path(db_path).parent
             folder.mkdir(parents=True, exist_ok=True)
             connection_string = f"sqlite:///{db_path}"
