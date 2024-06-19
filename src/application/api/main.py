@@ -1,17 +1,31 @@
+import os
 import logging
 from datetime import datetime
 from pytz import timezone
+from contextlib import asynccontextmanager
 from fastapi import Request, status, HTTPException
 from fastapi.responses import JSONResponse
 from fastapi.encoders import jsonable_encoder
 from fastapi.exceptions import RequestValidationError
 from fastapi import FastAPI
+from src.infrastructure.databases import DBConnectionHandler
 from src.application.api.routes import router
+
+
+log_level = os.environ.get("LOG_LEVEL") or "INFO"
+if log_level == "DEBUG":
+    log = logging.DEBUG
+elif log_level == "ERROR":
+    log = logging.ERROR
+elif log_level == "WARNING":
+    log = logging.WARNING
+else:
+    log = logging.INFO
 
 sp = timezone("America/Sao_Paulo")
 logging.Formatter.converter = lambda *args: datetime.now(tz=sp).timetuple()
 logging.basicConfig(
-    level=logging.INFO,
+    level=log,
     format="%(asctime)s %(levelname)s %(message)s",
     datefmt="%d/%m/%Y %H:%M:%S"
 )
@@ -19,11 +33,29 @@ logging.getLogger('httpx').propagate = False
 logging.getLogger('asyncio').propagate = False
 logging.getLogger('urllib3').propagate = False
 
+
+@asynccontextmanager
+async def lifespan(_: FastAPI):
+    """
+    Executado antes e depois de dar o start no fastapi
+    """
+
+    logging.debug("Iniciando o projeto.")
+    # Criar as tabelas e o banco de dados se não existir.
+    with DBConnectionHandler() as database:
+        database.create_tables()
+
+    yield
+
+    logging.debug("Finalizando o projeto.")
+
+
 app = FastAPI(
     title="VKSoftware",
     version="1.0.0",
     redoc_url="/redocs",
     docs_url="/docs",
+    lifespan=lifespan
 )
 
 
@@ -34,6 +66,9 @@ def health_check():
     """
 
     return {"success": True}
+
+
+
 
 
 app.include_router(router)

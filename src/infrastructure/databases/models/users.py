@@ -1,9 +1,8 @@
 from sqlalchemy import Column, String, Integer
-from sqlalchemy.orm import relationship
-from src.infrastructure.databases import Base
+from src.infrastructure.databases import ModelBase
 
 
-class User(Base):
+class User(ModelBase):
     """
     Classe de usuários.
     """
@@ -14,7 +13,6 @@ class User(Base):
     email = Column(String, nullable=False, unique=True)
     password = Column(String, nullable=False)
     name = Column(String(20), nullable=False)
-    pet_id = relationship("Pet")
 
     def __repr__(self) -> str:
         """

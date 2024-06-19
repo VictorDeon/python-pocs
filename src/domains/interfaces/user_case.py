@@ -8,7 +8,7 @@ class UserCaseInterface(ABC):
     """
 
     @abstractmethod
-    def execute(self, input_dto: Any) -> Any:
+    async def execute(self, input_dto: Any) -> Any:
         """
         Executa o caso de uso.
         """

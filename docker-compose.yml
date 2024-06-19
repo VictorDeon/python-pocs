@@ -1,4 +1,3 @@
-version: '3'
 services:
   mongodb:
     image: mongo:4.0.8
@@ -106,6 +105,20 @@ services:
     networks:
       - vksoftware
 
+  sqlite-ui:
+    image: coleifer/sqlite-web
+    container_name: poc_sqlite_admin
+    profiles:
+      - all
+      - sqlite
+      - emulators
+    ports:
+      - "8086:8080"
+    volumes:
+      - poc_sqlite_data:/data
+    environment:
+      - SQLITE_DATABASE=poc.sqlite
+
   redis:
     image: redis/redis-stack-server:latest
     container_name: poc_redis
@@ -174,7 +187,7 @@ services:
       - GOOGLE_APPLICATION_CREDENTIALS=service_account.json
       - PUBSUB_EMULATOR_HOST=pubsub:8085
       - BUCKET_NAME=vksofware-documents
-      - DB_CONNECTION_STRING=sqlite:///storage.db
+      - DB_CONNECTION_STRING=sqlite:///poc.sqlite
       - TOPIC_ID=general-input
       - POKEAPI_URL=https://pokeapi.co/api/v2
       - CACHE_HOST=host.docker.internal
@@ -204,3 +217,4 @@ volumes:
   poc_mysql_data:
   poc_mysql_admin:
   poc_redis_data:
+  poc_sqlite_data:

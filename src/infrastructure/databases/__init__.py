@@ -1,7 +1,7 @@
-from .base import Base
+from .base import ModelBase
 from .connection import DBConnectionHandler
 
 __all__ = [
-    Base,
-    DBConnectionHandler
+    "ModelBase",
+    "DBConnectionHandler"
 ]
