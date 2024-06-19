@@ -22,7 +22,7 @@ class Company(BaseModel):
     is_actived: bool = Column(Boolean, default=True, index=True)
 
     id_user: int = Column(BigInteger, ForeignKey("users.id"))
-    user: User = relationship("User", lazy="joined", backref='user')
+    user: User = relationship("User", lazy="joined", backref='companies')
 
     def __repr__(self) -> str:
         """

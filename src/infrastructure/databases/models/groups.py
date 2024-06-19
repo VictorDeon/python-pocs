@@ -26,7 +26,7 @@ class Group(BaseModel):
     permissions: Optional[list[Permission]] = relationship(
         "Permission",
         secondary=group_permission_many_to_many,
-        backref='permission',
+        backref='groups',
         lazy='dynamic'
     )
 

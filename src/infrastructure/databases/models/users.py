@@ -1,6 +1,6 @@
 from datetime import datetime
 from typing import Optional
-from sqlalchemy import Column, String, BigInteger, DateTime, Boolean
+from sqlalchemy import Column, String, BigInteger, DateTime, Boolean, ForeignKey
 from sqlalchemy.orm import relationship
 from src.infrastructure.databases import BaseModel
 from src.infrastructure.databases.models.__many_to_many import (
@@ -28,23 +28,24 @@ class User(BaseModel):
     updated_at: datetime = Column(DateTime, nullable=True)
     is_deleted: bool = Column(Boolean, default=False, index=True)
 
+    profile_id = Column(BigInteger, ForeignKey('profiles.id'))
     profile: Profile = relationship(
         "Profile",
         uselist=False,
-        backref='profile'
+        backref='user'
     )
 
     groups: Optional[list[Group]] = relationship(
         "Group",
         secondary=user_group_many_to_many,
-        backref='group',
+        backref='users',
         lazy='dynamic'
     )
 
     permissions: Optional[list[Permission]] = relationship(
         "Permission",
         secondary=user_permission_many_to_many,
-        backref='permission',
+        backref='users',
         lazy='dynamic'
     )
 

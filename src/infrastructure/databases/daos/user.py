@@ -2,7 +2,7 @@ import logging
 from typing import List
 from src.domains.entities import User
 from src.infrastructure.databases.connection import DBConnectionHandler
-from src.infrastructure.databases.models import User as EntityUser
+from src.infrastructure.databases.models import User as EntityUser, Profile
 from src.infrastructure.databases.interfaces import UserDAOInterface
 
 
@@ -16,17 +16,20 @@ class UserDAO(UserDAOInterface):
         Cria o usuário passando como argumento os dados do mesmo.
         """
 
-        user = None
+        profile = Profile(phone="61992839444")
+
+        new_user = EntityUser(
+            name=name,
+            email=email,
+            password=password,
+            profile=profile
+        )
+
         with DBConnectionHandler() as database:
             try:
-                new_user = EntityUser(
-                    name=name,
-                    email=email,
-                    password=password
-                )
                 database.session.add(new_user)
                 database.session.commit()
-                user = User(id=new_user.id, name=new_user.name, email=new_user.email)
+                logging.info(f"Usuário {new_user.name} criado com sucesso.")
             except Exception as e:
                 logging.error(f"Ocorreu um problema ao criar o usuário: {e}")
                 database.session.rollback()
@@ -34,7 +37,7 @@ class UserDAO(UserDAOInterface):
             finally:
                 database.session.close()
 
-        return user
+        return User(id=new_user.id, name=new_user.name, email=new_user.email)
 
     async def retrieve(self, _id: int) -> User:
         """
