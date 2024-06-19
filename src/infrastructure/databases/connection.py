@@ -6,7 +6,7 @@ from pathlib import Path
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker, Session
 from sqlalchemy.future.engine import Engine
-from src.infrastructure.databases import ModelBase
+from src.infrastructure.databases import BaseModel
 
 
 class DBConnectionHandler:
@@ -56,8 +56,8 @@ class DBConnectionHandler:
         """
 
         import src.infrastructure.databases.models
-        ModelBase.metadata.drop_all(self.__engine)
-        ModelBase.metadata.create_all(self.__engine)
+        BaseModel.metadata.drop_all(self.__engine)
+        BaseModel.metadata.create_all(self.__engine)
 
     def __enter__(self):
         """
