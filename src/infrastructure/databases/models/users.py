@@ -24,7 +24,7 @@ class User(BaseModel):
     password: Mapped[str] = Column(String(30), nullable=False)
     name: Mapped[str] = Column(String(30), nullable=False)
     created_at: Mapped[datetime] = Column(DateTime, default=datetime.now, index=True)
-    updated_at: Mapped[datetime] = Column(DateTime, nullable=True)
+    updated_at: Mapped[Optional[datetime]] = Column(DateTime, nullable=True)
     is_deleted: Mapped[bool] = Column(Boolean, default=False, index=True)
 
     profile_id: Mapped[int] = Column(BigInteger, ForeignKey('profiles.id'))
@@ -40,7 +40,7 @@ class User(BaseModel):
         foreign_keys='Company.owner_id'
     )
 
-    work_company_cnpj: Mapped[str] = Column(String(14), ForeignKey('companies.cnpj', name='fk_employee_company'))
+    work_company_cnpj: Mapped[Optional[str]] = Column(String(14), ForeignKey('companies.cnpj', name='fk_employee_company'))
     work_company = relationship(
         'Company',
         back_populates='employees',

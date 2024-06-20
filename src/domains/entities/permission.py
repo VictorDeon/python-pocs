@@ -8,6 +8,7 @@ class Permission(BaseModel):
 
     id: int = Field(..., description="Identificador único da permissão.")
     name: str = Field(..., description="Nome do permissão.")
+    code: str = Field(..., description="Código da permissão.")
 
     def to_dict(self):
         """

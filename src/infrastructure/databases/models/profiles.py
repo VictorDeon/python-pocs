@@ -16,7 +16,7 @@ class Profile(BaseModel):
     phone: Mapped[Optional[str]] = Column(String(11), nullable=True)
     address: Mapped[Optional[str]] = Column(String(100), nullable=True)
     created_at: Mapped[datetime] = Column(DateTime, default=datetime.now, index=True)
-    updated_at: Mapped[datetime] = Column(DateTime, nullable=True)
+    updated_at: Mapped[Optional[datetime]] = Column(DateTime, nullable=True)
     is_deleted: Mapped[bool] = Column(Boolean, default=False, index=True)
 
     def __repr__(self) -> str:

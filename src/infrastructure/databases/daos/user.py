@@ -1,12 +1,7 @@
 import logging
+from src.adapters.dtos.create_user import CreateUserInputDTO
 from src.infrastructure.databases.connection import DBConnectionHandler
-from src.infrastructure.databases.models import (
-    User,
-    Profile,
-    Permission,
-    Group,
-    Company
-)
+from src.infrastructure.databases.models import User, Profile
 from src.infrastructure.databases.interfaces import UserDAOInterface
 
 
@@ -15,28 +10,25 @@ class UserDAO(UserDAOInterface):
     Repositorio de manipulação da entidade user
     """
 
-    async def create(
-        self,
-        email: str,
-        name: str,
-        password: str,
-        phone: str = None,
-        address: str = None,
-        work_company: Company = None,
-        groups: list[Group] = [],
-        permissions: list[Permission] = []) -> User:
+    async def create(self, user: CreateUserInputDTO) -> User:
         """
         Cria o usuário passando como argumento os dados do mesmo.
         """
 
-        profile = Profile(phone=phone, address=address)
+        profile = Profile(**user.profile.to_dict())
+
+        groups = []
+        for group_id in user.groups:
+            logging.info(f"Buscar o grupo {group_id} e adicionar na lista de grupos.")
+
+        permissions = []
+        for permission_id in user.permissions:
+            logging.info(f"Buscar a permissão {permission_id} e adicionar na lista de permissões")
 
         user = User(
-            name=name,
-            email=email,
-            password=password,
+            **user.to_dict(),
             profile=profile,
-            work_company=work_company,
+            work_company=user.work_company_cnpj,
             groups=groups,
             permissions=permissions
         )

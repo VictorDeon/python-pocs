@@ -1,5 +1,6 @@
 from abc import ABC, abstractmethod
-from src.domains.entities import Permission
+from typing import Any
+from src.infrastructure.databases.models import Permission
 
 
 class PermissionDAOInterface(ABC):
@@ -8,7 +9,7 @@ class PermissionDAOInterface(ABC):
     """
 
     @abstractmethod
-    async def create(self, name: str) -> Permission:
+    async def create(self, dto: Any) -> Permission:
         """
         Cria a permissão passando como argumento os dados do mesmo.
         """

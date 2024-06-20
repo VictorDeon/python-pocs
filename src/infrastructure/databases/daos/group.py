@@ -1,6 +1,7 @@
 import logging
+from src.adapters.dtos import CreateGroupInputDTO
 from src.infrastructure.databases.connection import DBConnectionHandler
-from src.infrastructure.databases.models import Group, Permission
+from src.infrastructure.databases.models import Group
 from src.infrastructure.databases.interfaces import UserDAOInterface
 
 
@@ -9,16 +10,13 @@ class GroupDAO(UserDAOInterface):
     Repositorio de manipulação da entidade group
     """
 
-    async def create(self, name: str, permissions: list[Permission]) -> Group:
+    async def create(self, dto: CreateGroupInputDTO) -> Group:
         """
         Cria o grupo passando como argumento os dados do mesmo.
         """
 
 
-        group = Group(
-            name=name,
-            permissions=permissions
-        )
+        group = Group(name=dto.name)
 
         with DBConnectionHandler() as database:
             try:

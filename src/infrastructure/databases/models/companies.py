@@ -15,9 +15,9 @@ class Company(BaseModel):
 
     cnpj: Mapped[str] = Column(String(14), primary_key=True)
     name: Mapped[str] = Column(String(50), nullable=False)
-    fantasy_name: Mapped[str] = Column(String(50), nullable=True)
+    fantasy_name: Mapped[Optional[str]] = Column(String(50), nullable=True)
     created_at: Mapped[datetime] = Column(DateTime, default=datetime.now, index=True)
-    updated_at: Mapped[datetime] = Column(DateTime, nullable=True)
+    updated_at: Mapped[Optional[datetime]] = Column(DateTime, nullable=True)
     is_actived: Mapped[bool] = Column(Boolean, default=True, index=True)
 
     owner_id: Mapped[int] = Column(BigInteger, ForeignKey("users.id", name='fk_company_owner'))

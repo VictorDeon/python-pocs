@@ -1,21 +1,21 @@
 import logging
+from src.adapters.dtos import CreatePermissionInputDTO
 from src.infrastructure.databases.connection import DBConnectionHandler
 from src.infrastructure.databases.models import Permission
-from src.infrastructure.databases.interfaces import UserDAOInterface
+from src.infrastructure.databases.interfaces import PermissionDAOInterface
 
 
-class PermissionDAO(UserDAOInterface):
+class PermissionDAO(PermissionDAOInterface):
     """
     Repositorio de manipulação da entidade de permissão
     """
 
-    async def create(self, name: str) -> Permission:
+    async def create(self, dto: CreatePermissionInputDTO) -> Permission:
         """
         Cria a permissão passando como argumento os dados da mesma.
         """
 
-
-        permission = Permission(name=name)
+        permission = Permission(**dto.to_dict())
 
         with DBConnectionHandler() as database:
             try:

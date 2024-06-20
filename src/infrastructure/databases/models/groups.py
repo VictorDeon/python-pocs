@@ -19,7 +19,7 @@ class Group(BaseModel):
     id: Mapped[int] = Column(BigInteger, primary_key=True, autoincrement=True)
     name: Mapped[str] = Column(String(50), nullable=False)
     created_at: Mapped[datetime] = Column(DateTime, default=datetime.now, index=True)
-    updated_at: Mapped[datetime] = Column(DateTime, nullable=True)
+    updated_at: Mapped[Optional[datetime]] = Column(DateTime, nullable=True)
     is_deleted: Mapped[bool] = Column(Boolean, default=False, index=True)
 
     permissions: Mapped[Optional[list[Permission]]] = relationship(

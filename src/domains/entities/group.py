@@ -1,3 +1,4 @@
+from typing import Optional
 from pydantic import BaseModel, Field
 from .permission import Permission
 
@@ -9,7 +10,7 @@ class Group(BaseModel):
 
     id: int = Field(..., description="Identificador único do grupo.")
     name: str = Field(..., description="Nome do grupo.")
-    permissions: list[Permission] = Field([], description="Lista de permissões do grupo de usuários.")
+    permissions: Optional[list[Permission]] = Field([], description="Lista de permissões do grupo de usuários.")
 
     def to_dict(self):
         """
