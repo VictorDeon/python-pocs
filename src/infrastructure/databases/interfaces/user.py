@@ -1,9 +1,9 @@
 from abc import ABC, abstractmethod
-from src.domains.entities import User
 from src.infrastructure.databases.models import (
-    Group as GroupModel,
-    Permission as PermissionModel,
-    Company as CompanyModel
+    Group,
+    Permission,
+    Company,
+    User
 )
 
 
@@ -20,9 +20,9 @@ class UserDAOInterface(ABC):
         password: str,
         phone: str = None,
         address: str = None,
-        work_company: CompanyModel = None,
-        groups: list[GroupModel] = [],
-        permissions: list[PermissionModel] = []) -> User:
+        work_company: Company = None,
+        groups: list[Group] = [],
+        permissions: list[Permission] = []) -> User:
         """
         Cria o usuário passando como argumento os dados do mesmo.
         """

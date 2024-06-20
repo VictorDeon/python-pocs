@@ -1,7 +1,6 @@
 import logging
-from src.domains.entities import Permission
 from src.infrastructure.databases.connection import DBConnectionHandler
-from src.infrastructure.databases.models import Permission as PermissionModel
+from src.infrastructure.databases.models import Permission
 from src.infrastructure.databases.interfaces import UserDAOInterface
 
 
@@ -16,7 +15,7 @@ class PermissionDAO(UserDAOInterface):
         """
 
 
-        permission = PermissionModel(name=name)
+        permission = Permission(name=name)
 
         with DBConnectionHandler() as database:
             try:
@@ -30,7 +29,4 @@ class PermissionDAO(UserDAOInterface):
             finally:
                 database.session.close()
 
-        return Permission(
-            id=permission.id,
-            name=permission.name
-        )
+        return permission

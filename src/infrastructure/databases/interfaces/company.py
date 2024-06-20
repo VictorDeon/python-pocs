@@ -1,6 +1,5 @@
 from abc import ABC, abstractmethod
-from src.infrastructure.databases.models import User as UserModel
-from src.domains.entities import Company
+from src.infrastructure.databases.models import User, Company
 
 
 class CompanyDAOInterface(ABC):
@@ -14,8 +13,8 @@ class CompanyDAOInterface(ABC):
         cnpj: str,
         name: str,
         fantasy_name: str,
-        user: UserModel,
-        employees: list[UserModel]) -> Company:
+        user: User,
+        employees: list[User]) -> Company:
         """
         Cria o grupo passando como argumento os dados do mesmo.
         """

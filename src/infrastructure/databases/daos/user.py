@@ -1,12 +1,11 @@
 import logging
-from src.domains.entities import User, Profile, Permission, Group
 from src.infrastructure.databases.connection import DBConnectionHandler
 from src.infrastructure.databases.models import (
-    User as UserModel,
-    Profile as ProfileModel,
-    Permission as PermissionModel,
-    Group as GroupModel,
-    Company as CompanyModel
+    User,
+    Profile,
+    Permission,
+    Group,
+    Company
 )
 from src.infrastructure.databases.interfaces import UserDAOInterface
 
@@ -23,16 +22,16 @@ class UserDAO(UserDAOInterface):
         password: str,
         phone: str = None,
         address: str = None,
-        work_company: CompanyModel = None,
-        groups: list[GroupModel] = [],
-        permissions: list[PermissionModel] = []) -> User:
+        work_company: Company = None,
+        groups: list[Group] = [],
+        permissions: list[Permission] = []) -> User:
         """
         Cria o usuário passando como argumento os dados do mesmo.
         """
 
-        profile = ProfileModel(phone=phone, address=address)
+        profile = Profile(phone=phone, address=address)
 
-        user = UserModel(
+        user = User(
             name=name,
             email=email,
             password=password,
@@ -54,26 +53,17 @@ class UserDAO(UserDAOInterface):
             finally:
                 database.session.close()
 
-        return User(
-            id=user.id,
-            name=user.name,
-            email=user.email,
-            profile=Profile(**profile.__dict__),
-            groups=[Group(**group) for group in user.groups],
-            permissions=[Permission(**permission) for permission in user.permissions]
-        )
+        return user
 
     async def retrieve(self, _id: int) -> User:
         """
         Pesquisa o usuário pelo email.
         """
 
-        user = None
+        user: User = None
         with DBConnectionHandler() as database:
             try:
-                _user: UserModel = database.session.query(UserModel).get(_id)
-                if _user:
-                    user = User(id=_user.id, name=_user.name, email=_user.email)
+                user = database.session.query(User).get(_id)
             except Exception as e:
                 logging.error(f"Ocorreu um problema ao buscar o usuário: {e}")
                 raise e
@@ -87,14 +77,12 @@ class UserDAO(UserDAOInterface):
         Pesquisa o usuário pelo email.
         """
 
-        users = []
+        users: list[User] = []
         with DBConnectionHandler() as database:
             try:
-                _users: UserModel = database.session.query(UserModel).filter(
-                    UserModel.email == email
+                users = database.session.query(User).filter(
+                    User.email == email
                 )
-                for user in _users:
-                    users.append(User(id=user.id, name=user.name, email=user.email))
             except Exception as e:
                 logging.error(f"Ocorreu um problema ao buscar o usuário: {e}")
                 raise e

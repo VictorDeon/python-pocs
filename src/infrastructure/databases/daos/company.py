@@ -1,10 +1,6 @@
 import logging
-from src.domains.entities import Company, User
 from src.infrastructure.databases.connection import DBConnectionHandler
-from src.infrastructure.databases.models import (
-    Company as CompanyModel,
-    User as UserModel
-)
+from src.infrastructure.databases.models import Company, User
 from src.infrastructure.databases.interfaces import UserDAOInterface
 
 
@@ -18,14 +14,14 @@ class CompanyDAO(UserDAOInterface):
         cnpj: str,
         name: str,
         fantasy_name: str,
-        owner: UserModel,
-        employees: list[UserModel]) -> Company:
+        owner: User,
+        employees: list[User]) -> Company:
         """
         Cria o grupo passando como argumento os dados do mesmo.
         """
 
 
-        company = CompanyModel(
+        company = Company(
             cnpj=cnpj,
             name=name,
             fantasy_name=fantasy_name,
@@ -45,12 +41,4 @@ class CompanyDAO(UserDAOInterface):
             finally:
                 database.session.close()
 
-        return Company(
-            cnpj=company.cnpj,
-            name=company.name,
-            fantasy_name=company.fantasy_name,
-            owner=User(**company.owner),
-            employees=[
-                User(**user) for user in company.employees
-            ]
-        )
+        return company
