@@ -1,4 +1,5 @@
 from pydantic import BaseModel, Field
+from typing import Optional
 
 
 class Profile(BaseModel):
@@ -7,8 +8,8 @@ class Profile(BaseModel):
     """
 
     id: int = Field(..., description="Identificador único do perfil do usuário.")
-    phone: str = Field(..., description="Telefone do usuário.")
-    address: str = Field(..., description="Endereço do usuário.")
+    phone: Optional[str] = Field(None, description="Telefone do usuário.")
+    address: Optional[str] = Field(None, description="Endereço do usuário.")
 
     def to_dict(self):
         """

@@ -27,7 +27,7 @@ class Company(BaseModel):
         foreign_keys=[owner_id]
     )
 
-    employees = relationship(
+    employees: Mapped[Optional[list[User]]] = relationship(
         'User',
         back_populates='work_company',
         foreign_keys='User.work_company_cnpj'

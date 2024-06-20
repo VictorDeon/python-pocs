@@ -34,7 +34,13 @@ class User(BaseModel):
         backref='user'
     )
 
-    work_company_cnpj: str = Column(String(14), ForeignKey('companies.cnpj', name='fk_employee_company'))
+    companies = relationship(
+        'Company',
+        back_populates='owner',
+        foreign_keys='Company.owner_id'
+    )
+
+    work_company_cnpj: Mapped[str] = Column(String(14), ForeignKey('companies.cnpj', name='fk_employee_company'))
     work_company = relationship(
         'Company',
         back_populates='employees',

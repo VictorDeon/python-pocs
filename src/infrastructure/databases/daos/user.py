@@ -1,5 +1,5 @@
 import logging
-from src.domains.entities import User
+from src.domains.entities import User, Profile, Permission, Group
 from src.infrastructure.databases.connection import DBConnectionHandler
 from src.infrastructure.databases.models import (
     User as UserModel,
@@ -54,7 +54,14 @@ class UserDAO(UserDAOInterface):
             finally:
                 database.session.close()
 
-        return User(id=user.id, name=user.name, email=user.email)
+        return User(
+            id=user.id,
+            name=user.name,
+            email=user.email,
+            profile=Profile(**profile.__dict__),
+            groups=[Group(**group) for group in user.groups],
+            permissions=[Permission(**permission) for permission in user.permissions]
+        )
 
     async def retrieve(self, _id: int) -> User:
         """

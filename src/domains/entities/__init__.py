@@ -4,6 +4,7 @@ from .invoice import Invoice
 from .group import Group
 from .permission import Permission
 from .company import Company
+from .profile import Profile
 
 __all__ = [
     "Pokemon",
@@ -11,5 +12,6 @@ __all__ = [
     "Invoice",
     "Group",
     "Permission",
-    "Company"
+    "Company",
+    "Profile"
 ]
