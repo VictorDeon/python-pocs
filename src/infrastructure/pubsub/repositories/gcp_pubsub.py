@@ -1,9 +1,9 @@
+import json
+from typing import List, Any
 from google.pubsub_v1 import SubscriberAsyncClient, PublisherAsyncClient, PubsubMessage, PublishRequest, AcknowledgeRequest
 from google.api_core.retry_async import AsyncRetry
 from google.api_core.exceptions import AlreadyExists
 from src.infrastructure.pubsub import PubsubSingletonInterface
-from typing import List, Any
-import json
 
 
 class GCPPubsubSingleton(PubsubSingletonInterface):

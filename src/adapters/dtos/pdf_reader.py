@@ -1,5 +1,5 @@
-from pydantic import BaseModel, Field
 from typing import Optional
+from pydantic import BaseModel, Field
 from src.domains.entities import Invoice as EntityInvoice
 
 
@@ -8,8 +8,8 @@ class PDFReaderInputDTO(BaseModel):
     Dados de entrada para ler um PDF de invoice.
     """
 
-    trace_id: Optional[str] = Field(None, description="Identificador único da invoice"),
-    year: Optional[int] = Field(None, description="Ano na qual a invoice foi criada."),
+    trace_id: Optional[str] = Field(None, description="Identificador único da invoice")
+    year: Optional[int] = Field(None, description="Ano na qual a invoice foi criada.")
     month: Optional[int] = Field(None, description="Mês na qual a invoice foi criada.")
 
     def to_dict(self):

@@ -9,25 +9,25 @@ class FindUserPresenter(PresenterInterface):
     Formatação de saída da API que busca um usuário.
     """
 
-    def present(self, user: UserModel) -> FindUserOutputDTO:
+    def present(self, model: UserModel) -> FindUserOutputDTO:
         """
         Forma final de apresentação dos dados.
         """
 
-        entity = User(
-            id=user.id,
-            name=user.name,
-            email=user.email,
+        user = User(
+            id=model.id,
+            name=model.name,
+            email=model.email,
             profile=Profile(
-                id=user.profile.id,
-                phone=user.profile.phone,
-                address=user.profile.address
+                id=model.profile.id,
+                phone=model.profile.phone,
+                address=model.profile.address
             ),
             permissions=[
                 Permission(
                     id=permission.id,
                     name=permission.name
-                ) for permission in user.permissions
+                ) for permission in model.permissions
             ],
             groups=[
                 Group(
@@ -39,8 +39,8 @@ class FindUserPresenter(PresenterInterface):
                             name=permission.name
                         ) for permission in group.permissions
                     ]
-                ) for group in user.groups
+                ) for group in model.groups
             ]
         )
 
-        return FindUserOutputDTO(user=entity)
+        return FindUserOutputDTO(user=user)

@@ -37,7 +37,7 @@ async def blocked_requests(command: str = Header(..., description="Comando de re
     """
 
     mediator = Mediator()
-    mediator.add(BlockingRequestSyncController()),
+    mediator.add(BlockingRequestSyncController())
     mediator.add(BlockingRequestAsyncWithSyncController())
     mediator.add(NotBlockingRequestAsyncWithSyncController())
     mediator.add(NotBlockingRequestAsyncController())

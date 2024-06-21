@@ -15,12 +15,8 @@ class RequestRepositoryInterface(Generic[MODEL], metaclass=ABCMeta):
         Método responsável por listar dados de uma API.
         """
 
-        pass
-
     @abstractmethod
-    async def find_by_id(self, id: int) -> MODEL:
+    async def find_by_id(self, _id: int) -> MODEL:
         """
         Método responsável por encontrar um determinado objeto na API.
         """
-
-        pass

@@ -80,12 +80,12 @@ class PokemonPokeAPIRepository(RequestRepositoryInterface):
 
         return [Pokemon.from_dict(pokemon) for pokemon in responses]
 
-    async def find_by_id(self, pokemon_id: int) -> Pokemon:
+    async def find_by_id(self, _id: int) -> Pokemon:
         """
         Método responsável por encontrar um determinado pokemon.
         """
 
-        response = await self.http_client.get(f'{self.base_url}/pokemon/{pokemon_id}')
+        response = await self.http_client.get(f'{self.base_url}/pokemon/{_id}')
         response['weaknesses'], response['strengths'] = await self.__get_weaknesses_and_strengths(
             response.get('types', [])
         )
@@ -93,7 +93,7 @@ class PokemonPokeAPIRepository(RequestRepositoryInterface):
 
         return Pokemon.from_dict(response)
 
-    async def __get_weaknesses_and_strengths(self, types: List[dict]) -> List[dict]:
+    async def __get_weaknesses_and_strengths(self, types: List[dict]) -> tuple[dict]:
         """
         Pega as fraquezas do pokemon
         """

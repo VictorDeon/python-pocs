@@ -8,12 +8,12 @@ class ListPokemonsPresenter(PresenterInterface):
     Formatação de saída da API que lista os pokemons.
     """
 
-    def present(self, output: list[Pokemon]) -> ListPokemonsOutputDTO:
+    def present(self, model: list[Pokemon]) -> ListPokemonsOutputDTO:
         """
         Forma final de apresentação dos dados.
         """
 
-        sorted_pokemons = sorted(output, key=lambda pokemon: pokemon.id)
+        sorted_pokemons = sorted(model, key=lambda pokemon: pokemon.id)
 
         return ListPokemonsOutputDTO(pokemons=[
             PokemonOutput(

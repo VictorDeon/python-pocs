@@ -9,4 +9,6 @@ class ControllerInterface(ABC):
 
     @abstractmethod
     async def execute(self) -> Any:
-        pass
+        """
+        Executa a controladora.
+        """

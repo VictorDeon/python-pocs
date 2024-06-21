@@ -9,10 +9,10 @@ from src.adapters.dtos import CreatePermissionOutputDTO, CreatePermissionInputDT
     response_model=CreatePermissionOutputDTO,
     summary="Cria uma permissão."
 )
-async def create_permission(input: CreatePermissionInputDTO):
+async def create_permission(data: CreatePermissionInputDTO):
     """
     Cria uma permissão do usuário ou grupo.
     """
 
-    controller = CreatePermissionController(input=input)
+    controller = CreatePermissionController(input=data)
     return await controller.execute()

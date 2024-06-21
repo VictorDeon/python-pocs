@@ -13,8 +13,6 @@ class LocalStorageSingleton(StorageSingletonInterface):
         Realiza a instanciação do storage do google cloud plataform (GCP).
         """
 
-        pass
-
     async def upload_from_string(self, path: str, content: str, content_type: str, timeout: int) -> TextIOWrapper:
         """
         Insere um documento no bucket do GCP.

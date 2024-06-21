@@ -1,6 +1,6 @@
-import httpx
 import logging
 import json
+import httpx
 from src.infrastructure.clients import HttpClientInterface
 
 

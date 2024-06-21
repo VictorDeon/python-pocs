@@ -1,7 +1,7 @@
 import time
 import logging
-import asyncer
 import asyncio
+import asyncer
 from src.adapters import ControllerInterface
 from src.adapters.dtos import BlockedRequestsOutputDTO
 

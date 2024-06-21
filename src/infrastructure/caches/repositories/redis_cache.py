@@ -1,11 +1,11 @@
 import os
 import json
 import logging
+from typing import Any, Union
 from redis.asyncio import Redis
 from redis.exceptions import ConnectionError
 from src.domains.utils.formatters import JsonFormatter
 from src.infrastructure.caches import CacheInterface
-from typing import Any, Union
 
 
 class RedisCache(CacheInterface):

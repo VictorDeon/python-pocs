@@ -8,12 +8,12 @@ class ListXMLPokemonsPresenter(PresenterInterface):
     Formatação de saída da API que lista os pokemons em XML.
     """
 
-    def present(self, output_dto: ListPokemonsOutputDTO) -> str:
+    def present(self, output: ListPokemonsOutputDTO) -> str:
         """
         Forma final de apresentação dos dados.
         """
 
-        sorted_pokemons = sorted(output_dto.pokemons, key=lambda pokemon: pokemon.id)
+        sorted_pokemons = sorted(output.pokemons, key=lambda pokemon: pokemon.id)
         root = Element('pokemons')
         for pokemon in sorted_pokemons:
             pokemon_element = Element('pokemon')

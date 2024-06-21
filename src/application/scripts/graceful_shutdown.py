@@ -33,7 +33,7 @@ def setup_signal_handler() -> None:
         loop.add_signal_handler(sig, shutdown, sig)
 
 
-async def worker(n, stop_event) -> None:
+async def worker(n) -> None:
     """
     Trabalhador processando algo de forma simulada com o
     sleep de 1 a 15 de forma randomica.
@@ -58,7 +58,7 @@ async def main() -> None:
     # Criando 6 tarefas
     tasks = []
     for n in range(6):
-        task = worker(n, stop_event)
+        task = worker(n)
         tasks.append(task)
 
     await asyncio.gather(*tasks)

@@ -12,5 +12,3 @@ class MediatorInterface(ABC):
         """
         Envia a mensagem para algum recebedor especifico.
         """
-
-        pass

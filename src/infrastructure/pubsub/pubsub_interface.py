@@ -17,6 +17,12 @@ class PubsubSingletonInterface(ABC):
         if self.__instance is not None:
             raise RuntimeError("A instância do pubsub já existe! Utilize a função get_instance()")
 
+        self.publisher = None
+        self.subscriber = None
+        self.retry = None
+        self.topic_path = None
+        self.subscription_path = None
+
     @classmethod
     def get_instance(cls):
         """
@@ -34,15 +40,11 @@ class PubsubSingletonInterface(ABC):
         Cria as instâncias do pubsub a partir do cloud escolhido.
         """
 
-        pass
-
     @abstractmethod
     async def create_topic(self, project_id: str, topic_id: str) -> str:
         """
         Cria o tópico.
         """
-
-        pass
 
     @abstractmethod
     async def create_subscription(self, project_id: str, subscription_id: str) -> str:
@@ -50,15 +52,11 @@ class PubsubSingletonInterface(ABC):
         Cria a subscription
         """
 
-        pass
-
     @abstractmethod
     async def delete_topic(self, topic_path: str):
         """
         Deleta um topico.
         """
-
-        pass
 
     @abstractmethod
     async def delete_subcription(self, subscription_path: str):
@@ -66,15 +64,11 @@ class PubsubSingletonInterface(ABC):
         Deleta uma subscription.
         """
 
-        pass
-
     @abstractmethod
     async def publish(self, topic_path: str, data: Any):
         """
         Publica algo na fila.
         """
-
-        pass
 
     @abstractmethod
     async def pull(self, queue: str, max_messages: int):
@@ -82,15 +76,11 @@ class PubsubSingletonInterface(ABC):
         Pega as mensagens da fila.
         """
 
-        pass
-
     @abstractmethod
     async def ack(self, queue: str, ack_id: str):
         """
         Realiza o ack da mensagem.
         """
-
-        pass
 
     @abstractmethod
     async def unack(self, queue: str, ack_id: str):
@@ -98,20 +88,14 @@ class PubsubSingletonInterface(ABC):
         Realiza o unack da mensagem
         """
 
-        pass
-
     @abstractmethod
     async def clean(self, queue: str, max_messages: int):
         """
         Clean queue.
         """
 
-        pass
-
     @abstractmethod
     async def get(self, queue: str, max_messages: int) -> List[dict]:
         """
         Pega os dado da sub enviados para um topico.
         """
-
-        pass

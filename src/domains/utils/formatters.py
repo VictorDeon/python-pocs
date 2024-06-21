@@ -8,16 +8,16 @@ class JsonFormatter(json.JSONEncoder):
     Transforma alguns dados do python em json.
     """
 
-    def default(self, obj: json) -> json:
+    def default(self, o: json) -> json:
         """
         Valor padrão de formatação
         """
 
-        if isinstance(obj, Decimal):
-            return float(obj)
-        elif isinstance(obj, (datetime, date)):
-            return obj.isoformat()
-        elif isinstance(obj, Exception):
-            return str(obj)
+        if isinstance(o, Decimal):
+            return float(o)
+        elif isinstance(o, (datetime, date)):
+            return o.isoformat()
+        elif isinstance(o, Exception):
+            return str(o)
         else:
-            return super().default(obj)
+            return super().default(o)

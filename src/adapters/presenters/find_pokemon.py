@@ -9,29 +9,30 @@ class FindPokemonPresenter(PresenterInterface):
     Formatação de saída da API que busca um pokemon.
     """
 
-    def present(self, pokemon: Pokemon) -> FindPokemonOutputDTO:
+    def present(self, model: Pokemon) -> FindPokemonOutputDTO:
         """
         Forma final de apresentação dos dados.
         """
 
-        output = PokemonOutput(
-            id=pokemon.id,
-            name=pokemon.name,
-            types=", ".join(_type['type']['name'] for _type in pokemon.types),
-            sprite=pokemon.sprites['front_default'],
-            weight=self.__convert_hectograms_to_pounds(pokemon.weight),
-            height=self.__convert_decimeters_to_feet_and_inches(pokemon.height),
-            category=self.__get_en_category(pokemon.species),
-            abilities=self.__get_abilities(pokemon.abilities),
-            weaknesses=pokemon.weaknesses,
-            strengths=pokemon.strengths,
-            status={}
+        status = {}
+        for stat in model.stats:
+            status[f"{stat['stat']['name']}"] = stat['base_stat']
+
+        pokemon = PokemonOutput(
+            id=model.id,
+            name=model.name,
+            types=", ".join(_type['type']['name'] for _type in model.types),
+            sprite=model.sprites['front_default'],
+            weight=self.__convert_hectograms_to_pounds(model.weight),
+            height=self.__convert_decimeters_to_feet_and_inches(model.height),
+            category=self.__get_en_category(model.species),
+            abilities=self.__get_abilities(model.abilities),
+            weaknesses=model.weaknesses,
+            strengths=model.strengths,
+            status=status
         )
 
-        for stat in pokemon.stats:
-            output.status[f"{stat['stat']['name']}"] = stat['base_stat']
-
-        return FindPokemonOutputDTO(pokemon=output)
+        return FindPokemonOutputDTO(pokemon=pokemon)
 
     def __convert_decimeters_to_feet_and_inches(self, decimeters: int) -> str:
         """

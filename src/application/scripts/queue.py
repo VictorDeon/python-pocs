@@ -1,13 +1,13 @@
-from google.api_core.exceptions import GoogleAPIError
-from asyncio import Queue, Event
-from engines.pubsub.repositories import GCPPubsubSingleton
 import time
 import random
 import asyncio
 import logging
-import asyncer
 import signal
 import os
+from asyncio import Queue, Event
+import asyncer
+from google.api_core.exceptions import GoogleAPIError
+from src.infrastructure.pubsub.repositories import GCPPubsubSingleton
 
 
 logging.basicConfig(level=logging.INFO)
@@ -34,7 +34,7 @@ def write_health_check():
     Escrevendo o arquivo de health check.
     """
 
-    with open(".timestamp.healthcheck", "w") as file:
+    with open(".timestamp.healthcheck", "w", encoding='utf-8') as file:
         file.write(str(time.time()))
 
 

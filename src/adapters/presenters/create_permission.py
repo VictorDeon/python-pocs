@@ -9,15 +9,15 @@ class CreatePermissionPresenter(PresenterInterface):
     Formatação de saída da API que cria uma permissão.
     """
 
-    def present(self, permission: PermissionModel) -> CreatePermissionOutputDTO:
+    def present(self, model: PermissionModel) -> CreatePermissionOutputDTO:
         """
         Forma final de apresentação dos dados.
         """
 
-        entity = Permission(
-            id=permission.id,
-            name=permission.name,
-            code=permission.code
+        permission = Permission(
+            id=model.id,
+            name=model.name,
+            code=model.code
         )
 
-        return CreatePermissionOutputDTO(permission=entity)
+        return CreatePermissionOutputDTO(permission=permission)

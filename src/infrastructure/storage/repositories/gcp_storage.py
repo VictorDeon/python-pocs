@@ -1,8 +1,8 @@
-from google.cloud.storage import Client, Blob, Bucket
-from asyncer import asyncify
-from typing import List
-from src.infrastructure.storage import StorageSingletonInterface
 import os
+from typing import List
+from asyncer import asyncify
+from google.cloud.storage import Client, Blob, Bucket
+from src.infrastructure.storage import StorageSingletonInterface
 
 
 class GCPStorageSingleton(StorageSingletonInterface):
@@ -18,13 +18,13 @@ class GCPStorageSingleton(StorageSingletonInterface):
         self.client = Client(project=os.environ.get('CLOUD_PROJECT'))
         self.bucket: Bucket = self.client.get_bucket(os.environ.get('BUCKET_NAME'))
 
-    async def upload_from_string(self, path: str, string_content: str, content_type: str, timeout: int) -> Blob:
+    async def upload_from_string(self, path: str, content: str, content_type: str, timeout: int) -> Blob:
         """
         Insere um documento no bucket do GCP.
         """
 
         blob = Blob(path, self.bucket)
-        await asyncify(blob.upload_from_string)(string_content, content_type=content_type, timeout=timeout)
+        await asyncify(blob.upload_from_string)(content, content_type=content_type, timeout=timeout)
         return blob
 
     async def list_blobs(self, path: str) -> List[str]:
