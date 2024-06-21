@@ -1,4 +1,4 @@
-from typing import TypeVar, Generic, Optional, AsyncIterator
+from typing import TypeVar, Generic, Optional
 
 INPUT = TypeVar("INPUT")
 DB_MODEL = TypeVar("DB_MODEL")
@@ -9,32 +9,32 @@ class DAOInterface(Generic[INPUT, DB_MODEL]):
     Interface de CRUD
     """
 
-    async def create(self, dto: INPUT) -> DB_MODEL:
+    async def create(self, dto: INPUT, commit: bool = True, close_session: bool = True) -> DB_MODEL:
         """
         Cria um objeto.
         """
 
-    async def list(self) -> AsyncIterator[DB_MODEL]:
+    async def list(self, dto: INPUT, close_session: bool = True) -> list[DB_MODEL]:
         """
         Pega uma lista de objetos.
         """
 
-    async def retrieve(self, id: int) -> Optional[DB_MODEL]:
+    async def retrieve(self, _id: int, close_session: bool = True) -> Optional[DB_MODEL]:
         """
         Pega os dados de um objeto pelo _id
         """
 
-    async def update(self, instance: DB_MODEL, dto: INPUT) -> DB_MODEL:
+    async def update(self, _id: int, dto: INPUT, commit: bool = True, close_session: bool = True) -> DB_MODEL:
         """
         Atualiza os dados de um objeto.
         """
 
-    async def delete(self, instance: DB_MODEL) -> None:
+    async def delete(self, _id: int, commit: bool = True, close_session: bool = True) -> None:
         """
         Deleta um objeto.
         """
 
-    async def count(self) -> int:
+    async def count(self, close_session: bool = True) -> int:
         """
         Pega o total de objetos.
         """
