@@ -26,6 +26,10 @@ packages:
 	# Inserir o site-packages dentro do .ignore
 	sudo docker cp api:/usr/local/lib/python3.10/site-packages .ignore/site-packages
 
+chown:
+	# Mudar as permissões de uma pasta
+	docker compose exec api chown -R ${user}:${group} ${path}
+
 rmi:
 	# Remove as imagens none
 	docker rmi $(docker images --filter "dangling=true" -q --no-trunc)
@@ -57,3 +61,19 @@ report:
 html:
 	# Relatório da cobertura de testes em html
 	docker compose exec api coverage html
+
+
+### MIGRATIONS ################################################################
+id := head
+
+migration:
+	# Cria a migraçao para ser preenchida
+	docker compose exec api alembic revision -m ${name}
+
+migrate:
+	# Insere a migração no banco de dados
+	docker compose exec api alembic upgrade head
+
+rollback:
+	# Volta para a versão anterior
+	docker compose exec api alembic downgrade -1
