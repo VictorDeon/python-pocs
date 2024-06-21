@@ -1,4 +1,4 @@
-from src.adapters.interfaces import ControllerInterface
+from src.adapters import ControllerInterface
 from src.adapters.dtos import FindUserInputDTO
 from src.adapters.presenters import FindUserPresenter
 from src.domains.user_cases import FindUser

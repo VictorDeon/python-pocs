@@ -1,4 +1,4 @@
-from src.adapters.interfaces import ControllerInterface
+from src.adapters import ControllerInterface
 from src.adapters.presenters import FindPokemonPresenter
 from src.adapters.dtos import FindPokemonInputDTO
 from src.domains.user_cases import FindPokemonUseCase

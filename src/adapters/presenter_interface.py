@@ -3,6 +3,7 @@ from typing import TypeVar, Generic, Any
 
 T = TypeVar("T")
 
+
 class PresenterInterface(Generic[T], metaclass=ABCMeta):
     """
     Interface de saída das APIs.
@@ -13,5 +14,3 @@ class PresenterInterface(Generic[T], metaclass=ABCMeta):
         """
         Forma final de apresentação dos dados.
         """
-
-        pass

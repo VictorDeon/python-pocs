@@ -1,6 +1,6 @@
 import math
 from src.adapters.dtos.find_pokemon import FindPokemonOutputDTO, PokemonOutput
-from src.adapters.interfaces import PresenterInterface
+from src.adapters import PresenterInterface
 from src.domains.entities import Pokemon
 
 

@@ -1,5 +1,5 @@
 from src.adapters.dtos import PDFReaderOutputDTO
-from src.adapters.interfaces import PresenterInterface
+from src.adapters import PresenterInterface
 from src.domains.entities import Invoice
 from typing import List
 

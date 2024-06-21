@@ -1,5 +1,5 @@
 from src.adapters.dtos.list_pokemons import ListPokemonsOutputDTO, PokemonOutput
-from src.adapters.interfaces import PresenterInterface
+from src.adapters import PresenterInterface
 from src.domains.entities import Pokemon
 
 

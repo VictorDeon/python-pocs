@@ -2,6 +2,7 @@ from typing import TypeVar, Generic, Optional, AsyncIterator, Any
 
 T = TypeVar("T")
 
+
 class DAOInterface(Generic[T]):
     """
     Interface de CRUD

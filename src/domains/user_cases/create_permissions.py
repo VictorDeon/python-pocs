@@ -1,12 +1,12 @@
-from src.adapters.interfaces import PresenterInterface
+from src.adapters import PresenterInterface
 from src.adapters.presenters import CreatePermissionPresenter
 from src.adapters.dtos import CreatePermissionInputDTO, CreatePermissionOutputDTO
-from src.domains.interfaces import UserCaseInterface
+from src.domains import UserCaseInterface
 from src.infrastructure.databases.daos import PermissionDAO
 from src.infrastructure.databases import DAOInterface
 
 
-class CreatePermission(UserCaseInterface[CreatePermissionInputDTO, CreatePermissionOutputDTO]):
+class CreatePermission(UserCaseInterface):
     """
     Caso de uso de criação de permissões.
     """

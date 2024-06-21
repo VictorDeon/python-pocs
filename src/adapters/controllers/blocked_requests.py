@@ -2,7 +2,7 @@ import time
 import logging
 import asyncer
 import asyncio
-from src.adapters.interfaces import ControllerInterface
+from src.adapters import ControllerInterface
 from src.adapters.dtos import BlockedRequestsOutputDTO
 
 SLEEP = 20

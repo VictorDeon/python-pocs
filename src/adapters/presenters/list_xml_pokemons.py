@@ -1,6 +1,6 @@
 from xml.etree.ElementTree import Element, tostring
 from src.adapters.dtos import ListPokemonsOutputDTO
-from src.adapters.interfaces import PresenterInterface
+from src.adapters import PresenterInterface
 
 
 class ListXMLPokemonsPresenter(PresenterInterface):

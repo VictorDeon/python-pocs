@@ -1,5 +1,5 @@
 from src.adapters.dtos import CreatePermissionOutputDTO
-from src.adapters.interfaces import PresenterInterface
+from src.adapters import PresenterInterface
 from src.infrastructure.databases.models import Permission as PermissionModel
 from src.domains.entities import Permission
 

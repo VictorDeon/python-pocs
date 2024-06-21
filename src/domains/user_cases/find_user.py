@@ -1,7 +1,7 @@
-from src.adapters.interfaces import PresenterInterface
+from src.adapters import PresenterInterface
 from src.adapters.presenters import FindUserPresenter
 from src.adapters.dtos import FindUserInputDTO, FindUserOutputDTO
-from src.domains.interfaces import UserCaseInterface
+from src.domains import UserCaseInterface
 from src.infrastructure.databases.daos import UserDAO
 from src.infrastructure.databases import DAOInterface
 

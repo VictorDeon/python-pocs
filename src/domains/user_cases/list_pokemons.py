@@ -1,5 +1,5 @@
 from src.adapters.dtos import ListPokemonsInputDTO
-from src.adapters.interfaces import PresenterInterface
+from src.adapters import PresenterInterface
 from src.infrastructure.requests.interfaces import PokemonRepositoryInterface
 
 

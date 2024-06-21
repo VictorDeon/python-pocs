@@ -1,4 +1,4 @@
-from src.adapters.interfaces import ControllerInterface
+from src.adapters import ControllerInterface
 from src.adapters.dtos import PDFReaderInputDTO
 from src.adapters.presenters import PDFReaderPresenter
 from src.domains.user_cases import PDFReader
