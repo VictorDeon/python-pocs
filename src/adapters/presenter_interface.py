@@ -1,16 +1,17 @@
 from abc import ABCMeta, abstractmethod
-from typing import TypeVar, Generic, Any
+from typing import TypeVar, Generic
 
-T = TypeVar("T")
+MODEL = TypeVar("MODEL")
+OUTPUT = TypeVar("OUTPUT")
 
 
-class PresenterInterface(Generic[T], metaclass=ABCMeta):
+class PresenterInterface(Generic[MODEL, OUTPUT], metaclass=ABCMeta):
     """
     Interface de saída das APIs.
     """
 
     @abstractmethod
-    def present(self, model: Any) -> Any:
+    def present(self, model: MODEL) -> OUTPUT:
         """
         Forma final de apresentação dos dados.
         """

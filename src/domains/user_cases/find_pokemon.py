@@ -1,7 +1,8 @@
-from src.adapters.dtos import FindPokemonInputDTO
+from src.adapters.dtos import FindPokemonInputDTO, FindPokemonOutputDTO
 from src.adapters import PresenterInterface
 from src.domains import UserCaseInterface
-from src.infrastructure.requests.interfaces import PokemonRepositoryInterface
+from src.domains.entities import Pokemon
+from src.infrastructure.requests import RequestRepositoryInterface
 
 
 class FindPokemonUseCase(UserCaseInterface):
@@ -9,7 +10,10 @@ class FindPokemonUseCase(UserCaseInterface):
     Realiza o caso de uso de encontrar um pokemon pelo seu ID.
     """
 
-    def __init__(self, presenter: PresenterInterface, repository: PokemonRepositoryInterface):
+    def __init__(
+        self,
+        presenter: PresenterInterface[Pokemon, FindPokemonOutputDTO],
+        repository: RequestRepositoryInterface[Pokemon]):
         """
         Constructor.
         """

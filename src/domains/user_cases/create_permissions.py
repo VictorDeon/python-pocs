@@ -1,8 +1,7 @@
 from src.adapters import PresenterInterface
-from src.adapters.presenters import CreatePermissionPresenter
 from src.adapters.dtos import CreatePermissionInputDTO, CreatePermissionOutputDTO
 from src.domains import UserCaseInterface
-from src.infrastructure.databases.daos import PermissionDAO
+from src.infrastructure.databases.models import Permission
 from src.infrastructure.databases import DAOInterface
 
 
@@ -13,8 +12,8 @@ class CreatePermission(UserCaseInterface):
 
     def __init__(
         self,
-        presenter: PresenterInterface[CreatePermissionPresenter],
-        repository: DAOInterface[PermissionDAO]):
+        presenter: PresenterInterface[Permission, CreatePermissionOutputDTO],
+        repository: DAOInterface[CreatePermissionInputDTO, Permission]):
         """
         Constructor.
         """

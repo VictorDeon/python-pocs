@@ -2,7 +2,7 @@ from uuid import uuid4
 from datetime import datetime
 from asyncer import asyncify
 from src.adapters import PresenterInterface
-from src.adapters.dtos import PDFGeneratorInputDTO
+from src.adapters.dtos import PDFGeneratorInputDTO, PDFGeneratorOutputDTO
 from src.domains import UserCaseInterface
 from src.infrastructure.pdf import GeneratePDF
 from src.infrastructure.storage import StorageSingletonInterface
@@ -13,7 +13,10 @@ class PDFGenerator(UserCaseInterface):
     Caso de uso de procura de um usuários.
     """
 
-    def __init__(self, presenter: PresenterInterface, repository: StorageSingletonInterface):
+    def __init__(
+        self,
+        presenter: PresenterInterface[str, PDFGeneratorOutputDTO],
+        repository: StorageSingletonInterface):
         """
         Constructor.
         """

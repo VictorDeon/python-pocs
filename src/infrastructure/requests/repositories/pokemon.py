@@ -5,10 +5,10 @@ from src.domains.entities.pokemon import Pokemon
 from src.infrastructure.constants import POKEAPI_URL
 from src.infrastructure.caches import CacheInterface
 from src.infrastructure.clients import HttpClientInterface
-from src.infrastructure.requests.interfaces import PokemonRepositoryInterface
+from src.infrastructure.requests import RequestRepositoryInterface
 
 
-class PokemonPokeAPIRepository(PokemonRepositoryInterface):
+class PokemonPokeAPIRepository(RequestRepositoryInterface):
     """
     Repositorio que faz a lógica de consulta de pesquisa do pokemon.
     """

@@ -1,6 +1,6 @@
 from src.adapters.dtos import PDFReaderOutputDTO
 from src.adapters import PresenterInterface
-from src.domains.entities import Invoice
+from src.domains.entities import ReaderInvoices
 from typing import List
 
 
@@ -9,9 +9,9 @@ class PDFReaderPresenter(PresenterInterface):
     Formatação de saída da API da leitura de PDF.
     """
 
-    def present(self, path: str, invoices: List[Invoice]) -> PDFReaderOutputDTO:
+    def present(self, model: ReaderInvoices) -> PDFReaderOutputDTO:
         """
         Forma final de apresentação dos dados.
         """
 
-        return PDFReaderOutputDTO(filename=path, invoices=invoices)
+        return PDFReaderOutputDTO(filename=model.path, invoices=model.invoices)

@@ -62,3 +62,12 @@ class Invoice(BaseModel):
                 ]
             }
         }
+
+
+class ReaderInvoices(BaseModel):
+    """
+    Invoice de leitura.
+    """
+
+    path: str = Field(..., description="Path de pesquisa de invoices.")
+    invoices: list[Invoice] = Field([], description="Dados das invoices.")

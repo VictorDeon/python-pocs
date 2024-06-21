@@ -1,8 +1,7 @@
 from src.adapters import PresenterInterface
-from src.adapters.presenters import FindUserPresenter
 from src.adapters.dtos import FindUserInputDTO, FindUserOutputDTO
 from src.domains import UserCaseInterface
-from src.infrastructure.databases.daos import UserDAO
+from src.infrastructure.databases.models import User
 from src.infrastructure.databases import DAOInterface
 
 
@@ -13,8 +12,8 @@ class FindUser(UserCaseInterface):
 
     def __init__(
         self,
-        presenter: PresenterInterface[FindUserPresenter],
-        repository: DAOInterface[UserDAO]):
+        presenter: PresenterInterface[User, FindUserOutputDTO],
+        repository: DAOInterface[FindUserInputDTO, User]):
         """
         Constructor.
         """

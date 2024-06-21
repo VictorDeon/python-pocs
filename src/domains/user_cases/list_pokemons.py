@@ -1,6 +1,7 @@
-from src.adapters.dtos import ListPokemonsInputDTO
+from src.adapters.dtos import ListPokemonsInputDTO, ListPokemonsOutputDTO
 from src.adapters import PresenterInterface
-from src.infrastructure.requests.interfaces import PokemonRepositoryInterface
+from src.domains.entities import Pokemon
+from src.infrastructure.requests import RequestRepositoryInterface
 
 
 class ListPokemonsUseCase:
@@ -8,7 +9,10 @@ class ListPokemonsUseCase:
     Realiza o caso de uso de listar os pokemons.
     """
 
-    def __init__(self, presenter: PresenterInterface, repository: PokemonRepositoryInterface):
+    def __init__(
+        self,
+        presenter: PresenterInterface[Pokemon, ListPokemonsOutputDTO],
+        repository: RequestRepositoryInterface[Pokemon]):
         """
         Construtor.
         """

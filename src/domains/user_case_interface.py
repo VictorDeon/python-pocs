@@ -1,10 +1,8 @@
-from typing import TypeVar, Generic, Any
-from abc import ABCMeta, abstractmethod
-
-T = TypeVar("T")
+from typing import Any
+from abc import ABC, abstractmethod
 
 
-class UserCaseInterface(Generic[T], metaclass=ABCMeta):
+class UserCaseInterface(ABC):
     """
     Interface de casos de uso.
     """

@@ -1,4 +1,3 @@
-from fastapi import Header
 from src.application.api.routes import router
 from src.adapters.controllers import CreatePermissionController
 from src.adapters.dtos import CreatePermissionOutputDTO, CreatePermissionInputDTO

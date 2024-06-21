@@ -1,6 +1,7 @@
 from src.adapters import PresenterInterface
-from src.adapters.dtos import PDFReaderInputDTO
+from src.adapters.dtos import PDFReaderInputDTO, PDFReaderOutputDTO
 from src.domains import UserCaseInterface
+from src.domains.entities import ReaderInvoices
 from src.infrastructure.storage import StorageSingletonInterface
 
 
@@ -9,7 +10,10 @@ class PDFReader(UserCaseInterface):
     Caso de uso de procura de um usuários.
     """
 
-    def __init__(self, presenter: PresenterInterface, repository: StorageSingletonInterface):
+    def __init__(
+        self,
+        presenter: PresenterInterface[ReaderInvoices, PDFReaderOutputDTO],
+        repository: StorageSingletonInterface):
         """
         Constructor.
         """
@@ -59,4 +63,4 @@ class PDFReader(UserCaseInterface):
             # Extrair dados do pdf e inserir no response
             response.append(data)
 
-        return self.presenter.present(path=path, invoices=response)
+        return self.presenter.present(model=ReaderInvoices(path=path, invoices=response))

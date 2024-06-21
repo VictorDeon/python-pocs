@@ -1,10 +1,8 @@
-from abc import ABCMeta, abstractmethod
-from typing import TypeVar, Generic, Any
-
-T = TypeVar("T")
+from abc import ABC, abstractmethod
+from typing import Any
 
 
-class ControllerInterface(Generic[T], metaclass=ABCMeta):
+class ControllerInterface(ABC):
     """
     Interface de controle.
     """
