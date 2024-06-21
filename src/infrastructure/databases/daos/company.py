@@ -1,10 +1,10 @@
 import logging
 from src.infrastructure.databases.connection import DBConnectionHandler
 from src.infrastructure.databases.models import Company, User
-from src.infrastructure.databases.interfaces import UserDAOInterface
+from src.infrastructure.databases import DAOInterface
 
 
-class CompanyDAO(UserDAOInterface):
+class CompanyDAO(DAOInterface):
     """
     Repositorio de manipulação da entidade de empresa
     """

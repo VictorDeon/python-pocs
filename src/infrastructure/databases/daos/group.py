@@ -2,10 +2,10 @@ import logging
 from src.adapters.dtos import CreateGroupInputDTO
 from src.infrastructure.databases.connection import DBConnectionHandler
 from src.infrastructure.databases.models import Group
-from src.infrastructure.databases.interfaces import UserDAOInterface
+from src.infrastructure.databases import DAOInterface
 
 
-class GroupDAO(UserDAOInterface):
+class GroupDAO(DAOInterface):
     """
     Repositorio de manipulação da entidade group
     """

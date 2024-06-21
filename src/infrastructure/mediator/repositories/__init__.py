@@ -1,5 +1,2 @@
+# flake8: noqa
 from .mediator import Mediator
-
-__all__ = [
-    Mediator
-]

@@ -2,10 +2,10 @@ import logging
 from src.adapters.dtos.create_user import CreateUserInputDTO
 from src.infrastructure.databases.connection import DBConnectionHandler
 from src.infrastructure.databases.models import User, Profile
-from src.infrastructure.databases.interfaces import UserDAOInterface
+from src.infrastructure.databases import DAOInterface
 
 
-class UserDAO(UserDAOInterface):
+class UserDAO(DAOInterface):
     """
     Repositorio de manipulação da entidade user
     """
