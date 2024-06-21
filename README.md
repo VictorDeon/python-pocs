@@ -27,8 +27,8 @@ A camada mais externa geralmente é composta por frameworks e ferramentas como b
 
 ### TODO:
 
-* Arrumar banco de dados sqlalchemy find_user
-* Endpoint com o CRUD de usuários (Criar, Listar, Visualizar, Deletar, Atualizar, Autenticar) - vwauth
+* Inserir migrations com alembic e deixar o docker compose com usuário não root para poder editar os arquivos internos dele
+* Endpoint com o CRUD de usuários e seus relacionamentos (Criar, Listar, Visualizar, Deletar, Atualizar, Autenticar) - vwauth
 * Desenvolver vários tipos de consumos de APIs usando corotines, queues, threads e processos
 * Inserir um sistema de logs inteligentes
 * Finalizar o leitor de PDF
