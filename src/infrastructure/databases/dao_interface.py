@@ -1,4 +1,4 @@
-from typing import TypeVar, Generic, Optional, AsyncIterator, Any
+from typing import TypeVar, Generic, Optional, AsyncIterator
 
 INPUT = TypeVar("INPUT")
 DB_MODEL = TypeVar("DB_MODEL")

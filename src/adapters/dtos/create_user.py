@@ -34,7 +34,6 @@ class CreatePermissionInputDTO(BaseModel):
         return self.model_dump()
 
 
-
 class CreateUserInputDTO(BaseModel):
     """
     Dados de entrada para criar um usuário

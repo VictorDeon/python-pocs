@@ -12,16 +12,15 @@ async def test_create_user_dao(faker: Faker):
     """
 
     user_dto = CreateUserInputDTO(
-        name = faker.name(),
-        email = faker.email(),
-        password = faker.password(length=15),
+        name=faker.name(),
+        email=faker.email(),
+        password=faker.password(length=15),
         permissions=[1, 2, 3],
         groups=[1],
         profile=CreateProfileInputDTO(
-            address = faker.address()
+            address=faker.address()
         )
     )
-
 
     dao = UserDAO()
     user = await dao.create(user=user_dto)
@@ -29,4 +28,3 @@ async def test_create_user_dao(faker: Faker):
     assert user.id is not None
     assert user.email == user_dto.email
     assert user.name == user_dto.name
-

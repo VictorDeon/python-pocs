@@ -61,7 +61,6 @@ class User(BaseModel):
         lazy='dynamic'
     )
 
-
     def __repr__(self) -> str:
         """
         Objeto como string.

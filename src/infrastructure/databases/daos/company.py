@@ -20,7 +20,6 @@ class CompanyDAO(DAOInterface):
         Cria o grupo passando como argumento os dados do mesmo.
         """
 
-
         company = Company(
             cnpj=cnpj,
             name=name,

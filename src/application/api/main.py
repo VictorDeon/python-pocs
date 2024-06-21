@@ -68,9 +68,6 @@ def health_check():
     return {"success": True}
 
 
-
-
-
 app.include_router(router)
 
 

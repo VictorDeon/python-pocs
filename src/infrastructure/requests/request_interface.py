@@ -1,6 +1,5 @@
 from typing import TypeVar, Generic
 from abc import ABCMeta, abstractmethod
-from src.domains.entities.pokemon import Pokemon
 
 MODEL = TypeVar("MODEL")
 

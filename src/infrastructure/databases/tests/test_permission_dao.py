@@ -8,18 +8,18 @@ async def test_create_permission_dao():
     """
 
     dto01 = CreatePermissionInputDTO(
-        name = "Permissão de criação de usuários",
-        code = "user_create"
+        name="Permissão de criação de usuários",
+        code="user_create"
     )
 
     dto02 = CreatePermissionInputDTO(
-        name = "Permissão de atualização de usuários",
-        code = "user_update"
+        name="Permissão de atualização de usuários",
+        code="user_update"
     )
 
     dto03 = CreatePermissionInputDTO(
-        name = "Permissão de deleção de usuários",
-        code = "user_delete"
+        name="Permissão de deleção de usuários",
+        code="user_delete"
     )
 
     dao = PermissionDAO()
@@ -38,4 +38,3 @@ async def test_create_permission_dao():
     assert permission03.id is not None
     assert permission03.name == dto03.name
     assert permission03.code == dto03.code
-

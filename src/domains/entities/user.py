@@ -16,7 +16,6 @@ class User(BaseModel):
     permissions: list[Permission] = Field([], description="Lista de permissões do usuário.")
     groups: list[Group] = Field([], description="Lista de grupos na qual o usuário pertence.")
 
-
     def to_dict(self):
         """
         Transforma o objeto em dicionário.

@@ -53,7 +53,7 @@ class DBConnectionHandler:
         Cria uma tabela no banco de dados.
         """
 
-        import src.infrastructure.databases.models
+        import src.infrastructure.databases.models  # noqa: F401
         BaseModel.metadata.drop_all(self.__engine)
         BaseModel.metadata.create_all(self.__engine)
 

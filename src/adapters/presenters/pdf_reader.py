@@ -1,7 +1,6 @@
 from src.adapters.dtos import PDFReaderOutputDTO
 from src.adapters import PresenterInterface
 from src.domains.entities import ReaderInvoices
-from typing import List
 
 
 class PDFReaderPresenter(PresenterInterface):

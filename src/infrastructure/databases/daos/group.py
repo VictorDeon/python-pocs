@@ -15,7 +15,6 @@ class GroupDAO(DAOInterface):
         Cria o grupo passando como argumento os dados do mesmo.
         """
 
-
         group = Group(name=dto.name)
 
         with DBConnectionHandler() as database:
