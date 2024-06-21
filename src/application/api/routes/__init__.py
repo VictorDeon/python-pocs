@@ -8,3 +8,4 @@ from .pdf_reader import *
 from .list_pokemons import *
 from .find_pokemon import *
 from .find_user import *
+from .create_permission import *

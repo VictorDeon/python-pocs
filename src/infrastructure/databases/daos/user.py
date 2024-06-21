@@ -47,7 +47,7 @@ class UserDAO(UserDAOInterface):
 
         return user
 
-    async def retrieve(self, _id: int) -> User:
+    async def retrieve(self, id: int) -> User:
         """
         Pesquisa o usuário pelo email.
         """
@@ -55,7 +55,7 @@ class UserDAO(UserDAOInterface):
         user: User = None
         with DBConnectionHandler() as database:
             try:
-                user = database.session.query(User).get(_id)
+                user = database.session.query(User).get(id)
             except Exception as e:
                 logging.error(f"Ocorreu um problema ao buscar o usuário: {e}")
                 raise e

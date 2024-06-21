@@ -1,7 +1,14 @@
-from abc import ABC, abstractmethod
+from abc import ABCMeta, abstractmethod
+from typing import TypeVar, Generic, Any
+
+T = TypeVar("T")
 
 
-class ControllerInterface(ABC):
+class ControllerInterface(Generic[T], metaclass=ABCMeta):
+    """
+    Interface de controle.
+    """
+
     @abstractmethod
-    async def execute(self) -> dict:
+    async def execute(self) -> Any:
         pass

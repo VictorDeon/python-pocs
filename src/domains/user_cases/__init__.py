@@ -3,11 +3,13 @@ from .list_pokemons import ListPokemonsUseCase
 from .find_user import FindUser
 from .pdf_generator import PDFGenerator
 from .pdf_reader import PDFReader
+from .create_permissions import CreatePermission
 
 __all__ = [
     FindPokemonUseCase,
     ListPokemonsUseCase,
     FindUser,
     PDFGenerator,
-    PDFReader
+    PDFReader,
+    CreatePermission
 ]

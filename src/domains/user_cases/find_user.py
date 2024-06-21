@@ -1,7 +1,9 @@
 from src.adapters.interfaces import PresenterInterface
-from src.adapters.dtos import FindUserInputDTO
+from src.adapters.presenters import FindUserPresenter
+from src.adapters.dtos import FindUserInputDTO, FindUserOutputDTO
 from src.domains.interfaces import UserCaseInterface
-from src.infrastructure.databases.interfaces import UserDAOInterface
+from src.infrastructure.databases.daos import UserDAO
+from src.infrastructure.databases import DAOInterface
 
 
 class FindUser(UserCaseInterface):
@@ -9,7 +11,10 @@ class FindUser(UserCaseInterface):
     Caso de uso de procura de um usuários.
     """
 
-    def __init__(self, presenter: PresenterInterface, repository: UserDAOInterface):
+    def __init__(
+        self,
+        presenter: PresenterInterface[FindUserPresenter],
+        repository: DAOInterface[UserDAO]):
         """
         Constructor.
         """
@@ -17,7 +22,7 @@ class FindUser(UserCaseInterface):
         self.presenter = presenter
         self.repository = repository
 
-    async def execute(self, input_dto: FindUserInputDTO) -> dict:
+    async def execute(self, input_dto: FindUserInputDTO) -> FindUserOutputDTO:
         """
         Encontra o usuário pelo email.
         """

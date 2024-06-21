@@ -2,10 +2,10 @@ import logging
 from src.adapters.dtos import CreatePermissionInputDTO
 from src.infrastructure.databases.connection import DBConnectionHandler
 from src.infrastructure.databases.models import Permission
-from src.infrastructure.databases.interfaces import PermissionDAOInterface
+from src.infrastructure.databases import DAOInterface
 
 
-class PermissionDAO(PermissionDAOInterface):
+class PermissionDAO(DAOInterface):
     """
     Repositorio de manipulação da entidade de permissão
     """
