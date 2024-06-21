@@ -62,6 +62,9 @@ class DBConnectionHandler:
         Executado ao criar um contexto com o with.
         """
 
+        if self.session:
+            return self
+
         if not self.__connection_string or self.__connection_string.startswith("sqlite"):
             engine = self.__create_engine(sqlite=True)
         else:
@@ -77,3 +80,4 @@ class DBConnectionHandler:
         """
 
         self.session.close()
+        self.session = None

@@ -20,7 +20,7 @@ class CreatePermissionInputDTO(BaseModel):
 
 class CreatePermissionOutputDTO(BaseModel):
     """
-    Dados de saída para criar uma empresa.
+    Dados de saída para criar uma permissão.
     """
 
     permission: Permission = Field(..., description="Dados da permissão criada.")

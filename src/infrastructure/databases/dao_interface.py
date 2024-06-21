@@ -19,9 +19,14 @@ class DAOInterface(Generic[INPUT, DB_MODEL]):
         Pega uma lista de objetos.
         """
 
-    async def retrieve(self, _id: int, close_session: bool = True) -> Optional[DB_MODEL]:
+    async def get_by_id(self, _id: int, close_session: bool = True) -> Optional[DB_MODEL]:
         """
         Pega os dados de um objeto pelo _id
+        """
+
+    async def retrieve(self, dto: INPUT, close_session: bool = True) -> Optional[DB_MODEL]:
+        """
+        Pega os dados de um objeto por um campo qualquer da modelo.
         """
 
     async def update(self, _id: int, dto: INPUT, commit: bool = True, close_session: bool = True) -> DB_MODEL:

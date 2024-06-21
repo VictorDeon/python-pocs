@@ -10,3 +10,6 @@ from .create_company import CreateCompanyInputDTO, CreateCompanyOutputDTO
 from .create_group import CreateGroupInputDTO, CreateGroupOutputDTO
 from .create_permission import CreatePermissionInputDTO, CreatePermissionOutputDTO
 from .create_user import CreateUserInputDTO, CreateUserOutputDTO, CreateProfileInputDTO
+from .list_permissions import ListPermissionInputDTO, ListPermissionOutputDTO
+from .update_permission import UpdatePermissionInputDTO, UpdatePermissionOutputDTO
+from .retrieve_permission import RetrievePermissionInputDTO, RetrievePermissionOutputDTO

@@ -1,5 +1,6 @@
 import logging
 from typing import Optional, Any
+from sqlalchemy.orm.exc import NoResultFound
 from src.adapters.dtos import CreatePermissionInputDTO
 from src.infrastructure.databases.connection import DBConnectionHandler
 from src.infrastructure.databases.models import Permission
@@ -31,6 +32,9 @@ class PermissionDAO(DAOInterface):
             except Exception as e:
                 logging.error(f"Ocorreu um problema ao criar a permissão: {e}")
                 database.session.rollback()
+                if not close_session:
+                    database.session.close()
+
                 raise e
             finally:
                 if close_session:
@@ -46,12 +50,22 @@ class PermissionDAO(DAOInterface):
         permissions: list[Permission] = []
         with DBConnectionHandler() as database:
             try:
-                permissions = database.session.query(Permission).filter(
-                    Permission.name == dto.name or
-                    Permission.code == dto.code
-                )
+                permissions = database.session \
+                    .query(Permission) \
+                    .with_entities(
+                        Permission.id,
+                        Permission.name,
+                        Permission.code
+                    ) \
+                    .filter(
+                        Permission.name == dto.name or
+                        Permission.code == dto.code
+                    ).all()
             except Exception as e:
                 logging.error(f"Ocorreu um problema ao listar as permissões: {e}")
+                if not close_session:
+                    database.session.close()
+
                 raise e
             finally:
                 if close_session:
@@ -59,8 +73,7 @@ class PermissionDAO(DAOInterface):
 
         return permissions
 
-
-    async def retrieve(self, _id: int, close_session: bool = True) -> Optional[Permission]:
+    async def get_by_id(self, _id: int, close_session: bool = True) -> Optional[Permission]:
         """
         Pega os dados de uma permissão pelo _id
         """
@@ -71,6 +84,35 @@ class PermissionDAO(DAOInterface):
                 permission = database.session.query(Permission).get(_id)
             except Exception as e:
                 logging.error(f"Ocorreu um problema ao pegar os dados da permissão: {e}")
+                if not close_session:
+                    database.session.close()
+
+                raise e
+            finally:
+                if close_session:
+                    database.session.close()
+
+        return permission
+
+    async def retrieve(self, dto: Any, close_session: bool = True) -> Optional[Permission]:
+        """
+        Pega os dados de uma permissão pelo _id
+        """
+
+        permission: Permission = None
+        with DBConnectionHandler() as database:
+            try:
+                permission = database.session \
+                    .query(Permission) \
+                    .filter(Permission.code == dto.code) \
+                    .one()
+            except NoResultFound as e:
+                logging.warn(f"Permissão com código {dto.code} não encontrada: {e}")
+            except Exception as e:
+                logging.error(f"Ocorreu um problema ao pegar os dados da permissão: {e}")
+                if not close_session:
+                    database.session.close()
+
                 raise e
             finally:
                 if close_session:
@@ -97,6 +139,9 @@ class PermissionDAO(DAOInterface):
             except Exception as e:
                 logging.error(f"Ocorreu um problema ao atualizar a permissão: {e}")
                 database.session.rollback()
+                if not close_session:
+                    database.session.close()
+
                 raise e
             finally:
                 if close_session:
@@ -121,6 +166,9 @@ class PermissionDAO(DAOInterface):
             except Exception as e:
                 logging.error(f"Ocorreu um problema ao deletar a permissão: {e}")
                 database.session.rollback()
+                if not close_session:
+                    database.session.close()
+
                 raise e
             finally:
                 if close_session:
@@ -137,6 +185,9 @@ class PermissionDAO(DAOInterface):
                 qtd = database.session.query(Permission).count()
             except Exception as e:
                 logging.error(f"Ocorreu um problema ao realizar a contagem de permissões: {e}")
+                if not close_session:
+                    database.session.close()
+
                 raise e
             finally:
                 if close_session:
