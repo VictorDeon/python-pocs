@@ -17,6 +17,18 @@ class CreatePermissionInputDTO(BaseModel):
 
         return self.model_dump()
 
+    class Config:
+        """
+        Metadados da modelo
+        """
+
+        json_schema_extra = {
+            "example": {
+                "name": "Permissão para criar permissões",
+                "code": "permission_create"
+            },
+        }
+
 
 class CreatePermissionOutputDTO(BaseModel):
     """
