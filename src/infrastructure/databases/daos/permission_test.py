@@ -1,6 +1,6 @@
 from src.adapters.dtos import (
     CreatePermissionInputDTO, ListPermissionInputDTO,
-    RetrievePermissionInputDTO
+    RetrievePermissionInputDTO, UpdatePermissionInputDTO
 )
 from sqlalchemy.orm.exc import MultipleResultsFound
 from .permission import PermissionDAO
@@ -241,8 +241,7 @@ async def test_retrieve_multiples_rows_permission_dao():
 
 async def test_retrieve_not_found_permission_dao():
     """
-    Testa a busca de uma permissão pelo código e disparação exceção de
-    multiplos retornos.
+    Testa a busca de uma permissão pelo código e não encontrando
     """
 
     dao = PermissionDAO()
@@ -250,3 +249,136 @@ async def test_retrieve_not_found_permission_dao():
     permission = await dao.retrieve(dto=dto, close_session=False)
     assert permission is None
 
+
+async def test_update_code_permission_dao():
+    """
+    Testa a atualização do codigo da parmissão.
+    """
+
+    dao = PermissionDAO()
+
+    dto01 = CreatePermissionInputDTO(
+        name="Permissão para criação de permissões",
+        code="permission_create"
+    )
+    permission = await dao.create(dto=dto01, close_session=False)
+
+    dto = UpdatePermissionInputDTO(
+        name=permission.name,
+        code="permission_update"
+    )
+
+    qtd_updated = await dao.update(_id=permission.id, dto=dto, close_session=False)
+
+    assert qtd_updated == 1
+    assert permission.name == dto01.name
+    assert permission.code != dto01.code
+    assert permission.code == dto.code
+
+    await dao.delete(_id=permission.id)
+
+
+async def test_update_name_permission_dao():
+    """
+    Testa a atualização do nome da parmissão.
+    """
+
+    dao = PermissionDAO()
+
+    dto01 = CreatePermissionInputDTO(
+        name="Permissão para criação de permissões",
+        code="permission_create"
+    )
+    permission = await dao.create(dto=dto01, close_session=False)
+
+    dto = UpdatePermissionInputDTO(
+        name="Permissão para atualização de permissões",
+        code=permission.code
+    )
+
+    qtd_updated = await dao.update(_id=permission.id, dto=dto, close_session=False)
+
+    assert qtd_updated == 1
+    assert permission.name != dto01.name
+    assert permission.code == dto01.code
+    assert permission.name == dto.name
+
+    await dao.delete(_id=permission.id)
+
+
+async def test_update_all_permission_dao():
+    """
+    Testa a atualização dos dados da parmissão.
+    """
+
+    dao = PermissionDAO()
+
+    dto01 = CreatePermissionInputDTO(
+        name="Permissão para criação de permissões",
+        code="permission_create"
+    )
+    permission = await dao.create(dto=dto01, close_session=False)
+
+    dto = UpdatePermissionInputDTO(
+        name="Permissão para atualização de permissões",
+        code="permission_updated"
+    )
+
+    qtd_updated = await dao.update(_id=permission.id, dto=dto, close_session=False)
+
+    assert qtd_updated == 1
+    assert permission.name != dto01.name
+    assert permission.code != dto01.code
+    assert permission.name == dto.name
+    assert permission.code == dto.code
+
+    await dao.delete(_id=permission.id)
+
+
+async def test_update_not_found_permission_dao():
+    """
+    Testa a atualização não encontrado.
+    """
+
+    dao = PermissionDAO()
+
+    dto = UpdatePermissionInputDTO(
+        name="Permissão para atualização de permissões",
+        code="permission_updated"
+    )
+
+    qtd_updated = await dao.update(_id=999, dto=dto)
+    assert qtd_updated == 0
+
+
+async def test_delete_permission_dao():
+    """
+    Testa a deleção da parmissão.
+    """
+
+    dao = PermissionDAO()
+
+    dto = CreatePermissionInputDTO(
+        name="Permissão para criação de permissões",
+        code="permission_create"
+    )
+    permission = await dao.create(dto=dto, close_session=False)
+    assert permission is not None
+
+    qtd_deleted = await dao.delete(_id=permission.id, close_session=False)
+
+    permission = await dao.get_by_id(_id=permission.id)
+
+    assert qtd_deleted == 1
+    assert permission is None
+
+
+async def test_delete_not_found_permission_dao():
+    """
+    Testa a deleção não encontrado.
+    """
+
+    dao = PermissionDAO()
+
+    qtd_deleted = await dao.delete(_id=999)
+    assert qtd_deleted == 0

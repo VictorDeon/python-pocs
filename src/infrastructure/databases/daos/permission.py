@@ -4,7 +4,7 @@ from sqlalchemy import and_
 from sqlalchemy.orm.exc import NoResultFound
 from src.adapters.dtos import (
     CreatePermissionInputDTO, ListPermissionInputDTO,
-    RetrievePermissionInputDTO
+    RetrievePermissionInputDTO, UpdatePermissionInputDTO
 )
 from src.infrastructure.databases.connection import DBConnectionHandler
 from src.infrastructure.databases.models import Permission
@@ -115,17 +115,17 @@ class PermissionDAO(DAOInterface):
     async def update(
         self,
         _id: int,
-        dto: Any,
+        dto: UpdatePermissionInputDTO,
         commit: bool = True,
-        close_session: bool = True) -> Optional[Permission]:
+        close_session: bool = True) -> int:
         """
         Pega os dados de uma permissão pelo _id
         """
 
-        permission: Permission = None
+        qtd_updated: int = 0
         with DBConnectionHandler.connect(close_session) as database:
             try:
-                permission = database.session.query(Permission).filter(Permission.id == _id).update(dto.to_dict())
+                qtd_updated = database.session.query(Permission).filter(Permission.id == _id).update(dto.to_dict())
                 if commit:
                     database.session.commit()
                     logging.info("Permissões atualizadas no banco.")
@@ -135,20 +135,21 @@ class PermissionDAO(DAOInterface):
                 database.close_session()
                 raise e
 
-        return permission
+        return qtd_updated
 
     async def delete(
         self,
         _id: int,
         commit: bool = True,
-        close_session: bool = True) -> None:
+        close_session: bool = True) -> int:
         """
         Pega os dados de uma permissão pelo _id
         """
 
+        qtd_deleted: int = 0
         with DBConnectionHandler.connect(close_session) as database:
             try:
-                database.session.query(Permission).filter(Permission.id == _id).delete()
+                qtd_deleted = database.session.query(Permission).filter(Permission.id == _id).delete()
                 if commit:
                     database.session.commit()
                     logging.info("Permissões deletadas do banco.")
@@ -157,6 +158,8 @@ class PermissionDAO(DAOInterface):
                 database.session.rollback()
                 database.close_session()
                 raise e
+
+        return qtd_deleted
 
     async def count(self, close_session: bool = True) -> int:
         """
