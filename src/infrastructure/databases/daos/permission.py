@@ -149,7 +149,6 @@ class PermissionDAO(DAOInterface):
                     raise ValueError(f"Permissão com o id {_id} não encontrado.")
 
                 database.session.delete(permission)
-                database.session.flush()
                 if commit:
                     database.session.commit()
                     logging.info("Permissões deletadas do banco.")
