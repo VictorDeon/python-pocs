@@ -20,11 +20,12 @@ async def test_create_permission_dao():
     dao = PermissionDAO()
     permission = await dao.create(dto=dto, close_session=False)
 
-    assert permission.id is not None
-    assert permission.name == dto.name
-    assert permission.code == dto.code
-
-    await dao.delete(_id=permission.id)
+    try:
+        assert permission.id is not None
+        assert permission.name == dto.name
+        assert permission.code == dto.code
+    finally:
+        await dao.delete(_id=permission.id)
 
 
 async def test_list_by_code_permissions_dao():
@@ -57,14 +58,15 @@ async def test_list_by_code_permissions_dao():
     )
     permissions = await dao.list(dto=dto, close_session=False)
 
-    assert len(permissions) == 1
-    assert permissions[0].id == permission01.id
-    assert permissions[0].name == permission01.name
-    assert permissions[0].code == permission01.code
-
-    await dao.delete(_id=permission01.id, commit=False, close_session=False)
-    await dao.delete(_id=permission02.id, commit=False, close_session=False)
-    await dao.delete(_id=permission03.id, commit=True)
+    try:
+        assert len(permissions) == 1
+        assert permissions[0].id == permission01.id
+        assert permissions[0].name == permission01.name
+        assert permissions[0].code == permission01.code
+    finally:
+        await dao.delete(_id=permission01.id, commit=False, close_session=False)
+        await dao.delete(_id=permission02.id, commit=False, close_session=False)
+        await dao.delete(_id=permission03.id, commit=True)
 
 async def test_list_by_name_permissions_dao():
     """
@@ -96,17 +98,18 @@ async def test_list_by_name_permissions_dao():
     )
     permissions = await dao.list(dto=dto, close_session=False)
 
-    assert len(permissions) == 2
-    assert permissions[0].id == permission01.id
-    assert permissions[0].name == permission01.name
-    assert permissions[0].code == permission01.code
-    assert permissions[1].id == permission03.id
-    assert permissions[1].name == permission03.name
-    assert permissions[1].code == permission03.code
-
-    await dao.delete(_id=permission01.id, commit=False, close_session=False)
-    await dao.delete(_id=permission02.id, commit=False, close_session=False)
-    await dao.delete(_id=permission03.id, commit=True)
+    try:
+        assert len(permissions) == 2
+        assert permissions[0].id == permission01.id
+        assert permissions[0].name == permission01.name
+        assert permissions[0].code == permission01.code
+        assert permissions[1].id == permission03.id
+        assert permissions[1].name == permission03.name
+        assert permissions[1].code == permission03.code
+    finally:
+        await dao.delete(_id=permission01.id, commit=False, close_session=False)
+        await dao.delete(_id=permission02.id, commit=False, close_session=False)
+        await dao.delete(_id=permission03.id, commit=True)
 
 async def test_list_by_name_and_code_permissions_dao():
     """
@@ -139,14 +142,15 @@ async def test_list_by_name_and_code_permissions_dao():
     )
     permissions = await dao.list(dto=dto, close_session=False)
 
-    assert len(permissions) == 1
-    assert permissions[0].id == permission03.id
-    assert permissions[0].name == permission03.name
-    assert permissions[0].code == permission03.code
-
-    await dao.delete(_id=permission01.id, commit=False, close_session=False)
-    await dao.delete(_id=permission02.id, commit=False, close_session=False)
-    await dao.delete(_id=permission03.id, commit=True)
+    try:
+        assert len(permissions) == 1
+        assert permissions[0].id == permission03.id
+        assert permissions[0].name == permission03.name
+        assert permissions[0].code == permission03.code
+    finally:
+        await dao.delete(_id=permission01.id, commit=False, close_session=False)
+        await dao.delete(_id=permission02.id, commit=False, close_session=False)
+        await dao.delete(_id=permission03.id, commit=True)
 
 async def test_list_all_permissions_dao():
     """
@@ -177,20 +181,21 @@ async def test_list_all_permissions_dao():
 
     qtd = await dao.count(close_session=False)
 
-    assert len(permissions) == qtd
-    assert permissions[0].id == permission01.id
-    assert permissions[0].name == permission01.name
-    assert permissions[0].code == permission01.code
-    assert permissions[1].id == permission02.id
-    assert permissions[1].name == permission02.name
-    assert permissions[1].code == permission02.code
-    assert permissions[2].id == permission03.id
-    assert permissions[2].name == permission03.name
-    assert permissions[2].code == permission03.code
-
-    await dao.delete(_id=permission01.id, commit=False, close_session=False)
-    await dao.delete(_id=permission02.id, commit=False, close_session=False)
-    await dao.delete(_id=permission03.id, commit=True)
+    try:
+        assert len(permissions) == qtd
+        assert permissions[0].id == permission01.id
+        assert permissions[0].name == permission01.name
+        assert permissions[0].code == permission01.code
+        assert permissions[1].id == permission02.id
+        assert permissions[1].name == permission02.name
+        assert permissions[1].code == permission02.code
+        assert permissions[2].id == permission03.id
+        assert permissions[2].name == permission03.name
+        assert permissions[2].code == permission03.code
+    finally:
+        await dao.delete(_id=permission01.id, commit=False, close_session=False)
+        await dao.delete(_id=permission02.id, commit=False, close_session=False)
+        await dao.delete(_id=permission03.id, commit=True)
 
 async def test_get_by_id_permission_dao():
     """
@@ -207,11 +212,12 @@ async def test_get_by_id_permission_dao():
 
     searched_permissions = await dao.get_by_id(_id=permission.id, close_session=False)
 
-    assert permission.id == searched_permissions.id
-    assert permission.name == searched_permissions.name
-    assert permission.code == searched_permissions.code
-
-    await dao.delete(_id=permission.id)
+    try:
+        assert permission.id == searched_permissions.id
+        assert permission.name == searched_permissions.name
+        assert permission.code == searched_permissions.code
+    finally:
+        await dao.delete(_id=permission.id)
 
 
 async def test_get_by_id_not_found_permission_dao():
@@ -243,11 +249,12 @@ async def test_retrieve_by_code_permission_dao():
 
     searched_permissions = await dao.retrieve(dto=dto, close_session=False)
 
-    assert permission01.id == searched_permissions.id
-    assert permission01.name == searched_permissions.name
-    assert permission01.code == searched_permissions.code
-
-    await dao.delete(_id=permission01.id)
+    try:
+        assert permission01.id == searched_permissions.id
+        assert permission01.name == searched_permissions.name
+        assert permission01.code == searched_permissions.code
+    finally:
+        await dao.delete(_id=permission01.id)
 
 
 async def test_retrieve_multiples_rows_permission_dao():
@@ -274,13 +281,14 @@ async def test_retrieve_multiples_rows_permission_dao():
         code="permission_create"
     )
 
-    with pytest.raises(MultipleResultsFound) as exc:
-        await dao.retrieve(dto=dto, close_session=False)
+    try:
+        with pytest.raises(MultipleResultsFound) as exc:
+            await dao.retrieve(dto=dto, close_session=False)
 
-    assert 'Multiple rows were found when exactly one was required' in str(exc)
-
-    await dao.delete(_id=permission01.id)
-    await dao.delete(_id=permission02.id)
+        assert 'Multiple rows were found when exactly one was required' in str(exc)
+    finally:
+        await dao.delete(_id=permission01.id)
+        await dao.delete(_id=permission02.id)
 
 
 async def test_retrieve_not_found_permission_dao():
@@ -314,12 +322,13 @@ async def test_update_code_permission_dao():
 
     updated_permission = await dao.update(_id=permission.id, dto=dto, close_session=False)
 
-    assert permission.id == updated_permission.id
-    assert permission.name == updated_permission.name
-    assert permission.code == updated_permission.code
-    assert updated_permission.code == dto.code
-
-    await dao.delete(_id=permission.id)
+    try:
+        assert permission.id == updated_permission.id
+        assert permission.name == updated_permission.name
+        assert permission.code == updated_permission.code
+        assert updated_permission.code == dto.code
+    finally:
+        await dao.delete(_id=permission.id)
 
 
 async def test_update_name_permission_dao():
@@ -342,12 +351,13 @@ async def test_update_name_permission_dao():
 
     updated_permission = await dao.update(_id=permission.id, dto=dto, close_session=False)
 
-    assert permission.id == updated_permission.id
-    assert permission.name == updated_permission.name
-    assert permission.code == updated_permission.code
-    assert updated_permission.name == dto.name
-
-    await dao.delete(_id=permission.id)
+    try:
+        assert permission.id == updated_permission.id
+        assert permission.name == updated_permission.name
+        assert permission.code == updated_permission.code
+        assert updated_permission.name == dto.name
+    finally:
+        await dao.delete(_id=permission.id)
 
 
 async def test_update_all_permission_dao():
@@ -370,13 +380,14 @@ async def test_update_all_permission_dao():
 
     updated_permission = await dao.update(_id=permission.id, dto=dto, close_session=False)
 
-    assert permission.id == updated_permission.id
-    assert permission.name == updated_permission.name
-    assert permission.code == updated_permission.code
-    assert updated_permission.name == dto.name
-    assert updated_permission.code == dto.code
-
-    await dao.delete(_id=permission.id)
+    try:
+        assert permission.id == updated_permission.id
+        assert permission.name == updated_permission.name
+        assert permission.code == updated_permission.code
+        assert updated_permission.name == dto.name
+        assert updated_permission.code == dto.code
+    finally:
+        await dao.delete(_id=permission.id)
 
 
 async def test_update_not_found_permission_dao():
