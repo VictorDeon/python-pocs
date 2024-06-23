@@ -68,6 +68,7 @@ async def test_list_by_code_permissions_dao():
         await dao.delete(_id=permission02.id, commit=False, close_session=False)
         await dao.delete(_id=permission03.id, commit=True)
 
+
 async def test_list_by_name_permissions_dao():
     """
     Listando as permissões dos usuários pelo nome.
@@ -111,6 +112,7 @@ async def test_list_by_name_permissions_dao():
         await dao.delete(_id=permission02.id, commit=False, close_session=False)
         await dao.delete(_id=permission03.id, commit=True)
 
+
 async def test_list_by_name_and_code_permissions_dao():
     """
     Listando as permissões dos usuários pelo nome.
@@ -151,6 +153,7 @@ async def test_list_by_name_and_code_permissions_dao():
         await dao.delete(_id=permission01.id, commit=False, close_session=False)
         await dao.delete(_id=permission02.id, commit=False, close_session=False)
         await dao.delete(_id=permission03.id, commit=True)
+
 
 async def test_list_all_permissions_dao():
     """
@@ -196,6 +199,7 @@ async def test_list_all_permissions_dao():
         await dao.delete(_id=permission01.id, commit=False, close_session=False)
         await dao.delete(_id=permission02.id, commit=False, close_session=False)
         await dao.delete(_id=permission03.id, commit=True)
+
 
 async def test_get_by_id_permission_dao():
     """
@@ -438,4 +442,4 @@ async def test_delete_not_found_permission_dao():
     with pytest.raises(ValueError) as exc:
         await dao.delete(_id=999)
 
-    assert f"Permissão com o id 999 não encontrado." in str(exc)
+    assert "Permissão com o id 999 não encontrado." in str(exc)

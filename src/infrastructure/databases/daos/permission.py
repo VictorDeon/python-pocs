@@ -1,6 +1,6 @@
 import logging
 from typing import Optional
-from sqlalchemy import and_, select, Select
+from sqlalchemy import select, Select
 from sqlalchemy.orm.exc import NoResultFound
 from src.adapters.dtos import (
     CreatePermissionInputDTO, ListPermissionInputDTO,
