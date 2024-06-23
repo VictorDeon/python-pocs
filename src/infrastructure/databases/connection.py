@@ -12,14 +12,36 @@ class DBConnectionHandler:
     Realiza a lógica de conexão com o banco de dados usando SQL ALQUEMY.
     """
 
-    def __init__(self) -> None:
+    __instance = None
+
+    def __init__(self, close_session: bool = True) -> None:
         """
         Construtor.
         """
 
         self.__connection_string: Optional[str] = os.environ.get("DB_CONNECTION_STRING")
         self.__engine: Optional[Engine] = None
+        self.__close_session = close_session
         self.session = None
+
+    @classmethod
+    def connect(cls, close_session: bool = True):
+        """
+        Realiza a conexão.
+        """
+
+        if not cls.__instance:
+            cls.__instance = DBConnectionHandler(close_session)
+
+        cls.__instance.__close_session = close_session
+        return cls.__instance
+
+    def close_session(self, value: bool = True) -> None:
+        """
+        Configura o fechamento de conexão.
+        """
+
+        self.__close_session = value
 
     def __create_engine(self, sqlite: bool = False) -> Engine:
         """
@@ -81,5 +103,7 @@ class DBConnectionHandler:
         Executado ao sair de um contexto with.
         """
 
-        self.session.close()
-        self.session = None
+        if self.__close_session:
+            self.session.close()
+            self.session = None
+            self.__instance = None
