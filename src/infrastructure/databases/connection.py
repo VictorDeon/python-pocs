@@ -1,4 +1,5 @@
 import os
+import logging
 from typing import Optional, Any
 from pathlib import Path
 from sqlalchemy import create_engine
@@ -71,6 +72,7 @@ class DBConnectionHandler:
 
         __session = sessionmaker(bind=engine, expire_on_commit=False, class_=Session)
         self.session: Session = __session()
+        logging.debug("DB pool de conexões iniciado.")
 
     def create_tables(self):
         """
@@ -107,3 +109,4 @@ class DBConnectionHandler:
             self.session.close()
             self.session = None
             self.__instance = None
+            logging.debug("DB pool de conexões finalizada.")

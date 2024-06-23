@@ -1,8 +1,11 @@
 import logging
 from typing import Optional, Any
-from sqlalchemy import or_, and_
+from sqlalchemy import and_
 from sqlalchemy.orm.exc import NoResultFound
-from src.adapters.dtos import CreatePermissionInputDTO, ListPermissionInputDTO
+from src.adapters.dtos import (
+    CreatePermissionInputDTO, ListPermissionInputDTO,
+    RetrievePermissionInputDTO
+)
 from src.infrastructure.databases.connection import DBConnectionHandler
 from src.infrastructure.databases.models import Permission
 from src.infrastructure.databases import DAOInterface
@@ -29,7 +32,7 @@ class PermissionDAO(DAOInterface):
                 database.session.add(permission)
                 if commit:
                     database.session.commit()
-                logging.info(f"Permissão {permission.name} criado com sucesso.")
+                    logging.info("Permissões inseridadas no banco.")
             except Exception as e:
                 logging.error(f"Ocorreu um problema ao criar a permissão: {e}")
                 database.session.rollback()
@@ -46,7 +49,7 @@ class PermissionDAO(DAOInterface):
         permissions: list[Permission] = []
         with DBConnectionHandler.connect(close_session) as database:
             if dto.name and dto.code:
-                condition = or_(
+                condition = and_(
                     Permission.name.like(f"%{dto.name}%"),
                     Permission.code == dto.code
                 )
@@ -88,7 +91,7 @@ class PermissionDAO(DAOInterface):
 
         return permission
 
-    async def retrieve(self, dto: Any, close_session: bool = True) -> Optional[Permission]:
+    async def retrieve(self, dto: RetrievePermissionInputDTO, close_session: bool = True) -> Optional[Permission]:
         """
         Pega os dados de uma permissão pelo _id
         """
@@ -125,6 +128,7 @@ class PermissionDAO(DAOInterface):
                 permission = database.session.query(Permission).filter(Permission.id == _id).update(dto.to_dict())
                 if commit:
                     database.session.commit()
+                    logging.info("Permissões atualizadas no banco.")
             except Exception as e:
                 logging.error(f"Ocorreu um problema ao atualizar a permissão: {e}")
                 database.session.rollback()
@@ -147,6 +151,7 @@ class PermissionDAO(DAOInterface):
                 database.session.query(Permission).filter(Permission.id == _id).delete()
                 if commit:
                     database.session.commit()
+                    logging.info("Permissões deletadas do banco.")
             except Exception as e:
                 logging.error(f"Ocorreu um problema ao deletar a permissão: {e}")
                 database.session.rollback()
