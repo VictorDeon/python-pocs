@@ -8,7 +8,6 @@ class RetrievePermissionInputDTO(BaseModel):
     Dados de entrada para buscar uma permissão.
     """
 
-    name: Optional[str] = Field(None, description="Nome da permissão.")
     code: Optional[str] = Field(None, description="Código da permissão.")
 
     def to_dict(self):
