@@ -52,8 +52,10 @@ class PermissionDAO(DAOInterface):
 
             if dto:
                 if dto.name and dto.code:
-                    statement: Select = statement.where(Permission.name.like(f"%{dto.name}%"))
-                    statement: Select = statement.where(Permission.code == dto.code)
+                    statement: Select = statement.where(
+                        (Permission.name.like(f"%{dto.name}%")) &
+                        (Permission.code == dto.code)
+                    )
                 elif dto.name:
                     statement: Select = statement.where(Permission.name.like(f"%{dto.name}%"))
                 elif dto.code:
