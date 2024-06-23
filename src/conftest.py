@@ -38,14 +38,3 @@ def envs():
         "GOOGLE_CLOUD_PROJECT": "vksoftware"
     }):
         yield
-
-
-@pytest.fixture(scope="function")
-def db():
-    """
-    Fixture to populate db and remove after test execution.
-    """
-
-    yield
-
-
