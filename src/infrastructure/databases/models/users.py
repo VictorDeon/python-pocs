@@ -34,7 +34,7 @@ class User(BaseModel):
         backref='user'
     )
 
-    companies: Mapped[list["Company"]] = relationship(
+    companies: Mapped[list["Company"]] = relationship(  # noqa: F821
         'Company',
         back_populates='owner',
         foreign_keys='Company.owner_id'

@@ -2,7 +2,6 @@ from typing import Optional
 from pydantic import BaseModel, Field
 from src.domains.entities import User
 from .create_profile import CreateProfileInputDTO
-from .create_company import CreateCompanyInputDTO
 
 
 class CreatePermissionInputDTO(BaseModel):
