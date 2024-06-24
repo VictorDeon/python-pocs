@@ -13,8 +13,8 @@ async def test_create_permission_dao():
     """
 
     dto = CreatePermissionInputDTO(
-        name="Permissão de criação de permissões",
-        code="permission_create"
+        name="Test Permissão de criação de permissões",
+        code="t_permission_create"
     )
 
     dao = PermissionDAO()
@@ -36,25 +36,25 @@ async def test_list_by_code_permissions_dao():
     dao = PermissionDAO()
 
     dto01 = CreatePermissionInputDTO(
-        name="Permissão de criação de permissões",
-        code="permission_create"
+        name="Test Permissão de criação de permissões",
+        code="t_permission_create"
     )
     permission01 = await dao.create(dto=dto01, commit=False, close_session=False)
 
     dto02 = CreatePermissionInputDTO(
-        name="Permissão de atualização de permissões",
-        code="permission_update"
+        name="Test Permissão de atualização de permissões",
+        code="t_permission_update"
     )
     permission02 = await dao.create(dto=dto02, commit=False, close_session=False)
 
     dto03 = CreatePermissionInputDTO(
-        name="Permissão de listagem de permissões",
-        code="permission_list"
+        name="Test Permissão de listagem de permissões",
+        code="t_permission_list"
     )
     permission03 = await dao.create(dto=dto03, commit=True, close_session=False)
 
     dto = ListPermissionInputDTO(
-        code="permission_create"
+        code="t_permission_create"
     )
     permissions = await dao.list(dto=dto, close_session=False)
 
@@ -77,25 +77,25 @@ async def test_list_by_name_permissions_dao():
     dao = PermissionDAO()
 
     dto01 = CreatePermissionInputDTO(
-        name="Permissão para criação de permissões",
-        code="permission_create"
+        name="Test Permissão para criação de permissões",
+        code="t_permission_create"
     )
     permission01 = await dao.create(dto=dto01, commit=False, close_session=False)
 
     dto02 = CreatePermissionInputDTO(
-        name="Permissão de atualização de permissões",
-        code="permission_update"
+        name="Test Permissão de atualização de permissões",
+        code="t_permission_update"
     )
     permission02 = await dao.create(dto=dto02, commit=False, close_session=False)
 
     dto03 = CreatePermissionInputDTO(
-        name="Permissão para listagem de permissões",
-        code="permission_list"
+        name="Test Permissão para listagem de permissões",
+        code="t_permission_list"
     )
     permission03 = await dao.create(dto=dto03, commit=True, close_session=False)
 
     dto = ListPermissionInputDTO(
-        name="Permissão para"
+        name="Test Permissão para"
     )
     permissions = await dao.list(dto=dto, close_session=False)
 
@@ -121,26 +121,26 @@ async def test_list_by_name_and_code_permissions_dao():
     dao = PermissionDAO()
 
     dto01 = CreatePermissionInputDTO(
-        name="Permissão para criação de permissões",
-        code="permission_create"
+        name="Test Permissão para criação de permissões",
+        code="t_permission_create"
     )
     permission01 = await dao.create(dto=dto01, commit=False, close_session=False)
 
     dto02 = CreatePermissionInputDTO(
-        name="Permissão de atualização de permissões",
-        code="permission_update"
+        name="Test Permissão de atualização de permissões",
+        code="t_permission_update"
     )
     permission02 = await dao.create(dto=dto02, commit=False, close_session=False)
 
     dto03 = CreatePermissionInputDTO(
-        name="Permissão para listagem de permissões",
-        code="permission_list"
+        name="Test Permissão para listagem de permissões",
+        code="t_permission_list"
     )
     permission03 = await dao.create(dto=dto03, commit=True, close_session=False)
 
     dto = ListPermissionInputDTO(
-        name="Permissão para",
-        code="permission_list"
+        name="Test Permissão para",
+        code="t_permission_list"
     )
     permissions = await dao.list(dto=dto, close_session=False)
 
@@ -163,20 +163,20 @@ async def test_list_all_permissions_dao():
     dao = PermissionDAO()
 
     dto01 = CreatePermissionInputDTO(
-        name="Permissão para criação de permissões",
-        code="permission_create"
+        name="Test Permissão para criação de permissões",
+        code="t_permission_create"
     )
     permission01 = await dao.create(dto=dto01, commit=False, close_session=False)
 
     dto02 = CreatePermissionInputDTO(
-        name="Permissão de atualização de permissões",
-        code="permission_update"
+        name="Test Permissão de atualização de permissões",
+        code="t_permission_update"
     )
     permission02 = await dao.create(dto=dto02, commit=False, close_session=False)
 
     dto03 = CreatePermissionInputDTO(
-        name="Permissão para listagem de permissões",
-        code="permission_list"
+        name="Test Permissão para listagem de permissões",
+        code="t_permission_list"
     )
     permission03 = await dao.create(dto=dto03, commit=True, close_session=False)
 
@@ -207,8 +207,8 @@ async def test_get_by_id_permission_dao():
     """
 
     dto = CreatePermissionInputDTO(
-        name="Permissão de criação de permissões",
-        code="permission_create"
+        name="Test Permissão de criação de permissões",
+        code="t_permission_create"
     )
 
     dao = PermissionDAO()
@@ -240,15 +240,15 @@ async def test_retrieve_by_code_permission_dao():
     """
 
     dto01 = CreatePermissionInputDTO(
-        name="Permissão de criação de permissões",
-        code="permission_create"
+        name="Test Permissão de criação de permissões",
+        code="t_permission_create"
     )
 
     dao = PermissionDAO()
     permission01 = await dao.create(dto=dto01, close_session=False)
 
     dto = RetrievePermissionInputDTO(
-        code="permission_create"
+        code="t_permission_create"
     )
 
     searched_permissions = await dao.retrieve(dto=dto, close_session=False)
@@ -270,19 +270,19 @@ async def test_retrieve_multiples_rows_permission_dao():
     dao = PermissionDAO()
 
     dto01 = CreatePermissionInputDTO(
-        name="Permissão para criação de permissões",
-        code="permission_create"
+        name="Test Permissão para criação de permissões",
+        code="t_permission_create"
     )
     permission01 = await dao.create(dto=dto01, commit=False, close_session=False)
 
     dto02 = CreatePermissionInputDTO(
-        name="Permissão para listagem de permissões",
-        code="permission_create"
+        name="Test Permissão para listagem de permissões",
+        code="t_permission_create"
     )
     permission02 = await dao.create(dto=dto02, commit=True, close_session=False)
 
     dto = RetrievePermissionInputDTO(
-        code="permission_create"
+        code="t_permission_create"
     )
 
     try:
@@ -301,7 +301,7 @@ async def test_retrieve_not_found_permission_dao():
     """
 
     dao = PermissionDAO()
-    dto = RetrievePermissionInputDTO(code="permission_create")
+    dto = RetrievePermissionInputDTO(code="t_permission_create")
     permission = await dao.retrieve(dto=dto, close_session=False)
     assert permission is None
 
@@ -314,14 +314,14 @@ async def test_update_code_permission_dao():
     dao = PermissionDAO()
 
     dto01 = CreatePermissionInputDTO(
-        name="Permissão para criação de permissões",
-        code="permission_create"
+        name="Test Permissão para criação de permissões",
+        code="t_permission_create"
     )
     permission = await dao.create(dto=dto01, close_session=False)
 
     dto = UpdatePermissionInputDTO(
         name=permission.name,
-        code="permission_update"
+        code="t_permission_update"
     )
 
     updated_permission = await dao.update(_id=permission.id, dto=dto, close_session=False)
@@ -343,13 +343,13 @@ async def test_update_name_permission_dao():
     dao = PermissionDAO()
 
     dto01 = CreatePermissionInputDTO(
-        name="Permissão para criação de permissões",
-        code="permission_create"
+        name="Test Permissão para criação de permissões",
+        code="t_permission_create"
     )
     permission = await dao.create(dto=dto01, close_session=False)
 
     dto = UpdatePermissionInputDTO(
-        name="Permissão para atualização de permissões",
+        name="Test Permissão para atualização de permissões",
         code=permission.code
     )
 
@@ -372,14 +372,14 @@ async def test_update_all_permission_dao():
     dao = PermissionDAO()
 
     dto01 = CreatePermissionInputDTO(
-        name="Permissão para criação de permissões",
-        code="permission_create"
+        name="Test Permissão para criação de permissões",
+        code="t_permission_create"
     )
     permission = await dao.create(dto=dto01, close_session=False)
 
     dto = UpdatePermissionInputDTO(
-        name="Permissão para atualização de permissões",
-        code="permission_updated"
+        name="Test Permissão para atualização de permissões",
+        code="t_permission_updated"
     )
 
     updated_permission = await dao.update(_id=permission.id, dto=dto, close_session=False)
@@ -402,8 +402,8 @@ async def test_update_not_found_permission_dao():
     dao = PermissionDAO()
 
     dto = UpdatePermissionInputDTO(
-        name="Permissão para atualização de permissões",
-        code="permission_updated"
+        name="Test Permissão para atualização de permissões",
+        code="t_permission_updated"
     )
 
     with pytest.raises(NoResultFound) as exc:
@@ -420,8 +420,8 @@ async def test_delete_permission_dao():
     dao = PermissionDAO()
 
     dto = CreatePermissionInputDTO(
-        name="Permissão para criação de permissões",
-        code="permission_create"
+        name="Test Permissão para criação de permissões",
+        code="t_permission_create"
     )
     permission = await dao.create(dto=dto, close_session=False)
     assert permission is not None

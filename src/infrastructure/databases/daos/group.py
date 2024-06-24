@@ -31,12 +31,12 @@ class GroupDAO(DAOInterface):
         with DBConnectionHandler.connect(close_session) as database:
             try:
                 for permission_code in dto.permissions:
-                    group.permissions.append(
-                        await permission_dao.retrieve(
-                            dto=RetrievePermissionInputDTO(code=permission_code),
-                            close_session=False
-                        )
+                    permission = await permission_dao.retrieve(
+                        dto=RetrievePermissionInputDTO(code=permission_code),
+                        close_session=False
                     )
+                    if permission:
+                        group.permissions.append(permission)
 
                 database.session.add(group)
                 if commit:
