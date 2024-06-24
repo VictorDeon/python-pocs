@@ -154,7 +154,7 @@ class CompanyDAO(DAOInterface):
 
     async def delete(
         self,
-        _id: int,
+        cnpj: str,
         commit: bool = True,
         close_session: bool = True) -> None:
         """
@@ -163,9 +163,9 @@ class CompanyDAO(DAOInterface):
 
         with DBConnectionHandler.connect(close_session) as database:
             try:
-                company = database.session.get(Company, _id)
+                company = database.session.get(Company, cnpj)
                 if not company:
-                    raise ValueError(f"Empresa com o id {_id} não encontrado.")
+                    raise ValueError(f"Empresa com o cnpj {cnpj} não encontrado.")
 
                 database.session.delete(company)
                 if commit:

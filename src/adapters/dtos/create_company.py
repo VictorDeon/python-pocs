@@ -13,12 +13,12 @@ class CreateCompanyInputDTO(BaseModel):
     fantasy_name: Optional[str] = Field(None, description="Nome fantasia da empresa.")
     employees: list[int] = Field([], description="Lista de identificadores dos funcionários da empresa.")
 
-    def to_dict(self, include: list[str], exclude: list[str]) -> dict:
+    def to_dict(self, exclude: list[str] = []) -> dict:
         """
         Transforma os dados em dicionário.
         """
 
-        return self.model_dump(include=include, exclude=exclude)
+        return self.model_dump(exclude=exclude)
 
 
 class CreateCompanyOutputDTO(BaseModel):

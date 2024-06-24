@@ -25,7 +25,7 @@ class ProfileDAO(DAOInterface):
 
         with DBConnectionHandler.connect(close_session) as database:
             try:
-                database.session.add(Profile)
+                database.session.add(profile)
                 if commit:
                     database.session.commit()
                     logging.info("Perfil inseridado no banco.")

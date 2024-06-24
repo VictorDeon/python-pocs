@@ -13,7 +13,7 @@ class Company(BaseModel):
 
     __tablename__ = "companies"
 
-    cnpj: Mapped[str] = Column(String(14), primary_key=True)
+    cnpj: Mapped[str] = Column(String(14), primary_key=True, nullable=False)
     name: Mapped[str] = Column(String(50), nullable=False)
     fantasy_name: Mapped[Optional[str]] = Column(String(50), nullable=True)
     created_at: Mapped[datetime] = Column(DateTime, default=datetime.now, index=True)

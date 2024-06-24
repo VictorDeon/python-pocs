@@ -1,6 +1,7 @@
 import logging
 from src.adapters.dtos import (
-    CreateUserInputDTO, RetrievePermissionInputDTO
+    CreateUserInputDTO, RetrievePermissionInputDTO,
+    RetrieveCompanyInputDTO
 )
 from src.infrastructure.databases.connection import DBConnectionHandler
 from src.infrastructure.databases.models import User
@@ -44,12 +45,15 @@ class UserDAO(DAOInterface):
                 user.profile_id = profile.id
                 user.profile = profile
 
-                for company_dto in dto.companies:
-                    company = await company_dao.create(
-                        dto=company_dto,
+                if dto.work_company_cnpj:
+                    work_company = await company_dao.retrieve(
+                        dto=RetrieveCompanyInputDTO(cnpj=dto.work_company_cnpj),
                         close_session=False
                     )
-                    user.companies.append(company)
+
+                    if work_company:
+                        user.work_company_cnpj = work_company.cnpj
+                        user.work_company = work_company
 
                 for permission_code in dto.permissions:
                     permission = await permission_dao.retrieve(

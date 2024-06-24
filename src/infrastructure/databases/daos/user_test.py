@@ -1,16 +1,17 @@
 from src.adapters.dtos import (
     CreateUserInputDTO, CreatePermissionInputDTO,
-    CreateGroupInputDTO, CreateCompanyInputDTO,
-    CreateProfileInputDTO
+    CreateGroupInputDTO, CreateProfileInputDTO,
+    CreateCompanyInputDTO
 )
 from .group import GroupDAO
 from .permission import PermissionDAO
 from .user import UserDAO
+from .company import CompanyDAO
 
 
-async def test_create_group_dao():
+async def test_create_user_dao():
     """
-    Testa a criação de grupo pelo DAO.
+    Testa a criação de usuários pelo DAO.
     """
 
     permission_dao = PermissionDAO()
@@ -39,23 +40,22 @@ async def test_create_group_dao():
         close_session=False
     )
 
+    company_dao = CompanyDAO()
+    company = await company_dao.create(
+        dto=CreateCompanyInputDTO(
+            cnpj="11111111111111",
+            name="Empresa 01 LTDA",
+            fantasy_name="Empresa 01"
+        ),
+        close_session=False
+    )
+
     user_dao = UserDAO()
     dto = CreateUserInputDTO(
         name="Fulano de tal",
         email="fulano@gmail.com",
         password="******",
-        companies=[
-            CreateCompanyInputDTO(
-                cnpj="11111111111111",
-                name="Empresa X LTDA",
-                fantasy_name="Empresa X"
-            ),
-            CreateCompanyInputDTO(
-                cnpj="22222222222222",
-                name="Empresa Y LTDA",
-                fantasy_name="Empresa Y"
-            ),
-        ],
+        work_company_cnpj=company.cnpj,
         profile=CreateProfileInputDTO(phone="6399485956"),
         permissions=[permission01.code],
         groups=[group.id]
@@ -65,16 +65,19 @@ async def test_create_group_dao():
         close_session=False
     )
 
-
     try:
         assert user.id is not None
         assert user.name == dto.name
         assert user.email == dto.email
-        assert user.companies.count() == 2
+        assert user.work_company_cnpj == company.cnpj
+        assert user.work_company == company
+        assert len(user.companies) == 0
         assert user.profile is not None
         assert user.permissions.count() == 1
         assert user.groups.count() == 1
     finally:
+        await user_dao.delete(_id=user.id)
+        await company_dao.delete(cnpj=company.cnpj)
         await group_dao.delete(_id=group.id)
         await permission_dao.delete(_id=permission01.id)
         await permission_dao.delete(_id=permission02.id)
