@@ -2,9 +2,11 @@ import pytest
 from sqlalchemy.orm.exc import MultipleResultsFound, NoResultFound
 from src.adapters.dtos import (
     CreatePermissionInputDTO, ListPermissionInputDTO,
-    RetrievePermissionInputDTO, UpdatePermissionInputDTO
+    RetrievePermissionInputDTO, UpdatePermissionInputDTO,
+    CreateGroupInputDTO
 )
 from .permission import PermissionDAO
+from .group import GroupDAO
 
 
 async def test_create_permission_dao():
@@ -414,22 +416,38 @@ async def test_update_not_found_permission_dao():
 
 async def test_delete_permission_dao():
     """
-    Testa a deleção da parmissão.
+    Testa a deleção da parmissão sem deletar os grupos associados e nem
+    os usuários.
     """
 
-    dao = PermissionDAO()
+    permission_dao = PermissionDAO()
 
     dto = CreatePermissionInputDTO(
         name="Test Permissão para criação de permissões",
         code="t_permission_create"
     )
-    permission = await dao.create(dto=dto, close_session=False)
+    permission = await permission_dao.create(dto=dto, close_session=False)
     assert permission is not None
 
-    await dao.delete(_id=permission.id, close_session=False)
+    group_dao = GroupDAO()
+    group = await group_dao.create(
+        dto=CreateGroupInputDTO(
+            name="Grupo 03",
+            permissions=["t_permission_create"]
+        ),
+        close_session=False
+    )
+    assert group is not None
 
-    permission = await dao.get_by_id(_id=permission.id)
+    await permission_dao.delete(_id=permission.id, close_session=False)
+
+    permission = await permission_dao.get_by_id(_id=permission.id, close_session=False)
     assert permission is None
+
+    group = await group_dao.get_by_id(_id=group.id, close_session=False)
+    assert group is not None
+
+    await group_dao.delete(_id=group.id)
 
 
 async def test_delete_not_found_permission_dao():

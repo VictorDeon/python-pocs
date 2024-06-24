@@ -395,3 +395,40 @@ async def test_update_group_permission_clean_dao():
     finally:
         await dao.delete(_id=group.id)
         await permission_dao.delete(_id=permission.id)
+
+
+async def test_delete_group_dao():
+    """
+    Testa a deleção da grupo sem deletar as permissões associadas a ele
+    e nem os usuários associados a ele.
+    """
+
+    permission_dao = PermissionDAO()
+    permission = await permission_dao.create(
+        dto=CreatePermissionInputDTO(
+            name="Teste permissão para criação de permissões",
+            code="t_permission_create"
+        ),
+        close_session=False
+    )
+    assert permission is not None
+
+    group_dao = GroupDAO()
+    group = await group_dao.create(
+        dto=CreateGroupInputDTO(
+            name="Grupo 03",
+            permissions=["t_permission_create"]
+        ),
+        close_session=False
+    )
+    assert group is not None
+
+    await group_dao.delete(_id=group.id, close_session=False)
+
+    group = await group_dao.get_by_id(_id=group.id, close_session=False)
+    assert group is None
+
+    permission = await permission_dao.get_by_id(_id=permission.id, close_session=False)
+    assert permission is not None
+
+    await permission_dao.delete(_id=permission.id)
