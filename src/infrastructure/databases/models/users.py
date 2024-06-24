@@ -34,7 +34,7 @@ class User(BaseModel):
         backref='user'
     )
 
-    companies = relationship(
+    companies: Mapped[list["Company"]] = relationship(
         'Company',
         back_populates='owner',
         foreign_keys='Company.owner_id'

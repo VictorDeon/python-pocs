@@ -5,7 +5,10 @@ from src.adapters.dtos import (
 from src.infrastructure.databases.connection import DBConnectionHandler
 from src.infrastructure.databases.models import User
 from src.infrastructure.databases import DAOInterface
-from src.infrastructure.databases.daos import PermissionDAO, GroupDAO, ProfileDAO
+from .permission import PermissionDAO
+from .company import CompanyDAO
+from .group import GroupDAO
+from .profile import ProfileDAO
 
 
 class UserDAO(DAOInterface):
@@ -30,6 +33,7 @@ class UserDAO(DAOInterface):
         permission_dao = PermissionDAO()
         group_dao = GroupDAO()
         profile_dao = ProfileDAO()
+        company_dao = CompanyDAO()
 
         with DBConnectionHandler.connect(close_session) as database:
             try:
@@ -37,9 +41,15 @@ class UserDAO(DAOInterface):
                     dto=dto.profile,
                     close_session=False
                 )
+                user.profile_id = profile.id
                 user.profile = profile
 
-                # Criar a empresa principal
+                for company_dto in dto.companies:
+                    company = await company_dao.create(
+                        dto=company_dto,
+                        close_session=False
+                    )
+                    user.companies.append(company)
 
                 for permission_code in dto.permissions:
                     permission = await permission_dao.retrieve(

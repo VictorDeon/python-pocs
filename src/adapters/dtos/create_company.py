@@ -8,18 +8,17 @@ class CreateCompanyInputDTO(BaseModel):
     Dados de entrada para criar uma empresa.
     """
 
-    user_id: int = Field(..., description="Identificador do usuário dono da oficina.")
     cnpj: str = Field(..., description="CNPJ da empresa.")
     name: str = Field(..., description="Nome da empresa.")
     fantasy_name: Optional[str] = Field(None, description="Nome fantasia da empresa.")
     employees: list[int] = Field([], description="Lista de identificadores dos funcionários da empresa.")
 
-    def to_dict(self):
+    def to_dict(self, include: list[str], exclude: list[str]) -> dict:
         """
         Transforma os dados em dicionário.
         """
 
-        return self.model_dump()
+        return self.model_dump(include=include, exclude=exclude)
 
 
 class CreateCompanyOutputDTO(BaseModel):

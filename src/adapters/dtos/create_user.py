@@ -2,6 +2,7 @@ from typing import Optional
 from pydantic import BaseModel, Field
 from src.domains.entities import User
 from .create_profile import CreateProfileInputDTO
+from .create_company import CreateCompanyInputDTO
 
 
 class CreatePermissionInputDTO(BaseModel):
@@ -27,9 +28,10 @@ class CreateUserInputDTO(BaseModel):
     name: str = Field(..., description="Nome completo do usuário.")
     email: str = Field(..., description="Email do usuário.")
     password: str = Field(..., description="Senha de acesso do usuário.")
+    companies: list[CreateCompanyInputDTO] = Field([], description="Empresas do usuário.")
     profile: CreateProfileInputDTO = Field(None, description="Perfil do usuário com dados adicionais.")
     work_company_cnpj: Optional[str] = Field(None, description="Empresa na qual o usuário trabalha")
-    permissions: Optional[list[str]] = Field([], description="Lista de permissões do usuário.")
+    permissions: Optional[list[str]] = Field([], description="Lista de códigos das permissões do usuário.")
     groups: Optional[list[int]] = Field([], description="Lista de grupos na qual o usuário pertence.")
 
     def to_dict(self):

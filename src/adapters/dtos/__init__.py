@@ -12,8 +12,11 @@ from .create_permission import CreatePermissionInputDTO, CreatePermissionOutputD
 from .create_profile import CreateProfileInputDTO, CreateProfileOutputDTO
 from .create_user import CreateUserInputDTO, CreateUserOutputDTO
 from .list_permissions import ListPermissionInputDTO, ListPermissionOutputDTO
+from .list_companies import ListCompaniesInputDTO, ListCompaniesOutputDTO
 from .list_groups import ListGroupInputDTO, ListGroupOutputDTO
 from .update_permission import UpdatePermissionInputDTO, UpdatePermissionOutputDTO
 from .update_group import UpdateGroupInputDTO, UpdateGroupOutputDTO
+from .update_company import UpdateCompanyInputDTO, UpdateCompanyOutputDTO
 from .update_profile import UpdateProfileInputDTO, UpdateProfileOutputDTO
 from .retrieve_permission import RetrievePermissionInputDTO, RetrievePermissionOutputDTO
+from .retrieve_company import RetrieveCompanyInputDTO, RetrieveCompanyOutputDTO
