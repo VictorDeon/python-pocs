@@ -1,6 +1,6 @@
 from src.adapters.dtos import (
     CreateGroupInputDTO, CreatePermissionInputDTO,
-    ListGroupInputDTO
+    ListGroupInputDTO, UpdateGroupInputDTO
 )
 from .group import GroupDAO
 from .permission import PermissionDAO
@@ -294,3 +294,66 @@ async def test_list_by_permission_code_and_group_name_group_dao():
         await dao.delete(_id=group03.id)
         await permission_dao.delete(_id=permission01.id)
         await permission_dao.delete(_id=permission02.id)
+
+
+async def test_get_by_id_group_dao():
+    """
+    Testa a busca de um grupo pelo identificador.
+    """
+
+    dao = GroupDAO()
+    group = await dao.create(
+        dto=CreateGroupInputDTO(
+            name="Grupo 03",
+            permissions=[]
+        ),
+        close_session=False
+    )
+
+    seached_group = await dao.get_by_id(_id=group.id, close_session=False)
+
+    try:
+        assert group.id == seached_group.id
+        assert group.name == seached_group.name
+        assert group.permissions.count() == 0
+    finally:
+        await dao.delete(_id=group.id)
+
+
+async def test_update_group_dao():
+    """
+    Testa a atualização do grupo.
+    """
+
+    permission_dao = PermissionDAO()
+    permission = await permission_dao.create(
+        dto=CreatePermissionInputDTO(
+            name="Teste permissão para criação de permissões",
+            code="t_permission_create"
+        ),
+        close_session=False
+    )
+
+    dao = GroupDAO()
+    group = await dao.create(
+        dto=CreateGroupInputDTO(
+            name="Grupo 03",
+            permissions=[]
+        ),
+        close_session=False
+    )
+
+    dto = UpdateGroupInputDTO(
+        name="Grupo 01",
+        permissions=["t_permission_create"]
+    )
+
+    updated_group = await dao.update(_id=group.id, dto=dto, close_session=False)
+
+    try:
+        assert group.id == updated_group.id
+        assert group.name == updated_group.name
+        assert updated_group.permissions.count() == 1
+    finally:
+        await dao.delete(_id=group.id)
+        await permission_dao.delete(_id=permission.id)

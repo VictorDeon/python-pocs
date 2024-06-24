@@ -9,7 +9,7 @@ class CreateGroupInputDTO(BaseModel):
     """
 
     name: str = Field(..., description="Nome do grupo.")
-    permissions: Optional[list[str]] = Field([], description="Lista de identificadores de permissões do grupo de usuários.")
+    permissions: Optional[list[str]] = Field([], description="Lista de códigos de permissões do grupo de usuários.")
 
     def to_dict(self):
         """

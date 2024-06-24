@@ -114,10 +114,21 @@ class GroupDAO(DAOInterface):
         group: Group = None
         with DBConnectionHandler.connect(close_session) as database:
             statement = select(Group).where(Group.id == _id)
+            permission_dao = PermissionDAO()
 
             try:
                 group = database.session.scalars(statement).one()
+
+                permissions: list[Permission] = []
+                for permission_code in dto.permissions:
+                    permission = await permission_dao.retrieve(
+                        dto=RetrievePermissionInputDTO(code=permission_code),
+                        close_session=False
+                    )
+                    permissions.append(permission)
+
                 group.name = dto.name
+                group.permissions = permissions
                 if commit:
                     database.session.commit()
                     logging.info("Grupos atualizadas no banco.")
