@@ -9,9 +9,11 @@ from .blocked_requests import BlockedRequestsOutputDTO
 from .create_company import CreateCompanyInputDTO, CreateCompanyOutputDTO
 from .create_group import CreateGroupInputDTO, CreateGroupOutputDTO
 from .create_permission import CreatePermissionInputDTO, CreatePermissionOutputDTO
-from .create_user import CreateUserInputDTO, CreateUserOutputDTO, CreateProfileInputDTO
+from .create_profile import CreateProfileInputDTO, CreateProfileOutputDTO
+from .create_user import CreateUserInputDTO, CreateUserOutputDTO
 from .list_permissions import ListPermissionInputDTO, ListPermissionOutputDTO
 from .list_groups import ListGroupInputDTO, ListGroupOutputDTO
 from .update_permission import UpdatePermissionInputDTO, UpdatePermissionOutputDTO
 from .update_group import UpdateGroupInputDTO, UpdateGroupOutputDTO
+from .update_profile import UpdateProfileInputDTO, UpdateProfileOutputDTO
 from .retrieve_permission import RetrievePermissionInputDTO, RetrievePermissionOutputDTO

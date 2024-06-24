@@ -1,84 +1,67 @@
 import logging
-from src.adapters.dtos.create_user import CreateUserInputDTO
+from src.adapters.dtos import (
+    CreateUserInputDTO, RetrievePermissionInputDTO
+)
 from src.infrastructure.databases.connection import DBConnectionHandler
-from src.infrastructure.databases.models import User, Profile
+from src.infrastructure.databases.models import User
 from src.infrastructure.databases import DAOInterface
+from src.infrastructure.databases.daos import PermissionDAO, GroupDAO, ProfileDAO
 
 
 class UserDAO(DAOInterface):
     """
-    Repositorio de manipulação da entidade user
+    Repositorio de manipulação da entidade de usuários
     """
 
-    async def create(self, user: CreateUserInputDTO) -> User:
+    async def create(
+        self,
+        dto: CreateUserInputDTO,
+        commit: bool = True,
+        close_session: bool = True) -> User:
         """
         Cria o usuário passando como argumento os dados do mesmo.
         """
 
-        profile = Profile(**user.profile.to_dict())
-
-        groups = []
-        for group_id in user.groups:
-            logging.info(f"Buscar o grupo {group_id} e adicionar na lista de grupos.")
-
-        permissions = []
-        for permission_id in user.permissions:
-            logging.info(f"Buscar a permissão {permission_id} e adicionar na lista de permissões")
-
         user = User(
-            **user.to_dict(),
-            profile=profile,
-            work_company=user.work_company_cnpj,
-            groups=groups,
-            permissions=permissions
+            name=dto.name,
+            email=dto.email,
+            password=dto.password
         )
+        permission_dao = PermissionDAO()
+        group_dao = GroupDAO()
+        profile_dao = ProfileDAO()
 
-        with DBConnectionHandler() as database:
+        with DBConnectionHandler.connect(close_session) as database:
             try:
+                profile = await profile_dao.create(
+                    dto=dto.profile,
+                    close_session=False
+                )
+                user.profile = profile
+
+                # Criar a empresa principal
+
+                for permission_code in dto.permissions:
+                    permission = await permission_dao.retrieve(
+                        dto=RetrievePermissionInputDTO(code=permission_code),
+                        close_session=False
+                    )
+                    if permission:
+                        user.permissions.append(permission)
+
+                for group_id in dto.groups:
+                    group = await group_dao.get_by_id(_id=group_id, close_session=False)
+                    if group:
+                        user.groups.append(group)
+
                 database.session.add(user)
-                database.session.commit()
-                logging.info(f"Usuário {user.name} criado com sucesso.")
+                if commit:
+                    database.session.commit()
+                    logging.info("Usuário inseridado no banco.")
             except Exception as e:
                 logging.error(f"Ocorreu um problema ao criar o usuário: {e}")
                 database.session.rollback()
+                database.close_session(True)
                 raise e
-            finally:
-                database.session.close()
 
         return user
-
-    async def retrieve(self, id: int) -> User:
-        """
-        Pesquisa o usuário pelo email.
-        """
-
-        user: User = None
-        with DBConnectionHandler() as database:
-            try:
-                user = database.session.query(User).get(id)
-            except Exception as e:
-                logging.error(f"Ocorreu um problema ao buscar o usuário: {e}")
-                raise e
-            finally:
-                database.session.close()
-
-        return user
-
-    async def list(self, email: int = None) -> list[User]:
-        """
-        Pesquisa o usuário pelo email.
-        """
-
-        users: list[User] = []
-        with DBConnectionHandler() as database:
-            try:
-                users = database.session.query(User).filter(
-                    User.email == email
-                )
-            except Exception as e:
-                logging.error(f"Ocorreu um problema ao buscar o usuário: {e}")
-                raise e
-            finally:
-                database.session.close()
-
-        return users
