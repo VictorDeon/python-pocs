@@ -3,11 +3,12 @@ from typing import Optional
 from sqlalchemy import select, Select
 from src.adapters.dtos import (
     CreateGroupInputDTO, ListGroupInputDTO,
-    UpdateGroupInputDTO
+    UpdateGroupInputDTO, RetrievePermissionInputDTO
 )
 from src.infrastructure.databases.connection import DBConnectionHandler
 from src.infrastructure.databases.models import Group
 from src.infrastructure.databases import DAOInterface
+from .permission import PermissionDAO
 
 
 class GroupDAO(DAOInterface):
@@ -24,10 +25,19 @@ class GroupDAO(DAOInterface):
         Cria o grupo passando como argumento os dados do mesmo.
         """
 
-        group = Group(**dto.to_dict())
+        group = Group(name=dto.name)
+        permission_dao = PermissionDAO()
 
         with DBConnectionHandler.connect(close_session) as database:
             try:
+                for permission_code in dto.permissions:
+                    group.permissions.append(
+                        await permission_dao.retrieve(
+                            dto=RetrievePermissionInputDTO(code=permission_code),
+                            close_session=False
+                        )
+                    )
+
                 database.session.add(group)
                 if commit:
                     database.session.commit()
