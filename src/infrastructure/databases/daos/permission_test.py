@@ -1,10 +1,10 @@
+import pytest
+from sqlalchemy.orm.exc import MultipleResultsFound, NoResultFound
 from src.adapters.dtos import (
     CreatePermissionInputDTO, ListPermissionInputDTO,
     RetrievePermissionInputDTO, UpdatePermissionInputDTO
 )
-from sqlalchemy.orm.exc import MultipleResultsFound, NoResultFound
 from .permission import PermissionDAO
-import pytest
 
 
 async def test_create_permission_dao():

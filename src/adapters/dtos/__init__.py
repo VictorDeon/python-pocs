@@ -11,5 +11,7 @@ from .create_group import CreateGroupInputDTO, CreateGroupOutputDTO
 from .create_permission import CreatePermissionInputDTO, CreatePermissionOutputDTO
 from .create_user import CreateUserInputDTO, CreateUserOutputDTO, CreateProfileInputDTO
 from .list_permissions import ListPermissionInputDTO, ListPermissionOutputDTO
+from .list_groups import ListGroupInputDTO, ListGroupOutputDTO
 from .update_permission import UpdatePermissionInputDTO, UpdatePermissionOutputDTO
+from .update_group import UpdateGroupInputDTO, UpdateGroupOutputDTO
 from .retrieve_permission import RetrievePermissionInputDTO, RetrievePermissionOutputDTO

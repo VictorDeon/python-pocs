@@ -98,7 +98,7 @@ class PermissionDAO(DAOInterface):
             try:
                 permission = database.session.scalars(statement).one()
             except NoResultFound as e:
-                logging.warn(f"Permissão com código {dto.code} não encontrada: {e}")
+                logging.warning(f"Permissão com código {dto.code} não encontrada: {e}")
             except Exception as e:
                 logging.error(f"Ocorreu um problema ao pegar os dados da permissão: {e}")
                 database.close_session()
@@ -113,7 +113,7 @@ class PermissionDAO(DAOInterface):
         commit: bool = True,
         close_session: bool = True) -> Optional[Permission]:
         """
-        Pega os dados de uma permissão pelo _id
+        Pega os dados de uma permissão pelo _id e atualiza
         """
 
         permission: Permission = None
@@ -162,7 +162,7 @@ class PermissionDAO(DAOInterface):
 
     async def count(self, close_session: bool = True) -> int:
         """
-        Pega a quantidade de permissões registros no banco.
+        Pega a quantidade de permissões registradas no banco.
         """
 
         qtd: int = 0
