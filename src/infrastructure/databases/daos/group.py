@@ -6,7 +6,7 @@ from src.adapters.dtos import (
     UpdateGroupInputDTO, RetrievePermissionInputDTO
 )
 from src.infrastructure.databases.connection import DBConnectionHandler
-from src.infrastructure.databases.models import Group
+from src.infrastructure.databases.models import Group, Permission, group_permission_many_to_many
 from src.infrastructure.databases import DAOInterface
 from .permission import PermissionDAO
 
@@ -61,14 +61,20 @@ class GroupDAO(DAOInterface):
 
             if dto:
                 if dto.name and dto.code:
-                    statement: Select = statement.where(
-                        (Group.name.like(f"%{dto.name}%")) &
-                        (Group.permissions.in_(dto.code))
-                    )
+                    statement: Select = statement \
+                        .join(group_permission_many_to_many) \
+                        .join(Permission) \
+                        .where(
+                            Group.name.like(f"%{dto.name}%"),
+                            Permission.code == dto.code
+                        )
                 elif dto.name:
                     statement: Select = statement.where(Group.name.like(f"%{dto.name}%"))
                 elif dto.code:
-                    statement: Select = statement.where(Group.permissions.in_(dto.code))
+                    statement: Select = statement \
+                        .join(group_permission_many_to_many) \
+                        .join(Permission) \
+                        .where(Permission.code == dto.code)
 
             try:
                 groups = database.session.scalars(statement=statement).all()
