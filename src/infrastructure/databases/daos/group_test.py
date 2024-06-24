@@ -352,8 +352,46 @@ async def test_update_group_dao():
 
     try:
         assert group.id == updated_group.id
-        assert group.name == updated_group.name
+        assert updated_group.name == dto.name
         assert updated_group.permissions.count() == 1
+    finally:
+        await dao.delete(_id=group.id)
+        await permission_dao.delete(_id=permission.id)
+
+
+async def test_update_group_permission_clean_dao():
+    """
+    Testa a atualização do grupo removendo permissões.
+    """
+
+    permission_dao = PermissionDAO()
+    permission = await permission_dao.create(
+        dto=CreatePermissionInputDTO(
+            name="Teste permissão para criação de permissões",
+            code="t_permission_create"
+        ),
+        close_session=False
+    )
+
+    dao = GroupDAO()
+    group = await dao.create(
+        dto=CreateGroupInputDTO(
+            name="Grupo 03",
+            permissions=["t_permission_create"]
+        ),
+        close_session=False
+    )
+
+    dto = UpdateGroupInputDTO(
+        permissions=[]
+    )
+
+    updated_group = await dao.update(_id=group.id, dto=dto, close_session=False)
+
+    try:
+        assert group.id == updated_group.id
+        assert group.name == updated_group.name
+        assert updated_group.permissions.count() == 0
     finally:
         await dao.delete(_id=group.id)
         await permission_dao.delete(_id=permission.id)

@@ -127,7 +127,9 @@ class GroupDAO(DAOInterface):
                     )
                     permissions.append(permission)
 
-                group.name = dto.name
+                if dto.name:
+                    group.name = dto.name
+
                 group.permissions = permissions
                 if commit:
                     database.session.commit()
