@@ -1,4 +1,5 @@
 import logging
+from typing import Optional
 from sqlalchemy import Select, select
 from src.adapters.dtos import (
     CreateUserInputDTO, RetrievePermissionInputDTO,
@@ -83,7 +84,7 @@ class UserDAO(DAOInterface):
 
     async def list(self, dto: ListUserInputDTO, close_session: bool = True) -> list[User]:
         """
-        Pega uma lista de objetos.
+        Pega uma lista de usuários.
         """
 
         users: list[User] = []
@@ -105,3 +106,19 @@ class UserDAO(DAOInterface):
                 raise e
 
         return users
+
+    async def get_by_id(self, _id: int, close_session: bool = True) -> Optional[User]:
+        """
+        Pega os dados de um usuário pelo _id
+        """
+
+        user: User = None
+        with DBConnectionHandler.connect(close_session) as database:
+            try:
+                user = database.session.get(User, _id)
+            except Exception as e:
+                logging.error(f"Ocorreu um problema ao pegar os dados do usuário: {e}")
+                database.close_session(True)
+                raise e
+
+        return user

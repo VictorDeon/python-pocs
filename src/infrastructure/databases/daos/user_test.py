@@ -288,3 +288,28 @@ async def test_list_by_groups_users_dao():
         await user_dao.delete(_id=user01.id, commit=False, close_session=False)
         await user_dao.delete(_id=user02.id, commit=False, close_session=False)
         await user_dao.delete(_id=user03.id, commit=True)
+
+
+async def test_get_by_id_user_dao():
+    """
+    Testa a busca de um usuário pelo identificador.
+    """
+
+    dao = UserDAO()
+
+    dto = CreateUserInputDTO(
+        name="Usuário 01",
+        email="usuario01@gmail.com",
+        password="Django1234",
+        profile=CreateProfileInputDTO()
+    )
+    user = await dao.create(dto=dto, commit=True, close_session=False)
+
+    searched_permissions = await dao.get_by_id(_id=user.id, close_session=False)
+
+    try:
+        assert user.id == searched_permissions.id
+        assert user.name == searched_permissions.name
+        assert user.email == searched_permissions.email
+    finally:
+        await dao.delete(_id=user.id)
