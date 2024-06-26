@@ -141,7 +141,7 @@ class PermissionDAO(DAOInterface):
         commit: bool = True,
         close_session: bool = True) -> None:
         """
-        Pega os dados de uma permissão pelo _id
+        Pega os dados de uma permissão pelo _id e deleta
         """
 
         with DBConnectionHandler.connect(close_session) as database:

@@ -204,3 +204,44 @@ class UserDAO(DAOInterface):
                 raise e
 
         return user
+
+    async def delete(
+        self,
+        _id: int,
+        commit: bool = True,
+        close_session: bool = True) -> None:
+        """
+        Pega os dados de um usuário pelo _id e deleta
+        """
+
+        with DBConnectionHandler.connect(close_session) as database:
+            try:
+                user = database.session.get(User, _id)
+                if not user:
+                    raise ValueError(f"Usuário com o id {_id} não encontrado.")
+
+                database.session.delete(user)
+                if commit:
+                    database.session.commit()
+                    logging.info("Usuário deletado do banco.")
+            except Exception as e:
+                logging.error(f"Ocorreu um problema ao deletar o usuário: {e}")
+                database.session.rollback()
+                database.close_session()
+                raise e
+
+    async def count(self, close_session: bool = True) -> int:
+        """
+        Pega a quantidade de usuários registradas no banco.
+        """
+
+        qtd: int = 0
+        with DBConnectionHandler.connect(close_session) as database:
+            try:
+                qtd = database.session.query(User).count()
+            except Exception as e:
+                logging.error(f"Ocorreu um problema ao realizar a contagem de usuários: {e}")
+                database.close_session()
+                raise e
+
+        return qtd

@@ -120,7 +120,7 @@ async def test_list_users_dao():
     users = await dao.list(dto=dto, close_session=False)
 
     try:
-        assert len(users) == 3
+        assert len(users) == await dao.count()
         assert users[0].id == user01.id
         assert users[0].name == user01.name
         assert users[0].email == user01.email
@@ -583,3 +583,63 @@ async def test_update_groups_user_dao():
         await permission_dao.delete(_id=permission01.id)
         await permission_dao.delete(_id=permission02.id)
         await group_dao.delete(_id=group.id)
+
+
+async def test_delete_user_dao():
+    """
+    Testa a deleção do usuário sem deletar os grupos associados e nem
+    as permissões, mas deletando o perfil e qualquer empresa vinculada.
+    TODO: Inserir a empresa do usuário
+    """
+
+    permission_dao = PermissionDAO()
+
+    dto = CreatePermissionInputDTO(
+        name="Test Permissão para criação de permissões",
+        code="t_permission_create"
+    )
+    permission = await permission_dao.create(dto=dto, close_session=False)
+    assert permission is not None
+
+    group_dao = GroupDAO()
+    group = await group_dao.create(
+        dto=CreateGroupInputDTO(
+            name="Grupo 03",
+            permissions=["t_permission_create"]
+        ),
+        close_session=False
+    )
+    assert group is not None
+
+    company_dao = CompanyDAO()
+    work_company = await company_dao.create(
+        dto=CreateCompanyInputDTO(
+            cnpj="11111111111111",
+            name="Empresa 01 LTDA",
+            fantasy_name="Empresa 01"
+        ),
+        close_session=False
+    )
+
+    user_dao = UserDAO()
+    dto = CreateUserInputDTO(
+        name="Fulano de tal",
+        email="fulano@gmail.com",
+        password="******",
+        work_company_cnpj=work_company.cnpj,
+        profile=CreateProfileInputDTO(phone="6399485956"),
+        permissions=[permission.code],
+        groups=[group.id]
+    )
+    user = await user_dao.create(dto=dto, close_session=False)
+
+    await user_dao.delete(_id=user.id, close_session=False)
+
+    permission = await permission_dao.get_by_id(_id=permission.id, close_session=False)
+    assert permission is not None
+
+    group = await group_dao.get_by_id(_id=group.id, close_session=False)
+    assert group is not None
+
+    await permission_dao.delete(_id=permission.id)
+    await group_dao.delete(_id=group.id)
