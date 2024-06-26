@@ -8,10 +8,9 @@ class ListCompaniesInputDTO(BaseModel):
     Dados de entrada para listar empresas.
     """
 
-    user_id: Optional[int] = Field(None, description="Filtra pelo identificador do dona da empresa.")
-    cnpj: Optional[str] = Field(None, description="Filtrar pelo cnpj da empresa.")
+    owner_id: Optional[int] = Field(None, description="Filtra pelo identificador do dona da empresa.")
     name: Optional[str] = Field(None, description="Filtra pelo nome da empresa.")
-    employees: Optional[list[str]] = Field([], description="Filtra pela lista de emails dos funcionários da empresa.")
+    employees: Optional[list[int]] = Field([], description="Filtra pela lista de emails dos funcionários da empresa.")
 
     def to_dict(self):
         """

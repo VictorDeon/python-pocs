@@ -3,8 +3,7 @@ from typing import Optional
 from sqlalchemy import Select, select
 from sqlalchemy.exc import NoResultFound
 from src.adapters.dtos import (
-    CreateUserInputDTO, RetrievePermissionInputDTO,
-    RetrieveCompanyInputDTO, ListUserInputDTO,
+    CreateUserInputDTO, RetrievePermissionInputDTO, ListUserInputDTO,
     RetrieveUserInputDTO, UpdateUserInputDTO
 )
 from src.infrastructure.databases.connection import DBConnectionHandler
@@ -50,8 +49,8 @@ class UserDAO(DAOInterface):
                 user.profile = profile
 
                 if dto.work_company_cnpj:
-                    work_company = await company_dao.retrieve(
-                        dto=RetrieveCompanyInputDTO(cnpj=dto.work_company_cnpj),
+                    work_company = await company_dao.get_by_cnpj(
+                        cnpj=dto.work_company_cnpj,
                         close_session=False
                     )
 

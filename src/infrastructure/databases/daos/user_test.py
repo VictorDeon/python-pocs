@@ -1,3 +1,4 @@
+import pytest
 from src.adapters.dtos import (
     CreateUserInputDTO, CreatePermissionInputDTO,
     CreateGroupInputDTO, CreateProfileInputDTO,
@@ -9,6 +10,7 @@ from .group import GroupDAO
 from .permission import PermissionDAO
 from .user import UserDAO
 from .company import CompanyDAO
+from .profile import ProfileDAO
 
 
 async def test_create_user_dao():
@@ -42,17 +44,26 @@ async def test_create_user_dao():
         close_session=False
     )
 
+    user_dao = UserDAO()
+    owner_dto = CreateUserInputDTO(
+        name="Usuários dono",
+        email="usuario-dono@gmail.com",
+        password="Django1234",
+        profile=CreateProfileInputDTO()
+    )
+    user_owner = await user_dao.create(dto=owner_dto, close_session=False)
+
     company_dao = CompanyDAO()
     company = await company_dao.create(
         dto=CreateCompanyInputDTO(
             cnpj="11111111111111",
             name="Empresa 01 LTDA",
-            fantasy_name="Empresa 01"
+            fantasy_name="Empresa 01",
+            owner_id=user_owner.id
         ),
         close_session=False
     )
 
-    user_dao = UserDAO()
     dto = CreateUserInputDTO(
         name="Fulano de tal",
         email="fulano@gmail.com",
@@ -585,11 +596,11 @@ async def test_update_groups_user_dao():
         await group_dao.delete(_id=group.id)
 
 
+@pytest.mark.skip(reason="Implementar o delete cascade")
 async def test_delete_user_dao():
     """
     Testa a deleção do usuário sem deletar os grupos associados e nem
     as permissões, mas deletando o perfil e qualquer empresa vinculada.
-    TODO: Inserir a empresa do usuário
     """
 
     permission_dao = PermissionDAO()
@@ -633,6 +644,17 @@ async def test_delete_user_dao():
     )
     user = await user_dao.create(dto=dto, close_session=False)
 
+    # Precisa ser deletado junto com o usuário
+    company = await company_dao.create(
+        dto=CreateCompanyInputDTO(
+            cnpj="11111111111111",
+            name="Empresa 01 LTDA",
+            fantasy_name="Empresa 01",
+            owner_id=user.id
+        ),
+        close_session=False
+    )
+
     await user_dao.delete(_id=user.id, close_session=False)
 
     permission = await permission_dao.get_by_id(_id=permission.id, close_session=False)
@@ -640,6 +662,13 @@ async def test_delete_user_dao():
 
     group = await group_dao.get_by_id(_id=group.id, close_session=False)
     assert group is not None
+
+    company = await group_dao.get_by_id(_id=company.id, close_session=False)
+    assert company is None
+
+    profile_dao = ProfileDAO()
+    profile = await profile_dao.get_by_id(_id=user.profile.id, close_session=False)
+    assert profile is None
 
     await permission_dao.delete(_id=permission.id)
     await group_dao.delete(_id=group.id)

@@ -63,16 +63,13 @@ class CompanyDAO(DAOInterface):
                 if dto.employees:
                     statement: Select = statement \
                         .join(User, Company.owner_id == User.id) \
-                        .where(User.email.in_(dto.employees))
+                        .where(User.id.in_(dto.employees))
 
-                if dto.user_id:
-                    statement: Select = statement.where(Company.owner_id == dto.user_id)
+                if dto.owner_id:
+                    statement: Select = statement.where(Company.owner_id == dto.owner_id)
 
                 if dto.name:
                     statement: Select = statement.where(Company.name.like(f"%{dto.name}%"))
-
-                if dto.cnpj:
-                    statement: Select = statement.where(Company.cnpj == dto.cnpj)
 
             try:
                 companies = database.session.scalars(statement=statement).all()
@@ -83,15 +80,15 @@ class CompanyDAO(DAOInterface):
 
         return companies
 
-    async def get_by_id(self, _id: int, close_session: bool = True) -> Optional[Company]:
+    async def get_by_cnpj(self, cnpj: str, close_session: bool = True) -> Optional[Company]:
         """
-        Pega os dados de uma empresa pelo _id
+        Pega os dados de uma empresa pelo cnpj
         """
 
         company: Company = None
         with DBConnectionHandler.connect(close_session) as database:
             try:
-                company = database.session.get(Company, _id)
+                company = database.session.get(Company, cnpj)
             except Exception as e:
                 logging.error(f"Ocorreu um problema ao pegar os dados da empresa: {e}")
                 database.close_session(True)
@@ -99,29 +96,9 @@ class CompanyDAO(DAOInterface):
 
         return company
 
-    async def retrieve(self, dto: RetrieveCompanyInputDTO, close_session: bool = True) -> Optional[Company]:
-        """
-        Pega os dados de uma empresa por outros atributos
-        """
-
-        company: Company = None
-        with DBConnectionHandler.connect(close_session) as database:
-            statement: Select = select(Company).where(Company.cnpj == dto.cnpj)
-
-            try:
-                company = database.session.scalars(statement).one()
-            except NoResultFound as e:
-                logging.warning(f"Empresa com cnpj {dto.cnpj} não encontrada: {e}")
-            except Exception as e:
-                logging.error(f"Ocorreu um problema ao pegar os dados da empresa: {e}")
-                database.close_session()
-                raise e
-
-        return company
-
     async def update(
         self,
-        _id: int,
+        cnpj: str,
         dto: UpdateCompanyInputDTO,
         commit: bool = True,
         close_session: bool = True) -> Optional[Company]:
@@ -131,7 +108,7 @@ class CompanyDAO(DAOInterface):
 
         company: Company = None
         with DBConnectionHandler.connect(close_session) as database:
-            statement = select(Company).where(Company.id == _id)
+            statement = select(Company).where(Company.cnpj == cnpj)
 
             try:
                 company = database.session.scalars(statement).one()
