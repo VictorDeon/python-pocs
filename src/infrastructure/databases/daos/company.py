@@ -29,8 +29,14 @@ class CompanyDAO(DAOInterface):
 
         with DBConnectionHandler.connect(close_session) as database:
             try:
-                # Inserir o owner
-                # Inserir os employess
+                owner = database.session.get(User, dto.owner_id)
+                company.owner_id = owner.id
+                company.owner = owner
+
+                for employee_id in dto.employees:
+                    employee = database.session.get(User, employee_id)
+                    if employee:
+                        company.employees.append(employee)
 
                 database.session.add(company)
                 if commit:

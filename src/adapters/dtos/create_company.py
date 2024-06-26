@@ -8,6 +8,7 @@ class CreateCompanyInputDTO(BaseModel):
     Dados de entrada para criar uma empresa.
     """
 
+    owner_id: int = Field(..., description="Identificador do usuário dono da empresa.")
     cnpj: str = Field(..., description="CNPJ da empresa.")
     name: str = Field(..., description="Nome da empresa.")
     fantasy_name: Optional[str] = Field(None, description="Nome fantasia da empresa.")
