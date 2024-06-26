@@ -32,7 +32,7 @@ A camada mais externa geralmente é composta por frameworks e ferramentas como b
 * Desenvolver vários tipos de consumos de APIs usando corotines, queues, threads e processos
 * Inserir um sistema de logs inteligentes
 * Finalizar o leitor de PDF
-* Criar um interface com o tkinter para o CRUD de usuários.
+* Criar um interface com o tkinter para o CRUD de usuários definir via header.
 * Endpoints que faz o upload de um arquivo excel com dados de usuários.
 * Script que consume todos os arquivos excel da pasta de upload, pegar os dados e armazenar em varios bancos de dados
 e arquivos e enviar o excel para outra pasta de processados.

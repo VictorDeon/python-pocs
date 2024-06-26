@@ -26,7 +26,7 @@ class DBConnectionHandler:
         self.session = None
 
     @classmethod
-    def connect(cls, close_session: bool = True):
+    def connect(cls, close_session: bool = True) -> "DBConnectionHandler":
         """
         Realiza a conexão.
         """
@@ -83,7 +83,7 @@ class DBConnectionHandler:
         BaseModel.metadata.drop_all(self.__engine)
         BaseModel.metadata.create_all(self.__engine)
 
-    def __enter__(self):
+    def __enter__(self) -> "DBConnectionHandler":
         """
         Executado ao criar um contexto com o with.
         """

@@ -14,6 +14,7 @@ from .create_user import CreateUserInputDTO, CreateUserOutputDTO
 from .list_permissions import ListPermissionInputDTO, ListPermissionOutputDTO
 from .list_companies import ListCompaniesInputDTO, ListCompaniesOutputDTO
 from .list_groups import ListGroupInputDTO, ListGroupOutputDTO
+from .list_user import ListUserInputDTO, ListUserOutputDTO
 from .update_permission import UpdatePermissionInputDTO, UpdatePermissionOutputDTO
 from .update_group import UpdateGroupInputDTO, UpdateGroupOutputDTO
 from .update_company import UpdateCompanyInputDTO, UpdateCompanyOutputDTO

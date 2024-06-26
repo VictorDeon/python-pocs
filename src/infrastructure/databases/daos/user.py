@@ -1,7 +1,8 @@
 import logging
+from sqlalchemy import Select, select
 from src.adapters.dtos import (
     CreateUserInputDTO, RetrievePermissionInputDTO,
-    RetrieveCompanyInputDTO
+    RetrieveCompanyInputDTO, ListUserInputDTO
 )
 from src.infrastructure.databases.connection import DBConnectionHandler
 from src.infrastructure.databases.models import User
@@ -79,3 +80,28 @@ class UserDAO(DAOInterface):
                 raise e
 
         return user
+
+    async def list(self, dto: ListUserInputDTO, close_session: bool = True) -> list[User]:
+        """
+        Pega uma lista de objetos.
+        """
+
+        users: list[User] = []
+        with DBConnectionHandler.connect(close_session) as database:
+            statement: Select = select(User)
+
+            if dto:
+                if dto.name:
+                    statement: Select = statement.where(User.name.like(f"%{dto.name}%"))
+
+                if dto.email:
+                    statement: Select = statement.where(User.email == dto.email)
+
+            try:
+                users = database.session.scalars(statement=statement).all()
+            except Exception as e:
+                logging.error(f"Ocorreu um problema ao listar os usuários: {e}")
+                database.close_session(True)
+                raise e
+
+        return users
