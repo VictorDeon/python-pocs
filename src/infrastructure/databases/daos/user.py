@@ -1,9 +1,11 @@
 import logging
 from typing import Optional
 from sqlalchemy import Select, select
+from sqlalchemy.exc import NoResultFound
 from src.adapters.dtos import (
     CreateUserInputDTO, RetrievePermissionInputDTO,
-    RetrieveCompanyInputDTO, ListUserInputDTO
+    RetrieveCompanyInputDTO, ListUserInputDTO,
+    RetrieveUserInputDTO
 )
 from src.infrastructure.databases.connection import DBConnectionHandler
 from src.infrastructure.databases.models import User
@@ -119,6 +121,26 @@ class UserDAO(DAOInterface):
             except Exception as e:
                 logging.error(f"Ocorreu um problema ao pegar os dados do usuário: {e}")
                 database.close_session(True)
+                raise e
+
+        return user
+
+    async def retrieve(self, dto: RetrieveUserInputDTO, close_session: bool = True) -> Optional[User]:
+        """
+        Pega os dados de uma permissão pelo _id
+        """
+
+        user: User = None
+        with DBConnectionHandler.connect(close_session) as database:
+            statement: Select = select(User).where(User.email == dto.email)
+
+            try:
+                user = database.session.scalars(statement).one()
+            except NoResultFound as e:
+                logging.warning(f"Usuário com email {dto.email} não encontrada: {e}")
+            except Exception as e:
+                logging.error(f"Ocorreu um problema ao pegar os dados do usuário: {e}")
+                database.close_session()
                 raise e
 
         return user

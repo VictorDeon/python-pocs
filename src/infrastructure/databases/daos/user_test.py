@@ -1,7 +1,8 @@
 from src.adapters.dtos import (
     CreateUserInputDTO, CreatePermissionInputDTO,
     CreateGroupInputDTO, CreateProfileInputDTO,
-    CreateCompanyInputDTO, ListUserInputDTO
+    CreateCompanyInputDTO, ListUserInputDTO,
+    RetrieveUserInputDTO
 )
 from .group import GroupDAO
 from .permission import PermissionDAO
@@ -305,11 +306,40 @@ async def test_get_by_id_user_dao():
     )
     user = await dao.create(dto=dto, commit=True, close_session=False)
 
-    searched_permissions = await dao.get_by_id(_id=user.id, close_session=False)
+    searched_user = await dao.get_by_id(_id=user.id, close_session=False)
 
     try:
-        assert user.id == searched_permissions.id
-        assert user.name == searched_permissions.name
-        assert user.email == searched_permissions.email
+        assert user.id == searched_user.id
+        assert user.name == searched_user.name
+        assert user.email == searched_user.email
+    finally:
+        await dao.delete(_id=user.id)
+
+
+async def test_retrieve_by_email_user_dao():
+    """
+    Testa a busca de uma permissão pelo código.
+    """
+
+    dao = UserDAO()
+
+    dto = CreateUserInputDTO(
+        name="Usuário 01",
+        email="usuario01@gmail.com",
+        password="Django1234",
+        profile=CreateProfileInputDTO()
+    )
+    user = await dao.create(dto=dto, commit=True, close_session=False)
+
+    dto = RetrieveUserInputDTO(
+        email="usuario01@gmail.com"
+    )
+
+    searched_user = await dao.retrieve(dto=dto, close_session=False)
+
+    try:
+        assert user.id == searched_user.id
+        assert user.name == searched_user.name
+        assert user.email == searched_user.email
     finally:
         await dao.delete(_id=user.id)
