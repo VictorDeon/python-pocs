@@ -1,9 +1,11 @@
 from src.adapters.dtos import (
     CreateGroupInputDTO, CreatePermissionInputDTO,
-    ListGroupInputDTO, UpdateGroupInputDTO
+    ListGroupInputDTO, UpdateGroupInputDTO,
+    CreateUserInputDTO, CreateProfileInputDTO
 )
 from .group import GroupDAO
 from .permission import PermissionDAO
+from .user import UserDAO
 
 
 async def test_create_group_dao():
@@ -401,7 +403,6 @@ async def test_delete_group_dao():
     """
     Testa a deleção da grupo sem deletar as permissões associadas a ele
     e nem os usuários associados a ele.
-    TODO: Inserir o userDAO
     """
 
     permission_dao = PermissionDAO()
@@ -424,6 +425,18 @@ async def test_delete_group_dao():
     )
     assert group is not None
 
+    user_dao = UserDAO()
+    dto = CreateUserInputDTO(
+        name="Fulano de tal",
+        email="fulano@gmail.com",
+        password="******",
+        profile=CreateProfileInputDTO(phone="6399485956"),
+        permissions=[permission.code],
+        groups=[group.id]
+    )
+    user = await user_dao.create(dto=dto, close_session=False)
+    assert user is not None
+
     await group_dao.delete(_id=group.id, close_session=False)
 
     group = await group_dao.get_by_id(_id=group.id, close_session=False)
@@ -432,4 +445,8 @@ async def test_delete_group_dao():
     permission = await permission_dao.get_by_id(_id=permission.id, close_session=False)
     assert permission is not None
 
+    user = await user_dao.get_by_id(_id=user.id, close_session=False)
+    assert user is not None
+
     await permission_dao.delete(_id=permission.id)
+    await user_dao.delete(_id=user.id)
