@@ -18,6 +18,7 @@ from .list_user import ListUserInputDTO, ListUserOutputDTO
 from .update_permission import UpdatePermissionInputDTO, UpdatePermissionOutputDTO
 from .update_group import UpdateGroupInputDTO, UpdateGroupOutputDTO
 from .update_company import UpdateCompanyInputDTO, UpdateCompanyOutputDTO
+from .update_user import UpdateUserInputDTO, UpdateUserOutputDTO
 from .update_profile import UpdateProfileInputDTO, UpdateProfileOutputDTO
 from .retrieve_permission import RetrievePermissionInputDTO, RetrievePermissionOutputDTO
 from .retrieve_company import RetrieveCompanyInputDTO, RetrieveCompanyOutputDTO

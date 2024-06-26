@@ -5,7 +5,7 @@ from sqlalchemy.exc import NoResultFound
 from src.adapters.dtos import (
     CreateUserInputDTO, RetrievePermissionInputDTO,
     RetrieveCompanyInputDTO, ListUserInputDTO,
-    RetrieveUserInputDTO
+    RetrieveUserInputDTO, UpdateUserInputDTO
 )
 from src.infrastructure.databases.connection import DBConnectionHandler
 from src.infrastructure.databases.models import User
@@ -127,7 +127,7 @@ class UserDAO(DAOInterface):
 
     async def retrieve(self, dto: RetrieveUserInputDTO, close_session: bool = True) -> Optional[User]:
         """
-        Pega os dados de uma permissão pelo _id
+        Pega os dados de um usuário pelo email
         """
 
         user: User = None
@@ -140,6 +140,66 @@ class UserDAO(DAOInterface):
                 logging.warning(f"Usuário com email {dto.email} não encontrada: {e}")
             except Exception as e:
                 logging.error(f"Ocorreu um problema ao pegar os dados do usuário: {e}")
+                database.close_session()
+                raise e
+
+        return user
+
+    async def update(
+        self,
+        _id: int,
+        dto: UpdateUserInputDTO,
+        commit: bool = True,
+        close_session: bool = True) -> Optional[User]:
+        """
+        Pega os dados de um usuário pelo _id e atualiza
+        """
+
+        user: User = None
+        with DBConnectionHandler.connect(close_session) as database:
+            statement = select(User).where(User.id == _id)
+
+            try:
+                user = database.session.scalars(statement).one()
+                if dto.name:
+                    user.name = dto.name
+
+                if dto.email:
+                    user.email = dto.email
+
+                if dto.profile:
+                    profile_dao = ProfileDAO()
+                    await profile_dao.update(
+                        _id=user.profile.id,
+                        dto=dto.profile,
+                        close_session=False
+                    )
+
+                if dto.permissions is not None:
+                    permission_dao = PermissionDAO()
+                    user.permissions = []
+                    for permission_code in dto.permissions:
+                        permission = await permission_dao.retrieve(
+                            dto=RetrievePermissionInputDTO(code=permission_code),
+                            close_session=False
+                        )
+                        if permission:
+                            user.permissions.append(permission)
+
+                if dto.groups is not None:
+                    group_dao = GroupDAO()
+                    user.groups = []
+                    for group_id in dto.groups:
+                        group = await group_dao.get_by_id(_id=group_id, close_session=False)
+                        if group:
+                            user.groups.append(group)
+
+                if commit:
+                    database.session.commit()
+                    logging.info("Usuário atualizado no banco.")
+            except Exception as e:
+                logging.error(f"Ocorreu um problema ao atualizar o usuário: {e}")
+                database.session.rollback()
                 database.close_session()
                 raise e
 

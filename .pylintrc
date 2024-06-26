@@ -12,6 +12,7 @@ disable=
     W0102,  # dangerous-default-value
     R0913,  # too-many-arguments
     E1129,  # not-context-manager
+    E1101,  # no-member
 
 # Analyse import fallback blocks. This can be used to support both Python 2 and
 # 3 compatible code, which means that the block might have code that exists

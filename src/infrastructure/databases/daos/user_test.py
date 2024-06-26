@@ -2,7 +2,8 @@ from src.adapters.dtos import (
     CreateUserInputDTO, CreatePermissionInputDTO,
     CreateGroupInputDTO, CreateProfileInputDTO,
     CreateCompanyInputDTO, ListUserInputDTO,
-    RetrieveUserInputDTO
+    RetrieveUserInputDTO, UpdateUserInputDTO,
+    UpdateProfileInputDTO
 )
 from .group import GroupDAO
 from .permission import PermissionDAO
@@ -343,3 +344,242 @@ async def test_retrieve_by_email_user_dao():
         assert user.email == searched_user.email
     finally:
         await dao.delete(_id=user.id)
+
+
+async def test_update_name_user_dao():
+    """
+    Testa a atualização do nome do usuário.
+    """
+
+    dao = UserDAO()
+
+    dto = CreateUserInputDTO(
+        name="Usuário 01",
+        email="usuario01@gmail.com",
+        password="Django1234",
+        profile=CreateProfileInputDTO()
+    )
+    user = await dao.create(dto=dto, commit=True, close_session=False)
+
+    dto = UpdateUserInputDTO(name="Usuário 01 Atualizado")
+    updated_user = await dao.update(_id=user.id, dto=dto, close_session=False)
+
+    try:
+        assert user.id == updated_user.id
+        assert user.name == updated_user.name
+        assert user.email == updated_user.email
+        assert updated_user.name == dto.name
+    finally:
+        await dao.delete(_id=user.id)
+
+
+async def test_update_email_user_dao():
+    """
+    Testa a atualização do nome do usuário e email.
+    """
+
+    dao = UserDAO()
+
+    dto = CreateUserInputDTO(
+        name="Usuário 01",
+        email="usuario01@gmail.com",
+        password="Django1234",
+        profile=CreateProfileInputDTO()
+    )
+    user = await dao.create(dto=dto, commit=True, close_session=False)
+
+    dto = UpdateUserInputDTO(
+        name="Usuário 01 Atualizado",
+        email="usuario01atualizado@gmail.com"
+    )
+    updated_user = await dao.update(_id=user.id, dto=dto, close_session=False)
+
+    try:
+        assert user.id == updated_user.id
+        assert user.name == updated_user.name
+        assert user.email == updated_user.email
+        assert updated_user.name == dto.name
+        assert updated_user.email == dto.email
+    finally:
+        await dao.delete(_id=user.id)
+
+
+async def test_update_profile_user_dao():
+    """
+    Testa a atualização do nome do usuário e email e dados do perfil.
+    """
+
+    dao = UserDAO()
+
+    dto = CreateUserInputDTO(
+        name="Usuário 01",
+        email="usuario01@gmail.com",
+        password="Django1234",
+        profile=CreateProfileInputDTO(
+            phone="11111111111",
+            address="Rua fulano de tal 2039, sorocaba. SP"
+        )
+    )
+    user = await dao.create(dto=dto, commit=True, close_session=False)
+
+    dto = UpdateUserInputDTO(
+        name="Usuário 01 Atualizado",
+        email="usuario01atualizado@gmail.com",
+        profile=UpdateProfileInputDTO(
+            phone="6399384945",
+            address="Rua sicrano de tal 1111, sorocaba. SP"
+        )
+    )
+    updated_user = await dao.update(_id=user.id, dto=dto, close_session=False)
+
+    try:
+        assert user.id == updated_user.id
+        assert user.name == updated_user.name
+        assert user.email == updated_user.email
+        assert updated_user.name == dto.name
+        assert updated_user.email == dto.email
+        assert updated_user.profile.phone == dto.profile.phone
+        assert updated_user.profile.address == dto.profile.address
+    finally:
+        await dao.delete(_id=user.id)
+
+
+async def test_update_permissions_user_dao():
+    """
+    Testa a atualização do nome do usuário e email e dados do perfil
+    e permissões.
+    """
+
+    dao = UserDAO()
+
+    permission_dao = PermissionDAO()
+    permission01 = await permission_dao.create(
+        dto=CreatePermissionInputDTO(
+            name="Teste permissão para criação de permissões",
+            code="t_permission_create"
+        ),
+        close_session=False
+    )
+
+    permission02 = await permission_dao.create(
+        dto=CreatePermissionInputDTO(
+            name="Teste permissão para atualização de permissões",
+            code="t_permission_update"
+        ),
+        close_session=False
+    )
+
+    dto = CreateUserInputDTO(
+        name="Usuário 01",
+        email="usuario01@gmail.com",
+        password="Django1234",
+        profile=CreateProfileInputDTO(
+            phone="11111111111",
+            address="Rua fulano de tal 2039, sorocaba. SP"
+        ),
+        permissions=["t_permission_create"]
+    )
+    user = await dao.create(dto=dto, commit=True, close_session=False)
+
+    dto = UpdateUserInputDTO(
+        name="Usuário 01 Atualizado",
+        email="usuario01atualizado@gmail.com",
+        profile=UpdateProfileInputDTO(
+            phone="6399384945",
+            address="Rua sicrano de tal 1111, sorocaba. SP"
+        ),
+        permissions=["t_permission_update"]
+    )
+    updated_user = await dao.update(_id=user.id, dto=dto, close_session=False)
+
+    try:
+        assert user.id == updated_user.id
+        assert user.name == updated_user.name
+        assert user.email == updated_user.email
+        assert updated_user.name == dto.name
+        assert updated_user.email == dto.email
+        assert updated_user.profile.phone == dto.profile.phone
+        assert updated_user.profile.address == dto.profile.address
+        assert updated_user.permissions.count() == 1
+        assert updated_user.permissions[0].code == "t_permission_update"
+    finally:
+        await dao.delete(_id=user.id)
+        await permission_dao.delete(_id=permission01.id)
+        await permission_dao.delete(_id=permission02.id)
+
+
+async def test_update_groups_user_dao():
+    """
+    Testa a atualização do nome do usuário e email e dados do perfil
+    permissões e grupos.
+    """
+
+    dao = UserDAO()
+
+    permission_dao = PermissionDAO()
+    permission01 = await permission_dao.create(
+        dto=CreatePermissionInputDTO(
+            name="Teste permissão para criação de permissões",
+            code="t_permission_create"
+        ),
+        close_session=False
+    )
+
+    permission02 = await permission_dao.create(
+        dto=CreatePermissionInputDTO(
+            name="Teste permissão para atualização de permissões",
+            code="t_permission_update"
+        ),
+        close_session=False
+    )
+
+    group_dao = GroupDAO()
+    group = await group_dao.create(
+        dto=CreateGroupInputDTO(
+            name="Grupo 01",
+            permissions=["t_permission_create", "t_permission_update"]
+        ),
+        close_session=False
+    )
+
+    dto = CreateUserInputDTO(
+        name="Usuário 01",
+        email="usuario01@gmail.com",
+        password="Django1234",
+        profile=CreateProfileInputDTO(
+            phone="11111111111",
+            address="Rua fulano de tal 2039, sorocaba. SP"
+        ),
+        permissions=["t_permission_create"],
+        groups=[group.id]
+    )
+    user = await dao.create(dto=dto, commit=True, close_session=False)
+
+    dto = UpdateUserInputDTO(
+        name="Usuário 01 Atualizado",
+        email="usuario01atualizado@gmail.com",
+        profile=UpdateProfileInputDTO(
+            phone="6399384945",
+            address="Rua sicrano de tal 1111, sorocaba. SP"
+        ),
+        permissions=["t_permission_update"],
+        groups=[]
+    )
+    updated_user = await dao.update(_id=user.id, dto=dto, close_session=False)
+
+    try:
+        assert user.id == updated_user.id
+        assert user.name == updated_user.name
+        assert user.email == updated_user.email
+        assert updated_user.name == dto.name
+        assert updated_user.email == dto.email
+        assert updated_user.profile.phone == dto.profile.phone
+        assert updated_user.profile.address == dto.profile.address
+        assert updated_user.permissions.count() == 1
+        assert updated_user.permissions[0].code == "t_permission_update"
+        assert updated_user.groups.count() == 0
+    finally:
+        await dao.delete(_id=user.id)
+        await permission_dao.delete(_id=permission01.id)
+        await permission_dao.delete(_id=permission02.id)
+        await group_dao.delete(_id=group.id)
