@@ -1,4 +1,3 @@
-import pytest
 from src.adapters.dtos import (
     CreateUserInputDTO, CreateProfileInputDTO,
     CreateCompanyInputDTO, ListCompaniesInputDTO,
@@ -256,6 +255,7 @@ async def test_list_companies_by_name_dao():
 async def test_get_by_cnpj_company_dao():
     """
     Testa a busca de uma empresa pelo cnpj.
+    TODO: Verificar a quantidade de employees == 2
     """
 
     user_dao = UserDAO()
@@ -267,22 +267,6 @@ async def test_get_by_cnpj_company_dao():
     )
     user01 = await user_dao.create(dto=user_dto01, close_session=False)
 
-    user_dto02 = CreateUserInputDTO(
-        name="Fulano 02",
-        email="fulano02@gmail.com",
-        password="******",
-        profile=CreateProfileInputDTO()
-    )
-    user02 = await user_dao.create(dto=user_dto02, close_session=False)
-
-    user_dto03 = CreateUserInputDTO(
-        name="Fulano 03",
-        email="fulano03@gmail.com",
-        password="******",
-        profile=CreateProfileInputDTO()
-    )
-    user03 = await user_dao.create(dto=user_dto03, close_session=False)
-
     dao = CompanyDAO()
     dto = CreateCompanyInputDTO(
         cnpj="11111111111111",
@@ -292,6 +276,24 @@ async def test_get_by_cnpj_company_dao():
     )
     company = await dao.create(dto=dto, close_session=False)
 
+    user_dto02 = CreateUserInputDTO(
+        name="Fulano 02",
+        email="fulano02@gmail.com",
+        password="******",
+        work_company_cnpj=company.cnpj,
+        profile=CreateProfileInputDTO()
+    )
+    user02 = await user_dao.create(dto=user_dto02, close_session=False)
+
+    user_dto03 = CreateUserInputDTO(
+        name="Fulano 03",
+        email="fulano03@gmail.com",
+        password="******",
+        work_company_cnpj=company.cnpj,
+        profile=CreateProfileInputDTO()
+    )
+    user03 = await user_dao.create(dto=user_dto03, close_session=False)
+
     searched_company = await dao.get_by_cnpj(cnpj=company.cnpj)
 
     try:
@@ -300,6 +302,7 @@ async def test_get_by_cnpj_company_dao():
         assert company.fantasy_name == searched_company.fantasy_name
         assert company.owner_id == searched_company.owner_id
         assert company.owner == searched_company.owner
+        # assert company.employees.count() == 2
     finally:
         await user_dao.delete(_id=user01.id)
         await user_dao.delete(_id=user02.id)
