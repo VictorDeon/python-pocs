@@ -1,10 +1,9 @@
 import logging
 from typing import Optional
 from sqlalchemy import select, Select
-from sqlalchemy.orm.exc import NoResultFound
 from src.adapters.dtos import (
     CreateCompanyInputDTO, ListCompaniesInputDTO,
-    RetrieveCompanyInputDTO, UpdateCompanyInputDTO
+    UpdateCompanyInputDTO
 )
 from src.infrastructure.databases.connection import DBConnectionHandler
 from src.infrastructure.databases.models import Company, User

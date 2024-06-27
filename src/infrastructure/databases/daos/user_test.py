@@ -1,4 +1,3 @@
-import pytest
 from src.adapters.dtos import (
     CreateUserInputDTO, CreatePermissionInputDTO,
     CreateGroupInputDTO, CreateProfileInputDTO,
