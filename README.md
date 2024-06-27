@@ -37,8 +37,8 @@ A camada mais externa geralmente é composta por frameworks e ferramentas como b
 
 ### TODO:
 
+* Inserir migrations com alembic
 * Terminar o video do sqlalchemy
-* Inserir migrations com alembic e deixar o docker compose com usuário não root para poder editar os arquivos internos dele
 * Endpoint com o CRUD de usuários e seus relacionamentos (Criar, Listar, Visualizar, Deletar, Atualizar)
     - Criar todos os presents + tests
     - Criar todos os user_cases + tests

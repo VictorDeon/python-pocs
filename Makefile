@@ -1,9 +1,17 @@
+up:
+	# Roda a ferramenta em de desenvolvimento
+	docker compose --profile api up -d && docker attach api
+
+down:
+	# Desliga a ferramente em desenvolvimento
+	docker compose --profile api down
+
 install:
-	# Instala uma dependencia dentro do container
+	# Instala uma dependencia dentro do container remove flag user do docker compose
 	docker compose exec api pip3 install ${pkg}
 
 remove:
-	# Remove uma dependencia dentro do container
+	# Remove uma dependencia dentro do container remove flag user do docker compose
 	docker compose exec api pip3 uninstall ${pkg}
 
 requirements:
@@ -26,21 +34,9 @@ packages:
 	# Inserir o site-packages dentro do .ignore
 	sudo docker cp api:/usr/local/lib/python3.10/site-packages .ignore/site-packages
 
-chown:
-	# Mudar as permissões de uma pasta
-	docker compose exec api chown -R ${user}:${group} ${path}
-
 rmi:
 	# Remove as imagens none
 	docker rmi $(docker images --filter "dangling=true" -q --no-trunc)
-
-debug:
-	# Inserir o pdb no codigo e o método pdb.set_trace() (n, s, l)
-	docker attach api
-
-run:
-	# Roda o script
-	docker compose exec api python3 scripts/${script}
 
 ### QUALIDADE ###############################################################
 

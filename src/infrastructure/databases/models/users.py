@@ -1,6 +1,5 @@
-from datetime import datetime
 from typing import Optional
-from sqlalchemy import String, BigInteger, DateTime, Boolean, ForeignKey
+from sqlalchemy import String, BigInteger, ForeignKey
 from sqlalchemy.orm import Mapped, relationship, mapped_column
 from src.infrastructure.databases import BaseModel
 from .many_to_many import (
@@ -20,9 +19,6 @@ class User(BaseModel):
     email: Mapped[str] = mapped_column(String(50), nullable=False, index=True, unique=True)
     password: Mapped[str] = mapped_column(String(30), nullable=False)
     name: Mapped[str] = mapped_column(String(30), nullable=False)
-    created_at: Mapped[datetime] = mapped_column(DateTime, default=datetime.now, index=True)
-    updated_at: Mapped[Optional[datetime]] = mapped_column(DateTime, nullable=True)
-    is_deleted: Mapped[bool] = mapped_column(Boolean, default=False, index=True)
 
     profile_id: Mapped[int] = mapped_column(BigInteger, ForeignKey('profiles.id'))
     profile: Mapped["Profile"] = relationship(

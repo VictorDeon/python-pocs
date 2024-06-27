@@ -1,6 +1,5 @@
-from datetime import datetime
 from typing import Optional
-from sqlalchemy import String, BigInteger, DateTime, Boolean, ForeignKey
+from sqlalchemy import String, BigInteger, ForeignKey
 from sqlalchemy.orm import Mapped, relationship, mapped_column
 from src.infrastructure.databases import BaseModel
 
@@ -15,9 +14,6 @@ class Company(BaseModel):
     cnpj: Mapped[str] = mapped_column(String(14), primary_key=True, nullable=False)
     name: Mapped[str] = mapped_column(String(50), nullable=False)
     fantasy_name: Mapped[Optional[str]] = mapped_column(String(50), nullable=True)
-    created_at: Mapped[datetime] = mapped_column(DateTime, default=datetime.now, index=True)
-    updated_at: Mapped[Optional[datetime]] = mapped_column(DateTime, nullable=True)
-    is_actived: Mapped[bool] = mapped_column(Boolean, default=True, index=True)
 
     owner_id: Mapped[int] = mapped_column(BigInteger, ForeignKey("users.id", name='fk_company_owner'))
     owner: Mapped["User"] = relationship(
