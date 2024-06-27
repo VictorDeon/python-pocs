@@ -28,12 +28,14 @@ class User(BaseModel):
     profile: Mapped["Profile"] = relationship(
         "Profile",
         single_parent=True,
+        cascade="all, delete-orphan",
         back_populates="user"
     )
 
     companies: Mapped[list["Company"]] = relationship(
         'Company',
         back_populates='owner',
+        cascade="all, delete-orphan",
         foreign_keys='Company.owner_id'
     )
 
