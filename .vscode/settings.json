@@ -9,6 +9,9 @@
     "python.autoComplete.extraPaths": [
         ".ignore/site-packages"
     ],
+    "python.analysis.diagnosticSeverityOverrides": {
+        "reportUndefinedVariable": "none"
+    },
     "python.linting.enabled": true,
     "python.linting.pylintEnabled": true,
 }

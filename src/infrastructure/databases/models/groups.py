@@ -1,12 +1,12 @@
 from datetime import datetime
 from typing import Optional
-from sqlalchemy import Column, String, BigInteger, DateTime, Boolean
-from sqlalchemy.orm import Mapped, relationship
+from sqlalchemy import String, BigInteger, DateTime, Boolean
+from sqlalchemy.orm import Mapped, relationship, mapped_column
 from src.infrastructure.databases import BaseModel
-from src.infrastructure.databases.models.__many_to_many import (
-    group_permission_many_to_many
+from .many_to_many import (
+    groups_vs_permissions,
+    users_vs_groups
 )
-from .permissions import Permission
 
 
 class Group(BaseModel):
@@ -16,16 +16,23 @@ class Group(BaseModel):
 
     __tablename__ = "groups"
 
-    id: Mapped[int] = Column(BigInteger, primary_key=True, autoincrement=True)
-    name: Mapped[str] = Column(String(50), nullable=False)
-    created_at: Mapped[datetime] = Column(DateTime, default=datetime.now, index=True)
-    updated_at: Mapped[Optional[datetime]] = Column(DateTime, nullable=True)
-    is_deleted: Mapped[bool] = Column(Boolean, default=False, index=True)
+    id: Mapped[int] = mapped_column(BigInteger, primary_key=True, autoincrement=True)
+    name: Mapped[str] = mapped_column(String(50), nullable=False)
+    created_at: Mapped[datetime] = mapped_column(DateTime, default=datetime.now, index=True)
+    updated_at: Mapped[Optional[datetime]] = mapped_column(DateTime, nullable=True)
+    is_deleted: Mapped[bool] = mapped_column(Boolean, default=False, index=True)
 
-    permissions: Mapped[Optional[list[Permission]]] = relationship(
+    users: Mapped[Optional[list["User"]]] = relationship(
+        "User",
+        secondary=users_vs_groups,
+        back_populates="groups",
+        lazy='dynamic'
+    )
+
+    permissions: Mapped[Optional[list["Permission"]]] = relationship(
         "Permission",
-        secondary=group_permission_many_to_many,
-        backref='groups',
+        secondary=groups_vs_permissions,
+        back_populates="groups",
         lazy='dynamic'
     )
 

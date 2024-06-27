@@ -27,8 +27,10 @@ A camada mais externa geralmente é composta por frameworks e ferramentas como b
 
 ### TODO:
 
+* Arrumar todos os testes automatizados
+* Endpoint com o CRUD de usuários e seus relacionamentos (Criar, Listar, Visualizar, Deletar, Atualizar)
 * Inserir migrations com alembic e deixar o docker compose com usuário não root para poder editar os arquivos internos dele
-* Endpoint com o CRUD de usuários e seus relacionamentos (Criar, Listar, Visualizar, Deletar, Atualizar, Autenticar) - vwauth
+* Autenticação e autorização - vwauth
 * Desenvolver vários tipos de consumos de APIs usando corotines, queues, threads e processos
 * Inserir um sistema de logs inteligentes
 * Finalizar o leitor de PDF
