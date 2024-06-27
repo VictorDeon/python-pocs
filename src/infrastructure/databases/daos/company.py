@@ -33,11 +33,6 @@ class CompanyDAO(DAOInterface):
                 company.owner_id = owner.id
                 company.owner = owner
 
-                for employee_id in dto.employees:
-                    employee = database.session.get(User, employee_id)
-                    if employee:
-                        company.employees.append(employee)
-
                 database.session.add(company)
                 if commit:
                     database.session.commit()
@@ -60,11 +55,6 @@ class CompanyDAO(DAOInterface):
             statement: Select = select(Company)
 
             if dto:
-                if dto.employees:
-                    statement: Select = statement \
-                        .join(User, Company.owner_id == User.id) \
-                        .where(User.id.in_(dto.employees))
-
                 if dto.owner_id:
                     statement: Select = statement.where(Company.owner_id == dto.owner_id)
 

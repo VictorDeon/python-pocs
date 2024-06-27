@@ -12,7 +12,6 @@ class CreateCompanyInputDTO(BaseModel):
     cnpj: str = Field(..., description="CNPJ da empresa.")
     name: str = Field(..., description="Nome da empresa.")
     fantasy_name: Optional[str] = Field(None, description="Nome fantasia da empresa.")
-    employees: list[int] = Field([], description="Lista de identificadores dos funcionários da empresa.")
 
     def to_dict(self, exclude: list[str] = []) -> dict:
         """
