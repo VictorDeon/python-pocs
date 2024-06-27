@@ -1,5 +1,5 @@
 from typing import Optional
-from sqlalchemy import String, BigInteger, ForeignKey
+from sqlalchemy import VARCHAR, BIGINT, ForeignKey
 from sqlalchemy.orm import Mapped, relationship, mapped_column
 from src.infrastructure.databases import BaseModel
 from .many_to_many import (
@@ -15,12 +15,16 @@ class User(BaseModel):
 
     __tablename__ = "users"
 
-    id: Mapped[int] = mapped_column(BigInteger, primary_key=True, autoincrement=True)
-    email: Mapped[str] = mapped_column(String(50), nullable=False, index=True, unique=True)
-    password: Mapped[str] = mapped_column(String(30), nullable=False)
-    name: Mapped[str] = mapped_column(String(30), nullable=False)
+    id: Mapped[int] = mapped_column(BIGINT, primary_key=True, autoincrement=True)
+    email: Mapped[str] = mapped_column(VARCHAR(50), nullable=False, index=True, unique=True)
+    password: Mapped[str] = mapped_column(VARCHAR(30), nullable=False)
+    name: Mapped[str] = mapped_column(VARCHAR(30), nullable=False)
 
-    profile_id: Mapped[int] = mapped_column(BigInteger, ForeignKey('profiles.id'))
+    profile_id: Mapped[int] = mapped_column(
+        BIGINT,
+        ForeignKey('profiles.id'),
+        nullable=False
+    )
     profile: Mapped["Profile"] = relationship(
         "Profile",
         single_parent=True,
@@ -36,8 +40,9 @@ class User(BaseModel):
     )
 
     work_company_cnpj: Mapped[Optional[str]] = mapped_column(
-        String(14),
-        ForeignKey('companies.cnpj', name='fk_employee_company')
+        VARCHAR(14),
+        ForeignKey('companies.cnpj', name='fk_employee_company'),
+        nullable=True
     )
     work_company = relationship(
         'Company',

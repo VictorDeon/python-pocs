@@ -1,5 +1,5 @@
 from typing import Optional
-from sqlalchemy import String, BigInteger
+from sqlalchemy import VARCHAR, BIGINT
 from sqlalchemy.orm import Mapped, relationship, mapped_column
 from src.infrastructure.databases import BaseModel
 from .many_to_many import (
@@ -15,8 +15,8 @@ class Group(BaseModel):
 
     __tablename__ = "groups"
 
-    id: Mapped[int] = mapped_column(BigInteger, primary_key=True, autoincrement=True)
-    name: Mapped[str] = mapped_column(String(50), nullable=False)
+    id: Mapped[int] = mapped_column(BIGINT, primary_key=True, autoincrement=True)
+    name: Mapped[str] = mapped_column(VARCHAR(50), nullable=False)
 
     users: Mapped[Optional[list["User"]]] = relationship(
         "User",
