@@ -25,11 +25,25 @@ Nesta camada temos a pasta **adapters** com suas respectivas **controllers**. É
 
 A camada mais externa geralmente é composta por frameworks e ferramentas como banco de dados, arquivos, UI, entre outros tipos de entradas e dados que o usuário pode enviar. Essa camada está na pasta **application**
 
+
+### Ordem de criação
+
+1. adapters/dtos
+2. infrastructure/repositories ou daos
+3. adapters/presenters
+4. domains/user_cases
+5. adapters/controllers
+6. application/api/routes
+
 ### TODO:
 
-* Arrumar todos os testes automatizados
-* Endpoint com o CRUD de usuários e seus relacionamentos (Criar, Listar, Visualizar, Deletar, Atualizar)
+* Terminar o video do sqlalchemy
 * Inserir migrations com alembic e deixar o docker compose com usuário não root para poder editar os arquivos internos dele
+* Endpoint com o CRUD de usuários e seus relacionamentos (Criar, Listar, Visualizar, Deletar, Atualizar)
+    - Criar todos os presents + tests
+    - Criar todos os user_cases + tests
+    - Criar todos os controllers + tests
+    - Criar todas as rotas + tests
 * Autenticação e autorização - vwauth
 * Desenvolver vários tipos de consumos de APIs usando corotines, queues, threads e processos
 * Inserir um sistema de logs inteligentes
