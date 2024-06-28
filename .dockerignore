@@ -1,0 +1,17 @@
+.ignore/
+.git/
+.pytest_cache/
+__pycache__/
+.vscode/
+.coverage
+.dockerignore
+.editorconfig
+.flake8
+.gitignore
+.pylintrc
+Dockerfile
+Makefile
+README.md
+docker-compose.yml
+pytest.ini
+LICENSE

@@ -177,7 +177,6 @@ services:
     command: uvicorn src.application.api.main:app --workers 1 --host 0.0.0.0 --port 8000 --reload
     volumes:
       - .:/software
-    user: "1000:1000"
     ports:
       - 8000:8000
     extra_hosts:
