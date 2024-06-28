@@ -1,19 +1,19 @@
 {
     "configurations": [
         {
-            "name": "Docker: Python - Fastapi",
-            "type": "docker",
-            "request": "launch",
-            "preLaunchTask": "docker-run: debug",
-            "python": {
-                "pathMappings": [
-                    {
-                        "localRoot": "${workspaceFolder}",
-                        "remoteRoot": "/software"
-                    }
-                ],
-                "projectType": "fastapi"
-            }
+            "name": "Depurador do Python: Anexação Remota",
+            "type": "debugpy",
+            "request": "attach",
+            "connect": {
+                "host": "localhost",
+                "port": 5678
+            },
+            "pathMappings": [
+                {
+                    "localRoot": "${workspaceFolder}",
+                    "remoteRoot": "/software"
+                }
+            ]
         }
     ]
 }

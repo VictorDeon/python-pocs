@@ -34,10 +34,6 @@ packages:
 	# Inserir o site-packages dentro do .ignore
 	sudo docker cp api:/opt/venv/lib/python3.10/site-packages .ignore/site-packages
 
-rmi:
-	# Remove as imagens none
-	docker rmi $(docker images --filter "dangling=true" -q --no-trunc)
-
 ### QUALIDADE ###############################################################
 
 path := .
