@@ -51,16 +51,14 @@ class DBConnectionHandler:
         if self.__engine:
             return self.__engine
 
-        echo = os.environ.get("APP_ENV") == "tests"
-
         if sqlite:
             db_path = "assets/db/poc.sqlite"
             folder = Path(db_path).parent
             folder.mkdir(parents=True, exist_ok=True)
             connection_string = f"sqlite:///{db_path}"
-            self.__engine = create_engine(url=connection_string, echo=echo, connect_args={"check_same_thread": False})
+            self.__engine = create_engine(url=connection_string, echo=False, connect_args={"check_same_thread": False})
         else:
-            self.__engine = create_engine(url=self.__connection_string, echo=echo)
+            self.__engine = create_engine(url=self.__connection_string, echo=False)
 
         return self.__engine
 

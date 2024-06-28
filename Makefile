@@ -44,7 +44,7 @@ flake8:
 
 coverage:
 	# Roda os testes no container
-	docker compose exec api coverage run --source='src' -m pytest -s -vv --maxfail=1 -p no:warnings ${path}
+	docker compose exec api coverage run --source='src' -m pytest -s -vv --maxfail=1 -p no:warnings --cache-clear ${path}
 
 report:
 	# Relatório da cobertura de testes

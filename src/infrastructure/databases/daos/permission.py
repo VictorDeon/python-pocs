@@ -1,6 +1,6 @@
 import logging
 from typing import Optional
-from sqlalchemy import select, Select
+from sqlalchemy import select, Select, insert, Insert
 from sqlalchemy.orm.exc import NoResultFound
 from src.adapters.dtos import (
     CreatePermissionInputDTO, ListPermissionInputDTO,
@@ -25,11 +25,12 @@ class PermissionDAO(DAOInterface):
         Cria a permissão passando como argumento os dados da mesma.
         """
 
-        permission = Permission(**dto.to_dict())
-
         with DBConnectionHandler.connect(close_session) as database:
             try:
-                database.session.add(permission)
+                values = dto.to_dict()
+                statement: Insert = insert(Permission).values(**values).returning(Permission)
+                logging.debug(f"{statement} = {values}")
+                permission: Permission = database.session.scalar(statement)
                 if commit:
                     database.session.commit()
                     logging.info("Permissões inseridadas no banco.")
@@ -51,14 +52,10 @@ class PermissionDAO(DAOInterface):
             statement: Select = select(Permission)
 
             if dto:
-                if dto.name and dto.code:
-                    statement: Select = statement.where(
-                        (Permission.name.like(f"%{dto.name}%")) &
-                        (Permission.code == dto.code)
-                    )
-                elif dto.name:
+                if dto.name:
                     statement: Select = statement.where(Permission.name.like(f"%{dto.name}%"))
-                elif dto.code:
+
+                if dto.code:
                     statement: Select = statement.where(Permission.code == dto.code)
 
             try:
@@ -77,8 +74,9 @@ class PermissionDAO(DAOInterface):
 
         permission: Permission = None
         with DBConnectionHandler.connect(close_session) as database:
+            statement = select(Permission).where(Permission.id == _id)
             try:
-                permission = database.session.get(Permission, _id)
+                permission = database.session.scalar(statement)
             except Exception as e:
                 logging.error(f"Ocorreu um problema ao pegar os dados da permissão: {e}")
                 database.close_session(True)
