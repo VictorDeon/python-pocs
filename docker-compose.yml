@@ -172,14 +172,30 @@ services:
     profiles:
       - all
       - api
-    stdin_open: true
-    tty: true
-    command: uvicorn src.application.api.main:app --workers 1 --host 0.0.0.0 --port 8000 --reload
+    command: [
+      "python3",
+      "-m",
+      "debugpy",
+      "--listen",
+      "0.0.0.0:5678",
+      "--wait-for-client",
+      "/opt/venv/lib/python3.10/site-packages/uvicorn",
+      "src.application.api.main:app",
+      "--workers",
+      "1",
+      "--host",
+      "0.0.0.0",
+      "--port",
+      "8000",
+      "--reload"
+    ]
     volumes:
       - .:/software
       - .ignore/site-packages:/opt/venv/lib/python3.10/site-packages
+      - /usr/local/lib/python3.10/dist-packages/debugpy:/opt/venv/lib/python3.10/site-packages/debugpy
     ports:
       - 8000:8000
+      - 5678:5678
     extra_hosts:
       - "host.docker.internal:host-gateway"
     environment:
@@ -206,7 +222,7 @@ services:
       - LOG_LEVEL=DEBUG
     networks:
       - vksoftware
-
+    
 networks:
   vksoftware:
     external: true
