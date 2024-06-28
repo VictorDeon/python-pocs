@@ -8,15 +8,15 @@ down:
 
 install:
 	# Instala uma dependencia dentro do container remove flag user do docker compose
-	docker compose exec api /opt/venv/bin/pip install ${pkg}
+	docker compose exec api pip install ${pkg}
 
 remove:
 	# Remove uma dependencia dentro do container remove flag user do docker compose
-	docker compose exec api /opt/venv/bin/pip uninstall ${pkg}
+	docker compose exec api pip uninstall ${pkg}
 
 requirements:
 	# Lista os requirements do projeto
-	docker compose exec api /opt/venv/bin/pip freeze
+	docker compose exec api pip freeze
 
 logs:
 	# Verificar os logs

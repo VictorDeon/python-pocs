@@ -13,12 +13,3 @@ asyncpg==0.29.0
 aioredis==2.0.1
 redis==5.0.5
 httpx==0.26.0
-# Development dependecies
-ipython==8.25.0
-flake8==7.0.0
-pylint==3.2.3
-pytest==8.2.2
-pytest-asyncio==0.23.7
-Faker==25.8.0
-freezegun==1.5.1
-coverage==7.5.3
