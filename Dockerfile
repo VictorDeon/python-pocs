@@ -1,8 +1,9 @@
 # Estágio 1: Construção
 FROM python:3.10 as builder
 
-# Configura variáveis de ambiente para não escrever bytecode e não colocar logs em buffer
+# Remove o buffer para deixar os logs mais fluidos
 ENV PYTHONUNBUFFERED=1
+# Configura variáveis de ambiente para não escrever bytecode
 ENV PYTHONDONTWRITEBYTECODE=1
 
 # Instala dependências para construir pacotes Python
@@ -34,8 +35,9 @@ RUN pip install --no-cache-dir virtualenv \
 # Estágio 2: Execução
 FROM python:3.10
 
-# Configura variáveis de ambiente para não escrever bytecode e não colocar logs em buffer
+# Remove o buffer para deixar os logs mais fluidos
 ENV PYTHONUNBUFFERED=1
+# Configura variáveis de ambiente para não escrever bytecode
 ENV PYTHONDONTWRITEBYTECODE=1
 
 # Cria um diretório de trabalho

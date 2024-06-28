@@ -11,7 +11,5 @@
     ],
     "python.analysis.diagnosticSeverityOverrides": {
         "reportUndefinedVariable": "none"
-    },
-    "python.linting.enabled": true,
-    "python.linting.pylintEnabled": true,
+    }
 }
