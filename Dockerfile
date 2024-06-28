@@ -43,14 +43,14 @@ ENV PYTHONDONTWRITEBYTECODE=1
 # Cria um diretório de trabalho
 WORKDIR /software
 
-# Cria um usuário não-root com permissões 1000:1000 e adiciona ele ao grupo
-RUN addgroup --gid 1000 vkgroup && adduser --disabled-password --gecos "" --uid 1000 --gid 1000 vkuser
-
 # Copia o ambiente virtual do estágio de construção
 COPY --from=builder /opt/venv /opt/venv
 
 # Copia o código do projeto para o diretório de trabalho
 COPY . .
+
+# Cria um usuário não-root com permissões 1000:1000 e adiciona ele ao grupo
+RUN addgroup --gid 1000 vkgroup && adduser --disabled-password --gecos "" --uid 1000 --gid 1000 vkuser
 
 # Define as permissões para o usuário não-root no workspace
 RUN chown -R vkuser:vkgroup /software
