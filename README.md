@@ -38,31 +38,27 @@ A camada mais externa geralmente é composta por frameworks e ferramentas como b
 ### Como subir a aplicação
 ***
 
-1. Instale o [debugpy](https://github.com/microsoft/debugpy) na sua máquina local, se o caminho para o debugpy mudar, mude no volumes do docker compose. Para verificar o caminha execute: `pip3 show debugpy` no meu caso é `/usr/local/lib/python3.10/dist-packages/debugpy`
+1. Suba os emuladores que deseja usar com `docker compose --profile <emulators> up -d` e crie o network se necessário `docker network create vksoftware`.
 
-2. Suba os emuladores que deseja usar com `docker compose --profile <emulators> up -d` e crie o network se necessário `docker network create vksoftware`.
-
-3. Antes de subir pela primeira vez **comente o volume como abaixo** e crie uma pasta chamada `.ignore` e suba a aplicação com `docker compose --profile api up`
+2. Antes de subir pela primeira vez **comente o volume como abaixo** e crie uma pasta chamada `.ignore` e suba a aplicação com `docker compose --profile api up`
 
 ```yml
 volumes:
     - .:/software
     # - .ignore/site-packages:/opt/venv/lib/python3.10/site-packages
-    - /usr/local/lib/python3.10/dist-packages/debugpy:/opt/venv/lib/python3.10/site-packages/debugpy
 ```
 
-4. Ao subir execute `make packages` para criar os pacotes dentro do `.ignore/site-packages` e desligue o servidor `docker compose --profile api down`
+3. Ao subir execute `make packages` para criar os pacotes dentro do `.ignore/site-packages` e desligue o servidor `docker compose --profile api down`
 
-5. Descomente o volume e rode novamente o `docker compose --profile api up`.
+4. Descomente o volume e rode novamente o `docker compose --profile api up`.
 
-6. No vscode vai na aba `Executar` e clique em `Iniciar Depuração`, com isso o servidor vai subir e vc vai poder usar os
+5. No vscode vai na aba `Executar` e clique em `Iniciar Depuração`, com isso o servidor vai subir e vc vai poder usar os
 breakpoints para realizar o debug da aplicação.
 
 ```yml
 volumes:
     - .:/software
     - .ignore/site-packages:/opt/venv/lib/python3.10/site-packages
-    - /usr/local/lib/python3.10/dist-packages/debugpy:/opt/venv/lib/python3.10/site-packages/debugpy
 ```
 
 Nas proximas vezes só precisa executar os emuladores `docker compose --profile <emulators> up -d` e depois a api `docker compose --profile api up` com isso é só ir na aba `Executar` e clique em `Iniciar Depuração`.

@@ -39,6 +39,8 @@ FROM python:3.10
 ENV PYTHONUNBUFFERED=1
 # Configura variáveis de ambiente para não escrever bytecode
 ENV PYTHONDONTWRITEBYTECODE=1
+# Configura o ambiente
+ENV APP_ENV=production
 
 # Cria um diretório de trabalho
 WORKDIR /software
@@ -65,4 +67,4 @@ ENV PATH="/opt/venv/bin:$PATH"
 EXPOSE 8000
 
 # Comando padrão para iniciar o contêiner
-CMD uvicorn src.application.api.main:app --workers 1 --host 0.0.0.0 --port 8000
+CMD ["python3", "start.py"]
