@@ -25,8 +25,7 @@ Nesta camada temos a pasta **adapters** com suas respectivas **controllers**. É
 
 A camada mais externa geralmente é composta por frameworks e ferramentas como banco de dados, arquivos, UI, entre outros tipos de entradas e dados que o usuário pode enviar. Essa camada está na pasta **application**
 
-
-### Ordem de criação
+#### Ordem de criação
 
 1. adapters/dtos
 2. infrastructure/repositories ou daos
@@ -34,6 +33,39 @@ A camada mais externa geralmente é composta por frameworks e ferramentas como b
 4. domains/user_cases
 5. adapters/controllers
 6. application/api/routes
+
+***
+### Como subir a aplicação
+***
+
+1. Instale o [debugpy](https://github.com/microsoft/debugpy) na sua máquina local, se o caminho para o debugpy mudar, mude no volumes do docker compose. Para verificar o caminha execute: `pip3 show debugpy` no meu caso é `/usr/local/lib/python3.10/dist-packages/debugpy`
+
+2. Suba os emuladores que deseja usar com `docker compose --profile <emulators> up -d` e crie o network se necessário `docker network create vksoftware`.
+
+3. Antes de subir pela primeira vez **comente o volume como abaixo** e crie uma pasta chamada `.ignore` e suba a aplicação com `docker compose --profile api up`
+
+```yml
+volumes:
+    - .:/software
+    # - .ignore/site-packages:/opt/venv/lib/python3.10/site-packages
+    - /usr/local/lib/python3.10/dist-packages/debugpy:/opt/venv/lib/python3.10/site-packages/debugpy
+```
+
+4. Ao subir execute `make packages` para criar os pacotes dentro do `.ignore/site-packages` e desligue o servidor `docker compose --profile api down`
+
+5. Descomente o volume e rode novamente o `docker compose --profile api up`.
+
+6. No vscode vai na aba `Executar` e clique em `Iniciar Depuração`, com isso o servidor vai subir e vc vai poder usar os
+breakpoints para realizar o debug da aplicação.
+
+```yml
+volumes:
+    - .:/software
+    - .ignore/site-packages:/opt/venv/lib/python3.10/site-packages
+    - /usr/local/lib/python3.10/dist-packages/debugpy:/opt/venv/lib/python3.10/site-packages/debugpy
+```
+
+Nas proximas vezes só precisa executar os emuladores `docker compose --profile <emulators> up -d` e depois a api `docker compose --profile api up` com isso é só ir na aba `Executar` e clique em `Iniciar Depuração`.
 
 ### TODO:
 
@@ -60,24 +92,3 @@ e arquivos e enviar o excel para outra pasta de processados.
 * Endpoints de consulta desses dados de usuários pelos diversos meios acima.
 * Sistema de autenticação e autorização
 * Testes automatizados
-
-***
-### Visual Studio Code
-***
-
-Configura o autocomplete e analises, no arquivo `settings.json` faça:
-
-```json
-{
-    "files.exclude": {
-        ".pytest_cache": true,
-        "**/__pycache__": true
-    },
-    "python.analysis.extraPaths": [
-        ".ignore/site-packages"
-    ],
-    "python.autoComplete.extraPaths": [
-        ".ignore/site-packages"
-    ]
-}
-```
