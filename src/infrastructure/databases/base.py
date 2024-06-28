@@ -4,6 +4,10 @@ from sqlalchemy import TIMESTAMP, BOOLEAN, func, false
 from sqlalchemy.orm import DeclarativeBase, mapped_column, Mapped
 
 
+class Base(DeclarativeBase):
+    pass
+
+
 class BaseModel(DeclarativeBase):
     """
     Model base para todas as outras models.

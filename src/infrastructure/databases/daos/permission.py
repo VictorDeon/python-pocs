@@ -1,7 +1,6 @@
 import logging
 from typing import Optional
 from sqlalchemy import select, Select, insert, Insert
-from sqlalchemy.orm.exc import NoResultFound
 from src.adapters.dtos import (
     CreatePermissionInputDTO, ListPermissionInputDTO,
     RetrievePermissionInputDTO, UpdatePermissionInputDTO
@@ -59,6 +58,7 @@ class PermissionDAO(DAOInterface):
                     statement: Select = statement.where(Permission.code == dto.code)
 
             try:
+                logging.debug(statement)
                 permissions = database.session.scalars(statement=statement).all()
             except Exception as e:
                 logging.error(f"Ocorreu um problema ao listar as permissões: {e}")
@@ -76,6 +76,7 @@ class PermissionDAO(DAOInterface):
         with DBConnectionHandler.connect(close_session) as database:
             statement = select(Permission).where(Permission.id == _id)
             try:
+                logging.debug(statement)
                 permission = database.session.scalar(statement)
             except Exception as e:
                 logging.error(f"Ocorreu um problema ao pegar os dados da permissão: {e}")
@@ -94,9 +95,8 @@ class PermissionDAO(DAOInterface):
             statement: Select = select(Permission).where(Permission.code == dto.code)
 
             try:
-                permission = database.session.scalars(statement).one()
-            except NoResultFound as e:
-                logging.warning(f"Permissão com código {dto.code} não encontrada: {e}")
+                logging.debug(statement)
+                permission = database.session.scalar(statement)
             except Exception as e:
                 logging.error(f"Ocorreu um problema ao pegar os dados da permissão: {e}")
                 database.close_session()
@@ -119,7 +119,7 @@ class PermissionDAO(DAOInterface):
             statement = select(Permission).where(Permission.id == _id)
 
             try:
-                permission = database.session.scalars(statement).one()
+                permission = database.session.scalar(statement)
                 permission.code = dto.code
                 permission.name = dto.name
                 if commit:

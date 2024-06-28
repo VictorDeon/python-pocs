@@ -3,8 +3,8 @@ from sqlalchemy import VARCHAR, BIGINT, ForeignKey
 from sqlalchemy.orm import Mapped, relationship, mapped_column
 from src.infrastructure.databases import BaseModel
 from .many_to_many import (
-    users_vs_groups,
-    users_vs_permissions
+    UserVsGroup,
+    UserVsPermission
 )
 
 
@@ -52,16 +52,14 @@ class User(BaseModel):
 
     groups: Mapped[Optional[list["Group"]]] = relationship(
         "Group",
-        secondary=users_vs_groups,
-        back_populates="users",
-        lazy='dynamic'
+        secondary=UserVsGroup,
+        back_populates="users"
     )
 
     permissions: Mapped[Optional[list["Permission"]]] = relationship(
         "Permission",
-        secondary=users_vs_permissions,
-        back_populates="users",
-        lazy='dynamic'
+        secondary=UserVsPermission,
+        back_populates="users"
     )
 
     def __repr__(self) -> str:

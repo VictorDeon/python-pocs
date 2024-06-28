@@ -1,24 +1,36 @@
-from sqlalchemy import Column, BIGINT, Table, ForeignKey
-from src.infrastructure.databases import BaseModel
+from sqlalchemy import ForeignKey
+from sqlalchemy.orm import Mapped, mapped_column
+from src.infrastructure.databases.base import Base
 
 
-users_vs_groups = Table(
-    "users_vs_groups",
-    BaseModel.metadata,
-    Column("user_id", BIGINT, ForeignKey("users.id")),
-    Column("group_id", BIGINT, ForeignKey("groups.id"))
-)
+class UserVsGroup(Base):
+    """
+    Relacionamento NxM de usuários e grupos.
+    """
 
-users_vs_permissions = Table(
-    "users_vs_permissions",
-    BaseModel.metadata,
-    Column("user_id", BIGINT, ForeignKey("users.id")),
-    Column("permission_id", BIGINT, ForeignKey("permissions.id"))
-)
+    __tablename__ = "users_vs_groups"
 
-groups_vs_permissions = Table(
-    "groups_vs_permissions",
-    BaseModel.metadata,
-    Column("group_id", BIGINT, ForeignKey("groups.id")),
-    Column("permission_id", BIGINT, ForeignKey("permissions.id"))
-)
+    user_id: Mapped[int] = mapped_column(ForeignKey("users.id"), primary_key=True)
+    group_id: Mapped[int] = mapped_column(ForeignKey("groups.id"), primary_key=True)
+
+
+class UserVsPermission(Base):
+    """
+    Relacionamento NxM de usuários e permissões.
+    """
+
+    __tablename__ = "users_vs_permissions"
+
+    user_id: Mapped[int] = mapped_column(ForeignKey("users.id"), primary_key=True)
+    permission_id: Mapped[int] = mapped_column(ForeignKey("permissions.id"), primary_key=True)
+
+
+class GroupVsPermission(Base):
+    """
+    Relacionamento NxM de grupos e permissões.
+    """
+
+    __tablename__ = "groups_vs_permissions"
+
+    group_id: Mapped[int] = mapped_column(ForeignKey("groups.id"), primary_key=True)
+    permission_id: Mapped[int] = mapped_column(ForeignKey("permissions.id"), primary_key=True)
