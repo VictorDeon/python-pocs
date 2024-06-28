@@ -64,7 +64,7 @@ id := head
 
 migration:
 	# Cria a migraçao para ser preenchida
-	docker compose exec api alembic revision -m ${name}
+	docker compose exec api alembic revision --autogenerate -m ${name}
 
 migrate:
 	# Insere a migração no banco de dados

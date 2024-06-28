@@ -41,9 +41,6 @@ async def lifespan(_: FastAPI):
     """
 
     logging.debug("Iniciando o projeto.")
-    # Criar as tabelas e o banco de dados se não existir.
-    with DBConnectionHandler() as database:
-        database.create_tables()
 
     yield
 

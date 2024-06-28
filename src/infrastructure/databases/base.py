@@ -1,6 +1,6 @@
 from datetime import datetime
 from typing import Optional
-from sqlalchemy import TIMESTAMP, BOOLEAN, func
+from sqlalchemy import TIMESTAMP, BOOLEAN, func, false
 from sqlalchemy.orm import DeclarativeBase, mapped_column, Mapped
 
 
@@ -25,6 +25,6 @@ class BaseModel(DeclarativeBase):
     )
     is_deleted: Mapped[bool] = mapped_column(
         BOOLEAN,
-        default=False,
+        server_default=false(),
         index=True
     )

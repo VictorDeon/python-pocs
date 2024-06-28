@@ -74,15 +74,6 @@ class DBConnectionHandler:
         self.session: Session = __session()
         logging.debug("DB pool de conexões iniciado.")
 
-    def create_tables(self):
-        """
-        Cria uma tabela no banco de dados.
-        """
-
-        import src.infrastructure.databases.models  # noqa: F401
-        BaseModel.metadata.drop_all(self.__engine)
-        BaseModel.metadata.create_all(self.__engine)
-
     def __enter__(self) -> "DBConnectionHandler":
         """
         Executado ao criar um contexto com o with.
