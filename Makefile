@@ -8,15 +8,15 @@ down:
 
 install:
 	# Instala uma dependencia dentro do container remove flag user do docker compose
-	docker compose exec api pip3 install ${pkg}
+	docker compose exec api /opt/venv/bin/pip install ${pkg}
 
 remove:
 	# Remove uma dependencia dentro do container remove flag user do docker compose
-	docker compose exec api pip3 uninstall ${pkg}
+	docker compose exec api /opt/venv/bin/pip uninstall ${pkg}
 
 requirements:
 	# Lista os requirements do projeto
-	docker compose exec api pip3 freeze
+	docker compose exec api /opt/venv/bin/pip freeze
 
 logs:
 	# Verificar os logs
@@ -32,7 +32,7 @@ bash:
 
 packages:
 	# Inserir o site-packages dentro do .ignore
-	sudo docker cp api:/usr/local/lib/python3.10/site-packages .ignore/site-packages
+	sudo docker cp api:/opt/venv/lib/python3.10/site-packages .ignore/site-packages
 
 rmi:
 	# Remove as imagens none
