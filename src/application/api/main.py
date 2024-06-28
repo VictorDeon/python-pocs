@@ -1,14 +1,13 @@
 import os
 import logging
 from datetime import datetime
-from pytz import timezone
 from contextlib import asynccontextmanager
+from pytz import timezone
 from fastapi import Request, status, HTTPException
 from fastapi.responses import JSONResponse
 from fastapi.encoders import jsonable_encoder
 from fastapi.exceptions import RequestValidationError
 from fastapi import FastAPI
-from src.infrastructure.databases import DBConnectionHandler
 from src.application.api.routes import router
 
 

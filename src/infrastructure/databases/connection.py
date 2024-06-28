@@ -5,7 +5,6 @@ from pathlib import Path
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker, Session
 from sqlalchemy.future.engine import Engine
-from src.infrastructure.databases import BaseModel
 
 
 class DBConnectionHandler:
