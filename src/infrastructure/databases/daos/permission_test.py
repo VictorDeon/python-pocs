@@ -5,6 +5,7 @@ from src.adapters.dtos import (
     RetrievePermissionInputDTO, UpdatePermissionInputDTO,
     CreateGroupInputDTO, CreateUserInputDTO, CreateProfileInputDTO
 )
+from src.infrastructure.databases import DBConnectionHandler
 from .permission import PermissionDAO
 from .group import GroupDAO
 from .user import UserDAO
@@ -15,20 +16,21 @@ async def test_create_permission_dao():
     Testa a criação de permissões pelo DAO.
     """
 
-    dto = CreatePermissionInputDTO(
-        name="Test Permissão de criação de permissões",
-        code="t_permission_create"
-    )
+    async with DBConnectionHandler() as session:
+        dto = CreatePermissionInputDTO(
+            name="Test Permissão de criação de permissões",
+            code="t_permission_create"
+        )
 
-    dao = PermissionDAO()
-    permission = await dao.create(dto=dto, close_session=False)
+        dao = PermissionDAO(session=session)
+        permission = await dao.create(dto=dto)
 
-    try:
-        assert permission.id is not None
-        assert permission.name == dto.name
-        assert permission.code == dto.code
-    finally:
-        await dao.delete(_id=permission.id)
+        try:
+            assert permission.id is not None
+            assert permission.name == dto.name
+            assert permission.code == dto.code
+        finally:
+            await dao.delete(_id=permission.id)
 
 
 async def test_list_by_code_permissions_dao():

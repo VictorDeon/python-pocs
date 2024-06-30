@@ -1,4 +1,5 @@
 from typing import TypeVar, Generic, Optional
+from sqlalchemy.ext.asyncio import AsyncSession
 
 INPUT = TypeVar("INPUT")
 DB_MODEL = TypeVar("DB_MODEL")
@@ -8,6 +9,13 @@ class DAOInterface(Generic[INPUT, DB_MODEL]):
     """
     Interface de CRUD
     """
+
+    def __init__(self, session: AsyncSession) -> None:
+        """
+        Constructor.
+        """
+
+        self.session = session
 
     async def create(self, dto: INPUT, commit: bool = True, close_session: bool = True) -> DB_MODEL:
         """

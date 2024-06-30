@@ -2,9 +2,10 @@ import os
 import logging
 from typing import Optional, Any
 from pathlib import Path
-from sqlalchemy import create_engine
-from sqlalchemy.orm import sessionmaker, Session
-from sqlalchemy.future.engine import Engine
+from sqlalchemy.ext.asyncio import (
+    create_async_engine, async_sessionmaker,
+    AsyncSession, AsyncEngine
+)
 
 
 class DBConnectionHandler:
@@ -12,38 +13,16 @@ class DBConnectionHandler:
     Realiza a lógica de conexão com o banco de dados usando SQL ALQUEMY.
     """
 
-    __instance = None
-
-    def __init__(self, close_session: bool = True) -> None:
+    def __init__(self) -> None:
         """
         Construtor.
         """
 
         self.__connection_string: Optional[str] = os.environ.get("DB_CONNECTION_STRING")
-        self.__engine: Optional[Engine] = None
-        self.__close_session = close_session
+        self.__engine: Optional[AsyncEngine] = None
         self.session = None
 
-    @classmethod
-    def connect(cls, close_session: bool = True) -> "DBConnectionHandler":
-        """
-        Realiza a conexão.
-        """
-
-        if not cls.__instance:
-            cls.__instance = DBConnectionHandler(close_session)
-
-        cls.__instance.__close_session = close_session
-        return cls.__instance
-
-    def close_session(self, value: bool = True) -> None:
-        """
-        Configura o fechamento de conexão.
-        """
-
-        self.__close_session = value
-
-    def __create_engine(self, sqlite: bool = False) -> Engine:
+    def __create_engine(self, sqlite: bool = False) -> AsyncEngine:
         """
         Cria a engine de execução do sqlalchemy.
         """
@@ -56,28 +35,25 @@ class DBConnectionHandler:
             folder = Path(db_path).parent
             folder.mkdir(parents=True, exist_ok=True)
             connection_string = f"sqlite:///{db_path}"
-            self.__engine = create_engine(url=connection_string, echo=False, connect_args={"check_same_thread": False})
+            self.__engine = create_async_engine(url=connection_string, echo=False, connect_args={"check_same_thread": False})
         else:
-            self.__engine = create_engine(url=self.__connection_string, echo=False)
+            self.__engine = create_async_engine(url=self.__connection_string, echo=False)
 
         return self.__engine
 
-    def __create_session(self, engine: Engine) -> Session:
+    def __create_session(self, engine: AsyncEngine) -> AsyncSession:
         """
         Cria a sessão de conexão do banco de dados.
         """
 
-        __session = sessionmaker(bind=engine, expire_on_commit=False, class_=Session)
-        self.session: Session = __session()
+        __session = async_sessionmaker(bind=engine, expire_on_commit=False)
+        self.session: AsyncSession = __session()
         logging.debug("DB pool de conexões iniciado.")
 
-    def __enter__(self) -> "DBConnectionHandler":
+    async def __aenter__(self) -> "DBConnectionHandler":
         """
         Executado ao criar um contexto com o with.
         """
-
-        if self.session:
-            return self
 
         if not self.__connection_string or self.__connection_string.startswith("sqlite"):
             engine = self.__create_engine(sqlite=True)
@@ -88,13 +64,11 @@ class DBConnectionHandler:
 
         return self
 
-    def __exit__(self, exc_type: Any, exc_val: Any, exc_tb: Any) -> None:
+    async def __aexit__(self, exc_type: Any, exc_val: Any, exc_tb: Any) -> None:
         """
         Executado ao sair de um contexto with.
         """
 
-        if self.__close_session:
-            self.session.close()
-            self.session = None
-            self.__instance = None
-            logging.debug("DB pool de conexões finalizada.")
+        await self.session.close()
+        self.session = None
+        logging.debug("DB pool de conexões finalizada.")

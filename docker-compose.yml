@@ -187,7 +187,7 @@ services:
       - GOOGLE_APPLICATION_CREDENTIALS=service_account.json
       - PUBSUB_EMULATOR_HOST=pubsub:8085
       - BUCKET_NAME=vksofware-documents
-      - DB_CONNECTION_STRING=postgresql+psycopg2://poc:poc@postgres:5432/poc
+      - DB_CONNECTION_STRING=postgresql+asyncpg://poc:poc@postgres:5432/poc
       - TOPIC_ID=general-input
       - POKEAPI_URL=https://pokeapi.co/api/v2
       - CACHE_HOST=host.docker.internal

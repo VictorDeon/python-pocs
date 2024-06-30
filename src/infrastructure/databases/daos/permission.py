@@ -24,18 +24,18 @@ class PermissionDAO(DAOInterface):
         Cria a permissão passando como argumento os dados da mesma.
         """
 
-        with DBConnectionHandler.connect(close_session) as database:
+        async with DBConnectionHandler.connect(close_session) as database:
             try:
                 values = dto.to_dict()
                 statement: Insert = insert(Permission).values(**values).returning(Permission)
                 logging.debug(f"{statement} = {values}")
-                permission: Permission = database.session.scalar(statement)
+                permission: Permission = await database.session.scalar(statement)
                 if commit:
-                    database.session.commit()
+                    await database.session.commit()
                     logging.info("Permissões inseridadas no banco.")
             except Exception as e:
                 logging.error(f"Ocorreu um problema ao criar a permissão: {e}")
-                database.session.rollback()
+                await database.session.rollback()
                 database.close_session(True)
                 raise e
 
@@ -47,7 +47,7 @@ class PermissionDAO(DAOInterface):
         """
 
         permissions: list[Permission] = []
-        with DBConnectionHandler.connect(close_session) as database:
+        async with DBConnectionHandler.connect(close_session) as database:
             statement: Select = select(Permission)
 
             if dto:
@@ -59,7 +59,8 @@ class PermissionDAO(DAOInterface):
 
             try:
                 logging.debug(statement)
-                permissions = database.session.scalars(statement=statement).all()
+                result = await database.session.scalars(statement=statement)
+                permissions = result.all()
             except Exception as e:
                 logging.error(f"Ocorreu um problema ao listar as permissões: {e}")
                 database.close_session(True)
@@ -73,11 +74,11 @@ class PermissionDAO(DAOInterface):
         """
 
         permission: Permission = None
-        with DBConnectionHandler.connect(close_session) as database:
+        async with DBConnectionHandler.connect(close_session) as database:
             statement = select(Permission).where(Permission.id == _id)
             try:
                 logging.debug(statement)
-                permission = database.session.scalar(statement)
+                permission = await database.session.scalar(statement)
             except Exception as e:
                 logging.error(f"Ocorreu um problema ao pegar os dados da permissão: {e}")
                 database.close_session(True)
@@ -91,12 +92,12 @@ class PermissionDAO(DAOInterface):
         """
 
         permission: Permission = None
-        with DBConnectionHandler.connect(close_session) as database:
+        async with DBConnectionHandler.connect(close_session) as database:
             statement: Select = select(Permission).where(Permission.code == dto.code)
 
             try:
                 logging.debug(statement)
-                permission = database.session.scalar(statement)
+                permission = await database.session.scalar(statement)
             except Exception as e:
                 logging.error(f"Ocorreu um problema ao pegar os dados da permissão: {e}")
                 database.close_session()
@@ -115,7 +116,7 @@ class PermissionDAO(DAOInterface):
         """
 
         permission: Permission = None
-        with DBConnectionHandler.connect(close_session) as database:
+        async with DBConnectionHandler.connect(close_session) as database:
             statement: Update = update(Permission) \
                 .values(**dto.to_dict()) \
                 .where(Permission.id == _id) \
@@ -124,13 +125,13 @@ class PermissionDAO(DAOInterface):
             logging.debug(statement)
 
             try:
-                permission: Permission = database.session.execute(statement)
+                permission: Permission = await database.session.execute(statement)
                 if commit:
-                    database.session.commit()
+                    await database.session.commit()
                     logging.info("Permissões atualizadas no banco.")
             except Exception as e:
                 logging.error(f"Ocorreu um problema ao atualizar a permissão: {e}")
-                database.session.rollback()
+                await database.session.rollback()
                 database.close_session()
                 raise e
 
@@ -145,17 +146,17 @@ class PermissionDAO(DAOInterface):
         Pega os dados de uma permissão pelo _id e deleta
         """
 
-        with DBConnectionHandler.connect(close_session) as database:
+        async with DBConnectionHandler.connect(close_session) as database:
             statement: Delete = delete(Permission).where(Permission.id == _id).returning(Permission.id)
             logging.debug(statement)
             try:
-                permission_id: int = database.session.scalar(statement)
+                permission_id: int = await database.session.scalar(statement)
                 if commit:
-                    database.session.commit()
+                    await database.session.commit()
                     logging.info("Permissões deletadas do banco.")
             except Exception as e:
                 logging.error(f"Ocorreu um problema ao deletar a permissão: {e}")
-                database.session.rollback()
+                await database.session.rollback()
                 database.close_session()
                 raise e
 
@@ -167,10 +168,10 @@ class PermissionDAO(DAOInterface):
         """
 
         qtd: int = 0
-        with DBConnectionHandler.connect(close_session) as database:
+        async with DBConnectionHandler.connect(close_session) as database:
             statement = select(func.count(Permission.id))
             try:
-                qtd = database.session.scalar(statement)
+                qtd = await database.session.scalar(statement)
             except Exception as e:
                 logging.error(f"Ocorreu um problema ao realizar a contagem de permissões: {e}")
                 database.close_session()

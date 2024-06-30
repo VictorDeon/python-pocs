@@ -65,7 +65,6 @@ Nas proximas vezes só precisa executar os emuladores `docker compose --profile 
 
 ### TODO:
 
-* Terminar o video do sqlalchemy
 * Endpoint com o CRUD de usuários e seus relacionamentos (Criar, Listar, Visualizar, Deletar, Atualizar)
     - Criar todos os presents + tests
     - Criar todos os user_cases + tests
