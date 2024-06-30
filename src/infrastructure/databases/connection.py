@@ -50,7 +50,7 @@ class DBConnectionHandler:
         self.session: AsyncSession = __session()
         logging.debug("DB pool de conexões iniciado.")
 
-    async def __aenter__(self) -> "DBConnectionHandler":
+    async def __aenter__(self) -> AsyncSession:
         """
         Executado ao criar um contexto com o with.
         """
@@ -62,7 +62,7 @@ class DBConnectionHandler:
 
         self.__create_session(engine)
 
-        return self
+        return self.session
 
     async def __aexit__(self, exc_type: Any, exc_val: Any, exc_tb: Any) -> None:
         """

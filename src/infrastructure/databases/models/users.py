@@ -2,10 +2,7 @@ from typing import Optional
 from sqlalchemy import VARCHAR, BIGINT, ForeignKey
 from sqlalchemy.orm import Mapped, relationship, mapped_column
 from src.infrastructure.databases import BaseModel
-from .many_to_many import (
-    UserVsGroup,
-    UserVsPermission
-)
+from .many_to_many import UserVsPermission, UserVsGroup
 
 
 class User(BaseModel):
@@ -53,13 +50,15 @@ class User(BaseModel):
     groups: Mapped[Optional[list["Group"]]] = relationship(
         "Group",
         secondary=UserVsGroup,
-        back_populates="users"
+        back_populates="users",
+        lazy='dynamic'
     )
 
     permissions: Mapped[Optional[list["Permission"]]] = relationship(
         "Permission",
         secondary=UserVsPermission,
-        back_populates="users"
+        back_populates="users",
+        lazy='dynamic'
     )
 
     def __repr__(self) -> str:

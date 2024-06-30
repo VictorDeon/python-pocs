@@ -5,7 +5,7 @@ from src.adapters.dtos import (
     CreatePermissionInputDTO, ListPermissionInputDTO,
     RetrievePermissionInputDTO, UpdatePermissionInputDTO
 )
-from src.infrastructure.databases.connection import DBConnectionHandler
+from src.domains.utils.exceptions import GenericException
 from src.infrastructure.databases.models import Permission
 from src.infrastructure.databases import DAOInterface
 
@@ -15,166 +15,150 @@ class PermissionDAO(DAOInterface):
     Repositorio de manipulação da entidade de permissão
     """
 
-    async def create(
-        self,
-        dto: CreatePermissionInputDTO,
-        commit: bool = True,
-        close_session: bool = True) -> Permission:
+    async def create(self, dto: CreatePermissionInputDTO, commit: bool = True) -> Permission:
         """
         Cria a permissão passando como argumento os dados da mesma.
         """
 
-        async with DBConnectionHandler.connect(close_session) as database:
-            try:
-                values = dto.to_dict()
-                statement: Insert = insert(Permission).values(**values).returning(Permission)
-                logging.debug(f"{statement} = {values}")
-                permission: Permission = await database.session.scalar(statement)
-                if commit:
-                    await database.session.commit()
-                    logging.info("Permissões inseridadas no banco.")
-            except Exception as e:
-                logging.error(f"Ocorreu um problema ao criar a permissão: {e}")
-                await database.session.rollback()
-                database.close_session(True)
-                raise e
+        try:
+            values = dto.to_dict()
+            statement: Insert = insert(Permission).values(**values).returning(Permission)
+            logging.info(statement)
+            logging.info(f"VALORES: {values}")
+            permission: Permission = await self.session.scalar(statement)
+            if commit:
+                await self.session.commit()
+                logging.info("Permissões inseridadas no banco.")
+        except Exception as e:
+            logging.error(f"Ocorreu um problema ao criar a permissão: {e}")
+            await self.session.rollback()
+            raise e
 
         return permission
 
-    async def list(self, dto: ListPermissionInputDTO, close_session: bool = True) -> list[Permission]:
+    async def list(self, dto: ListPermissionInputDTO) -> list[Permission]:
         """
         Pega uma lista de objetos.
         """
 
-        permissions: list[Permission] = []
-        async with DBConnectionHandler.connect(close_session) as database:
-            statement: Select = select(Permission)
+        statement: Select = select(Permission)
 
-            if dto:
-                if dto.name:
-                    statement: Select = statement.where(Permission.name.like(f"%{dto.name}%"))
+        if dto:
+            if dto.name:
+                statement: Select = statement.where(Permission.name.like(f"%{dto.name}%"))
 
-                if dto.code:
-                    statement: Select = statement.where(Permission.code == dto.code)
+            if dto.code:
+                statement: Select = statement.where(Permission.code == dto.code)
 
-            try:
-                logging.debug(statement)
-                result = await database.session.scalars(statement=statement)
-                permissions = result.all()
-            except Exception as e:
-                logging.error(f"Ocorreu um problema ao listar as permissões: {e}")
-                database.close_session(True)
-                raise e
+        try:
+            values = dto.to_dict()
+            logging.info(statement)
+            logging.info(f"VALORES: {values}")
+            result = await self.session.scalars(statement=statement)
+            permissions: list[Permission] = result.all()
+        except Exception as e:
+            logging.error(f"Ocorreu um problema ao listar as permissões: {e}")
+            raise e
 
         return permissions
 
-    async def get_by_id(self, _id: int, close_session: bool = True) -> Optional[Permission]:
+    async def get_by_id(self, _id: int) -> Optional[Permission]:
         """
         Pega os dados de uma permissão pelo _id
         """
 
-        permission: Permission = None
-        async with DBConnectionHandler.connect(close_session) as database:
-            statement = select(Permission).where(Permission.id == _id)
-            try:
-                logging.debug(statement)
-                permission = await database.session.scalar(statement)
-            except Exception as e:
-                logging.error(f"Ocorreu um problema ao pegar os dados da permissão: {e}")
-                database.close_session(True)
-                raise e
+        statement = select(Permission).where(Permission.id == _id)
+        logging.info(statement)
+        logging.info(f"VALORES: _id: {_id}")
+        try:
+            permission: Permission = await self.session.scalar(statement)
+        except Exception as e:
+            logging.error(f"Ocorreu um problema ao pegar os dados da permissão: {e}")
+            raise e
 
         return permission
 
-    async def retrieve(self, dto: RetrievePermissionInputDTO, close_session: bool = True) -> Optional[Permission]:
+    async def retrieve(self, dto: RetrievePermissionInputDTO) -> Optional[Permission]:
         """
         Pega os dados de uma permissão pelo _id
         """
 
-        permission: Permission = None
-        async with DBConnectionHandler.connect(close_session) as database:
-            statement: Select = select(Permission).where(Permission.code == dto.code)
+        statement: Select = select(Permission).where(Permission.code == dto.code)
+        values = dto.to_dict()
+        logging.info(statement)
+        logging.info(f"VALORES: {values}")
 
-            try:
-                logging.debug(statement)
-                permission = await database.session.scalar(statement)
-            except Exception as e:
-                logging.error(f"Ocorreu um problema ao pegar os dados da permissão: {e}")
-                database.close_session()
-                raise e
+        try:
+            permission: Permission = await self.session.scalar(statement)
+        except Exception as e:
+            logging.error(f"Ocorreu um problema ao pegar os dados da permissão: {e}")
+            raise e
 
         return permission
 
-    async def update(
-        self,
-        _id: int,
-        dto: UpdatePermissionInputDTO,
-        commit: bool = True,
-        close_session: bool = True) -> Optional[Permission]:
+    async def update(self, _id: int, dto: UpdatePermissionInputDTO, commit: bool = True) -> Optional[Permission]:
         """
         Pega os dados de uma permissão pelo _id e atualiza
         """
 
-        permission: Permission = None
-        async with DBConnectionHandler.connect(close_session) as database:
-            statement: Update = update(Permission) \
-                .values(**dto.to_dict()) \
-                .where(Permission.id == _id) \
-                .returning(Permission)
+        statement: Update = update(Permission) \
+            .values(**dto.to_dict()) \
+            .where(Permission.id == _id) \
+            .returning(Permission)
 
-            logging.debug(statement)
+        values = dto.to_dict()
+        logging.info(statement)
+        logging.info(f"VALORES: _id: {_id}, {values}")
 
-            try:
-                permission: Permission = await database.session.execute(statement)
-                if commit:
-                    await database.session.commit()
-                    logging.info("Permissões atualizadas no banco.")
-            except Exception as e:
-                logging.error(f"Ocorreu um problema ao atualizar a permissão: {e}")
-                await database.session.rollback()
-                database.close_session()
-                raise e
+        try:
+            permission: Permission = await self.session.scalar(statement)
+            if not permission:
+                raise GenericException(f"Permissão com id {_id} não encontrado.")
+
+            if commit:
+                await self.session.commit()
+                logging.info("Permissões atualizadas no banco.")
+        except Exception as e:
+            logging.error(f"Ocorreu um problema ao atualizar a permissão: {e}")
+            await self.session.rollback()
+            raise e
 
         return permission
 
-    async def delete(
-        self,
-        _id: int,
-        commit: bool = True,
-        close_session: bool = True) -> int:
+    async def delete(self, _id: int, commit: bool = True) -> int:
         """
         Pega os dados de uma permissão pelo _id e deleta
         """
 
-        async with DBConnectionHandler.connect(close_session) as database:
-            statement: Delete = delete(Permission).where(Permission.id == _id).returning(Permission.id)
-            logging.debug(statement)
-            try:
-                permission_id: int = await database.session.scalar(statement)
-                if commit:
-                    await database.session.commit()
-                    logging.info("Permissões deletadas do banco.")
-            except Exception as e:
-                logging.error(f"Ocorreu um problema ao deletar a permissão: {e}")
-                await database.session.rollback()
-                database.close_session()
-                raise e
+        statement: Delete = delete(Permission).where(Permission.id == _id).returning(Permission.id)
+        logging.info(statement)
+        logging.info(f"VALORES: _id: {_id}")
+        try:
+            permission_id: int = await self.session.scalar(statement)
+            if not permission_id:
+                raise GenericException(f"Permissão com id {_id} não encontrado.")
+
+            if commit:
+                await self.session.commit()
+                logging.info("Permissões deletadas do banco.")
+        except Exception as e:
+            logging.error(f"Ocorreu um problema ao deletar a permissão: {e}")
+            await self.session.rollback()
+            raise e
 
         return permission_id
 
-    async def count(self, close_session: bool = True) -> int:
+    async def count(self) -> int:
         """
         Pega a quantidade de permissões registradas no banco.
         """
 
-        qtd: int = 0
-        async with DBConnectionHandler.connect(close_session) as database:
-            statement = select(func.count(Permission.id))
-            try:
-                qtd = await database.session.scalar(statement)
-            except Exception as e:
-                logging.error(f"Ocorreu um problema ao realizar a contagem de permissões: {e}")
-                database.close_session()
-                raise e
+        statement = select(func.count(Permission.id))
+        logging.info(statement)
+        try:
+            qtd: int = await self.session.scalar(statement)
+        except Exception as e:
+            logging.error(f"Ocorreu um problema ao realizar a contagem de permissões: {e}")
+            raise e
 
         return qtd
