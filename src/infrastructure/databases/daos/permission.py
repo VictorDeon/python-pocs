@@ -1,6 +1,6 @@
 import logging
 from typing import Optional
-from sqlalchemy import select, Select, insert, Insert
+from sqlalchemy import select, Select, insert, Insert, func, update, Update, delete, Delete
 from src.adapters.dtos import (
     CreatePermissionInputDTO, ListPermissionInputDTO,
     RetrievePermissionInputDTO, UpdatePermissionInputDTO
@@ -116,12 +116,15 @@ class PermissionDAO(DAOInterface):
 
         permission: Permission = None
         with DBConnectionHandler.connect(close_session) as database:
-            statement = select(Permission).where(Permission.id == _id)
+            statement: Update = update(Permission) \
+                .values(**dto.to_dict()) \
+                .where(Permission.id == _id) \
+                .returning(Permission)
+
+            logging.debug(statement)
 
             try:
-                permission = database.session.scalar(statement)
-                permission.code = dto.code
-                permission.name = dto.name
+                permission: Permission = database.session.execute(statement)
                 if commit:
                     database.session.commit()
                     logging.info("Permissões atualizadas no banco.")
@@ -137,18 +140,16 @@ class PermissionDAO(DAOInterface):
         self,
         _id: int,
         commit: bool = True,
-        close_session: bool = True) -> None:
+        close_session: bool = True) -> int:
         """
         Pega os dados de uma permissão pelo _id e deleta
         """
 
         with DBConnectionHandler.connect(close_session) as database:
+            statement: Delete = delete(Permission).where(Permission.id == _id).returning(Permission.id)
+            logging.debug(statement)
             try:
-                permission = database.session.get(Permission, _id)
-                if not permission:
-                    raise ValueError(f"Permissão com o id {_id} não encontrado.")
-
-                database.session.delete(permission)
+                permission_id: int = database.session.scalar(statement)
                 if commit:
                     database.session.commit()
                     logging.info("Permissões deletadas do banco.")
@@ -158,6 +159,8 @@ class PermissionDAO(DAOInterface):
                 database.close_session()
                 raise e
 
+        return permission_id
+
     async def count(self, close_session: bool = True) -> int:
         """
         Pega a quantidade de permissões registradas no banco.
@@ -165,8 +168,9 @@ class PermissionDAO(DAOInterface):
 
         qtd: int = 0
         with DBConnectionHandler.connect(close_session) as database:
+            statement = select(func.count(Permission.id))
             try:
-                qtd = database.session.query(Permission).count()
+                qtd = database.session.scalar(statement)
             except Exception as e:
                 logging.error(f"Ocorreu um problema ao realizar a contagem de permissões: {e}")
                 database.close_session()
