@@ -1,12 +1,17 @@
 import logging
 from typing import Optional
-from sqlalchemy import select, Select
+from sqlalchemy import (
+    select, Select,
+    func,
+    update as sql_update, Update,
+    delete as sql_delete, Delete,
+    insert as sql_insert, Insert
+)
 from src.adapters.dtos import (
     CreateGroupInputDTO, ListGroupInputDTO,
     UpdateGroupInputDTO, RetrievePermissionInputDTO
 )
-from src.infrastructure.databases.connection import DBConnectionHandler
-from src.infrastructure.databases.models import Group, Permission, GroupVsPermission
+from src.infrastructure.databases.models import Group, Permission, GroupVsPermission, GroupsVsPermissions
 from src.infrastructure.databases import DAOInterface
 from .permission import PermissionDAO
 
@@ -16,169 +21,155 @@ class GroupDAO(DAOInterface):
     Repositorio de manipulação da entidade de grupos
     """
 
-    async def create(
-        self,
-        dto: CreateGroupInputDTO,
-        commit: bool = True,
-        close_session: bool = True) -> Group:
+    async def create(self, dto: CreateGroupInputDTO, commit: bool = True) -> Group:
         """
         Cria o grupo passando como argumento os dados do mesmo.
         """
 
-        group = Group(name=dto.name)
-        permission_dao = PermissionDAO()
+        permission_dao = PermissionDAO(session=self.session)
+        statement: Insert = sql_insert(Group).values(name=dto.name).returning(Group)
 
-        with DBConnectionHandler.connect(close_session) as database:
-            try:
-                for permission_code in dto.permissions:
-                    permission = await permission_dao.retrieve(
-                        dto=RetrievePermissionInputDTO(code=permission_code),
-                        close_session=False
+        try:
+            group: Group = await self.session.scalar(statement)
+
+            for permission_code in dto.permissions:
+                permission = await permission_dao.retrieve(
+                    dto=RetrievePermissionInputDTO(code=permission_code)
+                )
+                if permission:
+                    statement: Insert = sql_insert(GroupsVsPermissions).values(
+                        group_id=group.id,
+                        permission_id=permission.id
                     )
-                    if permission:
-                        group.permissions.append(permission)
+                    await self.session.execute(statement)
 
-                database.session.add(group)
-                if commit:
-                    database.session.commit()
-                    logging.info("Grupo inseridado no banco.")
-            except Exception as e:
-                logging.error(f"Ocorreu um problema ao criar o grupo: {e}")
-                database.session.rollback()
-                database.close_session(True)
-                raise e
+            if commit:
+                await self.session.commit()
+                logging.info("Grupo atualizado no banco.")
+        except Exception as e:
+            logging.error(f"Ocorreu um problema ao criar o grupo: {e}")
+            await self.session.rollback()
+            raise e
 
         return group
 
-    async def list(self, dto: ListGroupInputDTO, close_session: bool = True) -> list[Group]:
+    async def list(self, dto: ListGroupInputDTO) -> list[Group]:
         """
         Pega uma lista de grupos.
         """
 
         groups: list[Group] = []
-        with DBConnectionHandler.connect(close_session) as database:
-            statement: Select = select(Group)
+        statement: Select = select(Group)
 
-            if dto:
-                if dto.name and dto.code:
-                    statement: Select = statement \
-                        .join(GroupVsPermission) \
-                        .join(Permission) \
-                        .where(
-                            Group.name.like(f"%{dto.name}%"),
-                            Permission.code == dto.code
-                        )
-                elif dto.name:
-                    statement: Select = statement.where(Group.name.like(f"%{dto.name}%"))
-                elif dto.code:
-                    statement: Select = statement \
-                        .join(GroupVsPermission) \
-                        .join(Permission) \
-                        .where(Permission.code == dto.code)
+        if dto:
+            if dto.name and dto.code:
+                statement: Select = statement \
+                    .join(GroupVsPermission) \
+                    .join(Permission) \
+                    .where(
+                        Group.name.like(f"%{dto.name}%"),
+                        Permission.code == dto.code
+                    )
+            elif dto.name:
+                statement: Select = statement.where(Group.name.like(f"%{dto.name}%"))
+            elif dto.code:
+                statement: Select = statement \
+                    .join(GroupVsPermission) \
+                    .join(Permission) \
+                    .where(Permission.code == dto.code)
 
-            try:
-                groups = database.session.scalars(statement=statement).all()
-            except Exception as e:
-                logging.error(f"Ocorreu um problema ao listar os grupos: {e}")
-                database.close_session(True)
-                raise e
+        try:
+            result = await self.session.scalars(statement=statement)
+            groups = result.all()
+        except Exception as e:
+            logging.error(f"Ocorreu um problema ao listar os grupos: {e}")
+            raise e
 
         return groups
 
-    async def get_by_id(self, _id: int, close_session: bool = True) -> Optional[Group]:
+    async def get_by_id(self, _id: int) -> Optional[Group]:
         """
         Pega os dados de um grupo pelo _id
         """
 
-        group: Group = None
-        with DBConnectionHandler.connect(close_session) as database:
-            try:
-                group = database.session.get(Group, _id)
-            except Exception as e:
-                logging.error(f"Ocorreu um problema ao pegar os dados do grupo: {e}")
-                database.close_session(True)
-                raise e
+        statement = select(Group).where(Group.id == _id)
+        try:
+            group: Group = await self.session.scalar(statement)
+        except Exception as e:
+            logging.error(f"Ocorreu um problema ao pegar os dados do grupo: {e}")
+            raise e
 
         return group
 
-    async def update(
-        self,
-        _id: int,
-        dto: UpdateGroupInputDTO,
-        commit: bool = True,
-        close_session: bool = True) -> Optional[Group]:
+    async def update(self, _id: int, dto: UpdateGroupInputDTO, commit: bool = True) -> Optional[Group]:
         """
         Pega os dados de um grupo pelo _id e atualiza
         """
 
-        group: Group = None
-        with DBConnectionHandler.connect(close_session) as database:
-            statement = select(Group).where(Group.id == _id)
-            permission_dao = PermissionDAO()
+        permission_dao = PermissionDAO(session=self.session)
+        statement: Update = sql_update(Group).values(name=dto.name).where(Group.id == _id).returning(Group)
 
-            try:
-                group = database.session.scalars(statement).one()
+        try:
+            updated_group: Group = await self.session.scalar(statement)
 
-                permissions: list[Permission] = []
+            if dto.permissions is not None:
+                statement: Delete = sql_delete(GroupsVsPermissions).where(
+                    GroupsVsPermissions.group_id == updated_group.id
+                )
+                await self.session.execute(statement)
+
                 for permission_code in dto.permissions:
                     permission = await permission_dao.retrieve(
-                        dto=RetrievePermissionInputDTO(code=permission_code),
-                        close_session=False
+                        dto=RetrievePermissionInputDTO(code=permission_code)
                     )
-                    permissions.append(permission)
+                    if permission:
+                        statement: Insert = sql_insert(GroupsVsPermissions).values(
+                            group_id=updated_group.id,
+                            permission_id=permission.id
+                        )
+                        await self.session.execute(statement)
 
-                if dto.name:
-                    group.name = dto.name
+            if commit:
+                await self.session.commit()
+                logging.info("Grupo atualizado no banco.")
+        except Exception as e:
+            logging.error(f"Ocorreu um problema ao atualizar o grupo: {e}")
+            await self.session.rollback()
+            raise e
 
-                group.permissions = permissions
-                if commit:
-                    database.session.commit()
-                    logging.info("Grupos atualizadas no banco.")
-            except Exception as e:
-                logging.error(f"Ocorreu um problema ao atualizar o grupo: {e}")
-                database.session.rollback()
-                database.close_session()
-                raise e
+        return updated_group
 
-        return group
-
-    async def delete(
-        self,
-        _id: int,
-        commit: bool = True,
-        close_session: bool = True) -> None:
+    async def delete(self, _id: int, commit: bool = True) -> int:
         """
         Pega os dados de um grupo pelo _id
         """
 
-        with DBConnectionHandler.connect(close_session) as database:
-            try:
-                group = database.session.get(Group, _id)
-                if not group:
-                    raise ValueError(f"Grupo com o id {_id} não encontrado.")
+        statement: Delete = sql_delete(GroupsVsPermissions).where(GroupsVsPermissions.group_id == _id)
 
-                database.session.delete(group)
-                if commit:
-                    database.session.commit()
-                    logging.info("Grupos deletadas do banco.")
-            except Exception as e:
-                logging.error(f"Ocorreu um problema ao deletar o grupo: {e}")
-                database.session.rollback()
-                database.close_session()
-                raise e
+        try:
+            await self.session.execute(statement)
 
-    async def count(self, close_session: bool = True) -> int:
+            statement: Delete = sql_delete(Group).where(Group.id == _id)
+            await self.session.execute(statement)
+            if commit:
+                await self.session.commit()
+                logging.info("Grupos deletadas do banco.")
+        except Exception as e:
+            logging.error(f"Ocorreu um problema ao deletar o grupo: {e}")
+            await self.session.rollback()
+            raise e
+
+    async def count(self) -> int:
         """
         Pega a quantidade de grupos registrados no banco.
         """
 
-        qtd: int = 0
-        with DBConnectionHandler.connect(close_session) as database:
-            try:
-                qtd = database.session.query(Group).count()
-            except Exception as e:
-                logging.error(f"Ocorreu um problema ao realizar a contagem de grupos: {e}")
-                database.close_session()
-                raise e
+        statement = select(func.count(Group.id))
+
+        try:
+            qtd = await self.session.scalar(statement)
+        except Exception as e:
+            logging.error(f"Ocorreu um problema ao realizar a contagem de grupos: {e}")
+            raise e
 
         return qtd

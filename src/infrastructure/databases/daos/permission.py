@@ -6,7 +6,7 @@ from src.adapters.dtos import (
     RetrievePermissionInputDTO, UpdatePermissionInputDTO
 )
 from src.domains.utils.exceptions import GenericException
-from src.infrastructure.databases.models import Permission
+from src.infrastructure.databases.models import Permission, GroupsVsPermissions
 from src.infrastructure.databases import DAOInterface
 
 
@@ -21,10 +21,7 @@ class PermissionDAO(DAOInterface):
         """
 
         try:
-            values = dto.to_dict()
-            statement: Insert = insert(Permission).values(**values).returning(Permission)
-            logging.info(statement)
-            logging.info(f"VALORES: {values}")
+            statement: Insert = insert(Permission).values(**dto.to_dict()).returning(Permission)
             permission: Permission = await self.session.scalar(statement)
             if commit:
                 await self.session.commit()
@@ -50,10 +47,12 @@ class PermissionDAO(DAOInterface):
             if dto.code:
                 statement: Select = statement.where(Permission.code == dto.code)
 
+            if dto.group_id:
+                statement: Select = statement \
+                    .join(GroupsVsPermissions, GroupsVsPermissions.permission_id == Permission.id) \
+                    .where(GroupsVsPermissions.group_id == dto.group_id)
+
         try:
-            values = dto.to_dict()
-            logging.info(statement)
-            logging.info(f"VALORES: {values}")
             result = await self.session.scalars(statement=statement)
             permissions: list[Permission] = result.all()
         except Exception as e:
@@ -68,8 +67,6 @@ class PermissionDAO(DAOInterface):
         """
 
         statement = select(Permission).where(Permission.id == _id)
-        logging.info(statement)
-        logging.info(f"VALORES: _id: {_id}")
         try:
             permission: Permission = await self.session.scalar(statement)
         except Exception as e:
@@ -84,9 +81,6 @@ class PermissionDAO(DAOInterface):
         """
 
         statement: Select = select(Permission).where(Permission.code == dto.code)
-        values = dto.to_dict()
-        logging.info(statement)
-        logging.info(f"VALORES: {values}")
 
         try:
             permission: Permission = await self.session.scalar(statement)
@@ -105,10 +99,6 @@ class PermissionDAO(DAOInterface):
             .values(**dto.to_dict()) \
             .where(Permission.id == _id) \
             .returning(Permission)
-
-        values = dto.to_dict()
-        logging.info(statement)
-        logging.info(f"VALORES: _id: {_id}, {values}")
 
         try:
             permission: Permission = await self.session.scalar(statement)
@@ -131,8 +121,6 @@ class PermissionDAO(DAOInterface):
         """
 
         statement: Delete = delete(Permission).where(Permission.id == _id).returning(Permission.id)
-        logging.info(statement)
-        logging.info(f"VALORES: _id: {_id}")
         try:
             permission_id: int = await self.session.scalar(statement)
             if not permission_id:
@@ -154,7 +142,6 @@ class PermissionDAO(DAOInterface):
         """
 
         statement = select(func.count(Permission.id))
-        logging.info(statement)
         try:
             qtd: int = await self.session.scalar(statement)
         except Exception as e:

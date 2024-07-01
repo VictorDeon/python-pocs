@@ -67,6 +67,8 @@ services:
     environment:
       - PGADMIN_DEFAULT_EMAIL=poc@poc.com
       - PGADMIN_DEFAULT_PASSWORD=poc
+    volumes:
+      - poc_postgres_admin:/var/lib/pgadmin
     depends_on:
       - postgres
     networks:
@@ -214,6 +216,7 @@ volumes:
   poc_mongodb_data:
   poc_postgres_data:
   poc_postgres_backup:
+  poc_postgres_admin:
   poc_mysql_data:
   poc_mysql_admin:
   poc_redis_data:

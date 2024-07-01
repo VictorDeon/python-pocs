@@ -14,7 +14,7 @@ class Permission(BaseModel):
 
     id: Mapped[int] = mapped_column(BIGINT, primary_key=True, autoincrement=True)
     name: Mapped[str] = mapped_column(VARCHAR(50), nullable=False)
-    code: Mapped[str] = mapped_column(VARCHAR(20), nullable=False)
+    code: Mapped[str] = mapped_column(VARCHAR(20), unique=True, nullable=False)
 
     users: Mapped[Optional[list["User"]]] = relationship(
         "User",
@@ -26,8 +26,7 @@ class Permission(BaseModel):
     groups: Mapped[Optional[list["Group"]]] = relationship(
         "Group",
         secondary=GroupVsPermission,
-        back_populates="permissions",
-        lazy='dynamic'
+        back_populates="permissions"
     )
 
     def __repr__(self) -> str:

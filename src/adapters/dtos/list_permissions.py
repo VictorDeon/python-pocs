@@ -10,6 +10,8 @@ class ListPermissionInputDTO(BaseModel):
 
     name: Optional[str] = Field(None, description="Nome da permissão.")
     code: Optional[str] = Field(None, description="Código da permissão.")
+    group_id: Optional[int] = Field(None, description="Buscar todas as permissões de um grupo.")
+    user_id: Optional[int] = Field(None, description="Buscar todas as permissões de um usuário.")
 
     def to_dict(self):
         """

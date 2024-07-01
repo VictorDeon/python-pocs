@@ -13,13 +13,14 @@ class DBConnectionHandler:
     Realiza a lógica de conexão com o banco de dados usando SQL ALQUEMY.
     """
 
-    def __init__(self) -> None:
+    def __init__(self, echo: bool = False) -> None:
         """
         Construtor.
         """
 
         self.__connection_string: Optional[str] = os.environ.get("DB_CONNECTION_STRING")
         self.__engine: Optional[AsyncEngine] = None
+        self.__echo = echo
         self.session = None
 
     def __create_engine(self, sqlite: bool = False) -> AsyncEngine:
@@ -35,9 +36,9 @@ class DBConnectionHandler:
             folder = Path(db_path).parent
             folder.mkdir(parents=True, exist_ok=True)
             connection_string = f"sqlite:///{db_path}"
-            self.__engine = create_async_engine(url=connection_string, echo=False, connect_args={"check_same_thread": False})
+            self.__engine = create_async_engine(url=connection_string, echo=self.__echo, connect_args={"check_same_thread": False})
         else:
-            self.__engine = create_async_engine(url=self.__connection_string, echo=False)
+            self.__engine = create_async_engine(url=self.__connection_string, echo=self.__echo)
 
         return self.__engine
 

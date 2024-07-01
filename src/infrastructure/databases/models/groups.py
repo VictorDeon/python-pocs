@@ -26,7 +26,7 @@ class Group(BaseModel):
         "Permission",
         secondary=GroupVsPermission,
         back_populates="groups",
-        lazy='dynamic'
+        lazy="subquery"
     )
 
     def __repr__(self) -> str:
