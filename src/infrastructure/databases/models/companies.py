@@ -1,6 +1,6 @@
 from typing import Optional
 from sqlalchemy import VARCHAR, BIGINT, ForeignKey
-from sqlalchemy.orm import Mapped, relationship, mapped_column
+from sqlalchemy.orm import Mapped, mapped_column
 from src.infrastructure.databases import BaseModel
 
 
@@ -22,17 +22,6 @@ class Company(BaseModel):
             name='fk_company_owner',
             ondelete="CASCADE"
         )
-    )
-    owner: Mapped["User"] = relationship(
-        "User",
-        back_populates='companies',
-        foreign_keys=[owner_id]
-    )
-
-    employees: Mapped[Optional[list["User"]]] = relationship(
-        'User',
-        back_populates='work_company',
-        foreign_keys='User.work_company_cnpj'
     )
 
     def __repr__(self) -> str:

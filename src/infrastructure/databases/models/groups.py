@@ -1,8 +1,6 @@
-from typing import Optional
 from sqlalchemy import VARCHAR, BIGINT
-from sqlalchemy.orm import Mapped, relationship, mapped_column
+from sqlalchemy.orm import Mapped, mapped_column
 from src.infrastructure.databases import BaseModel
-from .many_to_many import UserVsGroup, GroupVsPermission
 
 
 class Group(BaseModel):
@@ -14,20 +12,6 @@ class Group(BaseModel):
 
     id: Mapped[int] = mapped_column(BIGINT, primary_key=True, autoincrement=True)
     name: Mapped[str] = mapped_column(VARCHAR(50), nullable=False)
-
-    users: Mapped[Optional[list["User"]]] = relationship(
-        "User",
-        secondary=UserVsGroup,
-        back_populates="groups",
-        lazy='dynamic'
-    )
-
-    permissions: Mapped[Optional[list["Permission"]]] = relationship(
-        "Permission",
-        secondary=GroupVsPermission,
-        back_populates="groups",
-        lazy="subquery"
-    )
 
     def __repr__(self) -> str:
         """

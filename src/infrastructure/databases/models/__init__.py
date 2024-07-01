@@ -5,8 +5,7 @@ from .groups import Group
 from .profiles import Profile
 from .permissions import Permission
 from .many_to_many import (
-    UserVsGroup,
-    UserVsPermission,
-    GroupVsPermission,
-    GroupsVsPermissions
+    GroupsVsPermissions,
+    UsersVsGroups,
+    UsersVsPermissions
 )

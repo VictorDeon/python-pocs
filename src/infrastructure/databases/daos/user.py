@@ -1,13 +1,17 @@
 import logging
 from typing import Optional
-from sqlalchemy import Select, select
-from sqlalchemy.exc import NoResultFound
+from sqlalchemy import (
+    select, Select, func,
+    insert, Insert,
+    delete as sql_delete, Delete,
+    update as sql_update, Update
+)
 from src.adapters.dtos import (
     CreateUserInputDTO, RetrievePermissionInputDTO, ListUserInputDTO,
     RetrieveUserInputDTO, UpdateUserInputDTO
 )
-from src.infrastructure.databases.connection import DBConnectionHandler
-from src.infrastructure.databases.models import User
+from src.domains.utils.exceptions import GenericException
+from src.infrastructure.databases.models import User, UsersVsPermissions, UsersVsGroups, Company
 from src.infrastructure.databases import DAOInterface
 from .permission import PermissionDAO
 from .company import CompanyDAO
@@ -20,227 +24,223 @@ class UserDAO(DAOInterface):
     Repositorio de manipulação da entidade de usuários
     """
 
-    async def create(
-        self,
-        dto: CreateUserInputDTO,
-        commit: bool = True,
-        close_session: bool = True) -> User:
+    async def create(self, dto: CreateUserInputDTO, commit: bool = True) -> User:
         """
         Cria o usuário passando como argumento os dados do mesmo.
         """
 
-        user = User(
-            name=dto.name,
-            email=dto.email,
-            password=dto.password
-        )
-        permission_dao = PermissionDAO()
-        group_dao = GroupDAO()
-        profile_dao = ProfileDAO()
-        company_dao = CompanyDAO()
+        permission_dao = PermissionDAO(session=self.session)
+        group_dao = GroupDAO(session=self.session)
+        profile_dao = ProfileDAO(session=self.session)
+        company_dao = CompanyDAO(session=self.session)
 
-        with DBConnectionHandler.connect(close_session) as database:
-            try:
-                profile = await profile_dao.create(
-                    dto=dto.profile,
-                    close_session=False
+        try:
+            profile = await profile_dao.create(dto=dto.profile)
+
+            if dto.work_company_cnpj:
+                work_company = await company_dao.get_by_cnpj(cnpj=dto.work_company_cnpj)
+                if not work_company:
+                    raise GenericException(f"Empresa com cnpj {dto.work_company_cnpj} não encontrado.")
+
+            statement: Insert = insert(User).values(
+                name=dto.name,
+                email=dto.email,
+                password=dto.password,
+                profile_id=profile.id,
+                work_company_cnpj=dto.work_company_cnpj
+            ).returning(User)
+            user: User = await self.session.scalar(statement)
+
+            for permission_code in dto.permissions:
+                permission = await permission_dao.retrieve(
+                    dto=RetrievePermissionInputDTO(code=permission_code)
                 )
-                user.profile_id = profile.id
-                user.profile = profile
-
-                if dto.work_company_cnpj:
-                    work_company = await company_dao.get_by_cnpj(
-                        cnpj=dto.work_company_cnpj,
-                        close_session=False
+                if permission:
+                    statement: Insert = insert(UsersVsPermissions).values(
+                        user_id=user.id,
+                        permission_id=permission.id
                     )
+                    await self.session.execute(statement)
 
-                    if work_company:
-                        user.work_company_cnpj = work_company.cnpj
-                        user.work_company = work_company
-
-                for permission_code in dto.permissions:
-                    permission = await permission_dao.retrieve(
-                        dto=RetrievePermissionInputDTO(code=permission_code),
-                        close_session=False
+            for group_id in dto.groups:
+                group = await group_dao.get_by_id(_id=group_id)
+                if group:
+                    statement: Insert = insert(UsersVsGroups).values(
+                        user_id=user.id,
+                        group_id=group.id
                     )
-                    if permission:
-                        user.permissions.append(permission)
+                    await self.session.execute(statement)
 
-                for group_id in dto.groups:
-                    group = await group_dao.get_by_id(_id=group_id, close_session=False)
-                    if group:
-                        user.groups.append(group)
-
-                database.session.add(user)
-                if commit:
-                    database.session.commit()
-                    logging.info("Usuário inseridado no banco.")
-            except Exception as e:
-                logging.error(f"Ocorreu um problema ao criar o usuário: {e}")
-                database.session.rollback()
-                database.close_session(True)
-                raise e
+            if commit:
+                await self.session.commit()
+                logging.info("Usuário inseridado no banco.")
+        except Exception as e:
+            logging.error(f"Ocorreu um problema ao criar o usuário: {e}")
+            await self.session.rollback()
+            raise e
 
         return user
 
-    async def list(self, dto: ListUserInputDTO, close_session: bool = True) -> list[User]:
+    async def list(self, dto: ListUserInputDTO) -> list[User]:
         """
         Pega uma lista de usuários.
         """
 
-        users: list[User] = []
-        with DBConnectionHandler.connect(close_session) as database:
-            statement: Select = select(User)
+        statement: Select = select(User)
 
-            if dto:
-                if dto.name:
-                    statement: Select = statement.where(User.name.like(f"%{dto.name}%"))
+        if dto:
+            if dto.work_company_cnpj:
+                statement: Select = statement \
+                    .join(Company, Company.cnpj == User.work_company_cnpj) \
+                    .where(User.work_company_cnpj == dto.work_company_cnpj)
 
-                if dto.email:
-                    statement: Select = statement.where(User.email == dto.email)
+            if dto.name:
+                statement: Select = statement.where(User.name.like(f"%{dto.name}%"))
 
-            try:
-                users = database.session.scalars(statement=statement).all()
-            except Exception as e:
-                logging.error(f"Ocorreu um problema ao listar os usuários: {e}")
-                database.close_session(True)
-                raise e
+            if dto.email:
+                statement: Select = statement.where(User.email == dto.email)
+
+        try:
+            results = await self.session.scalars(statement=statement)
+            users: list[User] = results.all()
+        except Exception as e:
+            logging.error(f"Ocorreu um problema ao listar os usuários: {e}")
+            raise e
 
         return users
 
-    async def get_by_id(self, _id: int, close_session: bool = True) -> Optional[User]:
+    async def get_by_id(self, _id: int) -> Optional[User]:
         """
         Pega os dados de um usuário pelo _id
         """
 
-        user: User = None
-        with DBConnectionHandler.connect(close_session) as database:
-            try:
-                user = database.session.get(User, _id)
-            except Exception as e:
-                logging.error(f"Ocorreu um problema ao pegar os dados do usuário: {e}")
-                database.close_session(True)
-                raise e
+        statement: Select = select(User).where(User.id == _id)
+        try:
+            user: User = await self.session.scalar(statement)
+        except Exception as e:
+            logging.error(f"Ocorreu um problema ao pegar os dados do usuário: {e}")
+            raise e
 
         return user
 
-    async def retrieve(self, dto: RetrieveUserInputDTO, close_session: bool = True) -> Optional[User]:
+    async def retrieve(self, dto: RetrieveUserInputDTO) -> Optional[User]:
         """
         Pega os dados de um usuário pelo email
         """
 
-        user: User = None
-        with DBConnectionHandler.connect(close_session) as database:
-            statement: Select = select(User).where(User.email == dto.email)
+        statement: Select = select(User).where(User.email == dto.email)
 
-            try:
-                user = database.session.scalars(statement).one()
-            except NoResultFound as e:
-                logging.warning(f"Usuário com email {dto.email} não encontrada: {e}")
-            except Exception as e:
-                logging.error(f"Ocorreu um problema ao pegar os dados do usuário: {e}")
-                database.close_session()
-                raise e
+        try:
+            user: User = await self.session.scalar(statement)
+        except Exception as e:
+            logging.error(f"Ocorreu um problema ao pegar os dados do usuário: {e}")
+            raise e
 
         return user
 
-    async def update(
-        self,
-        _id: int,
-        dto: UpdateUserInputDTO,
-        commit: bool = True,
-        close_session: bool = True) -> Optional[User]:
+    async def update(self, _id: int, dto: UpdateUserInputDTO, commit: bool = True) -> Optional[User]:
         """
         Pega os dados de um usuário pelo _id e atualiza
         """
 
-        user: User = None
-        with DBConnectionHandler.connect(close_session) as database:
-            statement = select(User).where(User.id == _id)
+        try:
+            if dto.work_company_cnpj:
+                company_dao = CompanyDAO(session=self.session)
+                company: Company = await company_dao.get_by_cnpj(cnpj=dto.work_company_cnpj)
+                if not company:
+                    raise GenericException(f"Empresa com cnpj {dto.work_company_cnpj} não encontrado.")
 
-            try:
-                user = database.session.scalars(statement).one()
-                if dto.name:
-                    user.name = dto.name
+            statement: Update = sql_update(User).values(
+                name=dto.name,
+                email=dto.email,
+                work_company_cnpj=dto.work_company_cnpj
+            ).where(User.id == _id).returning(User)
 
-                if dto.email:
-                    user.email = dto.email
+            user: User = await self.session.scalar(statement)
+            if not user:
+                raise GenericException(f"Usuário com id {_id} não encontrado.")
 
-                if dto.profile:
-                    profile_dao = ProfileDAO()
-                    await profile_dao.update(
-                        _id=user.profile.id,
-                        dto=dto.profile,
-                        close_session=False
+            if dto.profile:
+                profile_dao = ProfileDAO(session=self.session)
+                await profile_dao.update(
+                    _id=user.profile_id,
+                    dto=dto.profile
+                )
+
+            if dto.permissions is not None:
+                permission_dao = PermissionDAO(session=self.session)
+                statement: Delete = sql_delete(UsersVsPermissions).where(UsersVsPermissions.user_id == user.id)
+                await self.session.execute(statement)
+
+                for permission_code in dto.permissions:
+                    permission = await permission_dao.retrieve(
+                        dto=RetrievePermissionInputDTO(code=permission_code)
                     )
-
-                if dto.permissions is not None:
-                    permission_dao = PermissionDAO()
-                    user.permissions = []
-                    for permission_code in dto.permissions:
-                        permission = await permission_dao.retrieve(
-                            dto=RetrievePermissionInputDTO(code=permission_code),
-                            close_session=False
+                    if permission:
+                        statement: Update = insert(UsersVsPermissions).values(
+                            user_id=user.id,
+                            permission_id=permission.id
                         )
-                        if permission:
-                            user.permissions.append(permission)
+                        await self.session.execute(statement)
 
-                if dto.groups is not None:
-                    group_dao = GroupDAO()
-                    user.groups = []
-                    for group_id in dto.groups:
-                        group = await group_dao.get_by_id(_id=group_id, close_session=False)
-                        if group:
-                            user.groups.append(group)
+            if dto.groups is not None:
+                group_dao = GroupDAO(session=self.session)
+                statement: Delete = sql_delete(UsersVsGroups).where(UsersVsGroups.user_id == user.id)
+                await self.session.execute(statement)
 
-                if commit:
-                    database.session.commit()
-                    logging.info("Usuário atualizado no banco.")
-            except Exception as e:
-                logging.error(f"Ocorreu um problema ao atualizar o usuário: {e}")
-                database.session.rollback()
-                database.close_session()
-                raise e
+                for group_id in dto.groups:
+                    group = await group_dao.get_by_id(_id=group_id)
+                    if group:
+                        statement: Update = insert(UsersVsPermissions).values(
+                            user_id=user.id,
+                            group_id=group.id
+                        )
+                        await self.session.execute(statement)
+
+            if commit:
+                await self.session.commit()
+                logging.info("Usuário atualizado no banco.")
+        except Exception as e:
+            logging.error(f"Ocorreu um problema ao atualizar o usuário: {e}")
+            await self.session.rollback()
+            raise e
 
         return user
 
-    async def delete(
-        self,
-        _id: int,
-        commit: bool = True,
-        close_session: bool = True) -> None:
+    async def delete(self, _id: int, commit: bool = True) -> int:
         """
         Pega os dados de um usuário pelo _id e deleta
         """
 
-        with DBConnectionHandler.connect(close_session) as database:
-            try:
-                user = database.session.get(User, _id)
-                if not user:
-                    raise ValueError(f"Usuário com o id {_id} não encontrado.")
+        statement: Delete = sql_delete(User).where(User.id == _id).returning(User.id)
+        try:
+            user_id: int = await self.session.scalar(statement)
+            if not user_id:
+                raise ValueError(f"Usuário com o id {_id} não encontrado.")
 
-                database.session.delete(user)
-                if commit:
-                    database.session.commit()
-                    logging.info("Usuário deletado do banco.")
-            except Exception as e:
-                logging.error(f"Ocorreu um problema ao deletar o usuário: {e}")
-                database.session.rollback()
-                database.close_session()
-                raise e
+            # Deletar profile
+            # Deletar companies
 
-    async def count(self, close_session: bool = True) -> int:
+            if commit:
+                await self.session.commit()
+                logging.info("Usuário deletado do banco.")
+        except Exception as e:
+            logging.error(f"Ocorreu um problema ao deletar o usuário: {e}")
+            await self.session.rollback()
+            raise e
+
+        return user_id
+
+    async def count(self) -> int:
         """
         Pega a quantidade de usuários registradas no banco.
         """
 
-        qtd: int = 0
-        with DBConnectionHandler.connect(close_session) as database:
-            try:
-                qtd = database.session.query(User).count()
-            except Exception as e:
-                logging.error(f"Ocorreu um problema ao realizar a contagem de usuários: {e}")
-                database.close_session()
-                raise e
+        statement: Select = select(func.count(User.id))
+        try:
+            qtd: int = await self.session.scalar(statement)
+        except Exception as e:
+            logging.error(f"Ocorreu um problema ao realizar a contagem de usuários: {e}")
+            raise e
 
         return qtd

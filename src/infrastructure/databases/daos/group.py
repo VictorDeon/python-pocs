@@ -11,7 +11,7 @@ from src.adapters.dtos import (
     CreateGroupInputDTO, ListGroupInputDTO,
     UpdateGroupInputDTO, RetrievePermissionInputDTO
 )
-from src.infrastructure.databases.models import Group, Permission, GroupVsPermission, GroupsVsPermissions
+from src.infrastructure.databases.models import Group, Permission, GroupsVsPermissions, UsersVsGroups
 from src.infrastructure.databases import DAOInterface
 from .permission import PermissionDAO
 
@@ -58,29 +58,26 @@ class GroupDAO(DAOInterface):
         Pega uma lista de grupos.
         """
 
-        groups: list[Group] = []
         statement: Select = select(Group)
 
         if dto:
-            if dto.name and dto.code:
+            if dto.user_id:
                 statement: Select = statement \
-                    .join(GroupVsPermission) \
-                    .join(Permission) \
-                    .where(
-                        Group.name.like(f"%{dto.name}%"),
-                        Permission.code == dto.code
-                    )
-            elif dto.name:
-                statement: Select = statement.where(Group.name.like(f"%{dto.name}%"))
-            elif dto.code:
+                    .join(UsersVsGroups, UsersVsGroups.group_id == Group.id) \
+                    .where(UsersVsGroups.user_id == dto.user_id)
+
+            if dto.code:
                 statement: Select = statement \
-                    .join(GroupVsPermission) \
-                    .join(Permission) \
+                    .join(GroupsVsPermissions, GroupsVsPermissions.group_id == Group.id) \
+                    .join(Permission, Permission.id == GroupsVsPermissions.permission_id) \
                     .where(Permission.code == dto.code)
+
+            if dto.name:
+                statement: Select = statement.where(Group.name.like(f"%{dto.name}%"))
 
         try:
             result = await self.session.scalars(statement=statement)
-            groups = result.all()
+            groups: list[Group] = result.all()
         except Exception as e:
             logging.error(f"Ocorreu um problema ao listar os grupos: {e}")
             raise e

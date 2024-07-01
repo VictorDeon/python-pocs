@@ -11,14 +11,13 @@ class UpdateCompanyInputDTO(BaseModel):
     cnpj: Optional[str] = Field(None, description="CNPJ da empresa.")
     name: Optional[str] = Field(None, description="Nome da empresa.")
     fantasy_name: Optional[str] = Field(None, description="Nome fantasia da empresa.")
-    employees: list[int] = Field([], description="Lista de identificadores dos funcionários da empresa.")
 
-    def to_dict(self):
+    def to_dict(self, exclude: list[str] = []):
         """
         Transforma os dados em dicionário.
         """
 
-        return self.model_dump()
+        return self.model_dump(exclude=exclude)
 
 
 class UpdateCompanyOutputDTO(BaseModel):

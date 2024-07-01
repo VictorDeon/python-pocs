@@ -1,8 +1,7 @@
 from typing import Optional
 from sqlalchemy import VARCHAR, BIGINT, ForeignKey
-from sqlalchemy.orm import Mapped, relationship, mapped_column
+from sqlalchemy.orm import Mapped, mapped_column
 from src.infrastructure.databases import BaseModel
-from .many_to_many import UserVsPermission, UserVsGroup
 
 
 class User(BaseModel):
@@ -22,43 +21,11 @@ class User(BaseModel):
         ForeignKey('profiles.id'),
         nullable=False
     )
-    profile: Mapped["Profile"] = relationship(
-        "Profile",
-        single_parent=True,
-        cascade="all, delete-orphan",
-        back_populates="user"
-    )
-
-    companies: Mapped[list["Company"]] = relationship(
-        'Company',
-        back_populates='owner',
-        cascade="all, delete-orphan",
-        foreign_keys='Company.owner_id'
-    )
 
     work_company_cnpj: Mapped[Optional[str]] = mapped_column(
         VARCHAR(14),
         ForeignKey('companies.cnpj', name='fk_employee_company'),
         nullable=True
-    )
-    work_company = relationship(
-        'Company',
-        back_populates='employees',
-        foreign_keys=[work_company_cnpj]
-    )
-
-    groups: Mapped[Optional[list["Group"]]] = relationship(
-        "Group",
-        secondary=UserVsGroup,
-        back_populates="users",
-        lazy='dynamic'
-    )
-
-    permissions: Mapped[Optional[list["Permission"]]] = relationship(
-        "Permission",
-        secondary=UserVsPermission,
-        back_populates="users",
-        lazy='dynamic'
     )
 
     def __repr__(self) -> str:

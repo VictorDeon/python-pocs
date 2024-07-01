@@ -41,16 +41,16 @@ class PermissionDAO(DAOInterface):
         statement: Select = select(Permission)
 
         if dto:
+            if dto.group_id:
+                statement: Select = statement \
+                    .join(GroupsVsPermissions, GroupsVsPermissions.permission_id == Permission.id) \
+                    .where(GroupsVsPermissions.group_id == dto.group_id)
+
             if dto.name:
                 statement: Select = statement.where(Permission.name.like(f"%{dto.name}%"))
 
             if dto.code:
                 statement: Select = statement.where(Permission.code == dto.code)
-
-            if dto.group_id:
-                statement: Select = statement \
-                    .join(GroupsVsPermissions, GroupsVsPermissions.permission_id == Permission.id) \
-                    .where(GroupsVsPermissions.group_id == dto.group_id)
 
         try:
             result = await self.session.scalars(statement=statement)

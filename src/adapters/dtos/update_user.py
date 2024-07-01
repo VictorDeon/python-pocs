@@ -11,6 +11,7 @@ class UpdateUserInputDTO(BaseModel):
 
     name: Optional[str] = Field(None, description="Nome do usuário.")
     email: Optional[str] = Field(None, description="Email do usuário.")
+    work_company_cnpj: Optional[str] = Field(None, description="CNPJ da empresa na qual o usuário trabalha")
     profile: Optional[UpdateProfileInputDTO] = Field(None, description="Perfil do usuário.")
     permissions: Optional[list[str]] = Field(None, description="Lista de permissões do usuário.")
     groups: Optional[list[int]] = Field(None, description="Lista de grupos do usuário.")

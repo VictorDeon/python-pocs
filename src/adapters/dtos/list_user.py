@@ -11,6 +11,7 @@ class ListUserInputDTO(BaseModel):
     name: Optional[str] = Field(None, description="Filtrar pelo nome do usuário.")
     email: Optional[str] = Field(None, description="Filtrar pelo email do usuário.")
     groups: Optional[list[str]] = Field([], description="Filtrar pelos grupos.")
+    work_company_cnpj: Optional[str] = Field(False, description="Listar todos os funcionários de uma empresa.")
 
     def to_dict(self):
         """
