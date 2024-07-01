@@ -35,8 +35,6 @@ class UserDAO(DAOInterface):
         company_dao = CompanyDAO(session=self.session)
 
         try:
-            profile = await profile_dao.create(dto=dto.profile)
-
             if dto.work_company_cnpj:
                 work_company = await company_dao.get_by_cnpj(cnpj=dto.work_company_cnpj)
                 if not work_company:
@@ -46,10 +44,11 @@ class UserDAO(DAOInterface):
                 name=dto.name,
                 email=dto.email,
                 password=dto.password,
-                profile_id=profile.id,
                 work_company_cnpj=dto.work_company_cnpj
             ).returning(User)
             user: User = await self.session.scalar(statement)
+
+            await profile_dao.create(user_id=user.id, dto=dto.profile)
 
             for permission_code in dto.permissions:
                 permission = await permission_dao.retrieve(
@@ -209,17 +208,21 @@ class UserDAO(DAOInterface):
 
     async def delete(self, _id: int, commit: bool = True) -> int:
         """
-        Pega os dados de um usuário pelo _id e deleta
+        Pega os dados de um usuário pelo _id e deleta o usuário,
+        suas empresas que é dona e seu perfil.
         """
 
-        statement: Delete = sql_delete(User).where(User.id == _id).returning(User.id)
         try:
+            statement: Delete = sql_delete(UsersVsGroups).where(UsersVsGroups.user_id == _id)
+            await self.session.execute(statement)
+
+            statement: Delete = sql_delete(UsersVsPermissions).where(UsersVsPermissions.user_id == _id)
+            await self.session.execute(statement)
+
+            statement: Delete = sql_delete(User).where(User.id == _id).returning(User.id)
             user_id: int = await self.session.scalar(statement)
             if not user_id:
                 raise ValueError(f"Usuário com o id {_id} não encontrado.")
-
-            # Deletar profile
-            # Deletar companies
 
             if commit:
                 await self.session.commit()

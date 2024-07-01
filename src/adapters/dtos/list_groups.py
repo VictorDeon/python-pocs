@@ -10,7 +10,7 @@ class ListGroupInputDTO(BaseModel):
 
     name: Optional[str] = Field(None, description="Nome do grupo.")
     code: Optional[str] = Field(None, description="Código da permissão no grupo.")
-    user_id: Optional[str] = Field(None, description="Filtrar todos os grupos de um usuário.")
+    user_id: Optional[int] = Field(None, description="Filtrar todos os grupos de um usuário.")
 
     def to_dict(self):
         """

@@ -11,12 +11,15 @@ class ProfileDAO(DAOInterface):
     Repositorio de manipulação da entidade de perfis
     """
 
-    async def create(self, dto: CreateProfileInputDTO, commit: bool = True) -> Profile:
+    async def create(self, user_id: int, dto: CreateProfileInputDTO, commit: bool = True) -> Profile:
         """
         Cria a perfil passando como argumento os seus dados.
         """
 
-        statement: Insert = insert(Profile).values(**dto.to_dict()).returning(Profile)
+        statement: Insert = insert(Profile).values(
+            **dto.to_dict(),
+            user_id=user_id
+        ).returning(Profile)
 
         try:
             profile: Profile = await self.session.scalar(statement)
@@ -30,26 +33,26 @@ class ProfileDAO(DAOInterface):
 
         return profile
 
-    async def get_by_id(self, _id: int) -> Optional[Profile]:
+    async def get_by_id(self, user_id: int) -> Optional[Profile]:
         """
-        Pega os dados de uma perfil pelo _id
+        Pega os dados de uma perfil pelo id do usuário dono do perfil
         """
 
-        statement: Select = select(Profile).where(Profile.id == _id)
+        statement: Select = select(Profile).where(Profile.user_id == user_id)
         try:
-            profile: Profile = self.session.scalar(statement)
+            profile: Profile = await self.session.scalar(statement)
         except Exception as e:
             logging.error(f"Ocorreu um problema ao pegar os dados do perfil: {e}")
             raise e
 
         return profile
 
-    async def update(self, _id: int, dto: UpdateProfileInputDTO, commit: bool = True) -> Optional[Profile]:
+    async def update(self, user_id: int, dto: UpdateProfileInputDTO, commit: bool = True) -> Optional[Profile]:
         """
         Pega os dados de um perfil pelo _id e atualiza
         """
 
-        statement: Update = sql_update(Profile).values(**dto.to_dict()).where(Profile.id == _id).returning(Profile)
+        statement: Update = sql_update(Profile).values(**dto.to_dict()).where(Profile.user_id == user_id).returning(Profile)
 
         try:
             profile: Profile = await self.session.scalar(statement)

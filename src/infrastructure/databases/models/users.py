@@ -16,12 +16,6 @@ class User(BaseModel):
     password: Mapped[str] = mapped_column(VARCHAR(30), nullable=False)
     name: Mapped[str] = mapped_column(VARCHAR(30), nullable=False)
 
-    profile_id: Mapped[int] = mapped_column(
-        BIGINT,
-        ForeignKey('profiles.id'),
-        nullable=False
-    )
-
     work_company_cnpj: Mapped[Optional[str]] = mapped_column(
         VARCHAR(14),
         ForeignKey('companies.cnpj', name='fk_employee_company'),

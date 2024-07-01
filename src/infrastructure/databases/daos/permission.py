@@ -6,7 +6,7 @@ from src.adapters.dtos import (
     RetrievePermissionInputDTO, UpdatePermissionInputDTO
 )
 from src.domains.utils.exceptions import GenericException
-from src.infrastructure.databases.models import Permission, GroupsVsPermissions
+from src.infrastructure.databases.models import Permission, GroupsVsPermissions, UsersVsPermissions
 from src.infrastructure.databases import DAOInterface
 
 
@@ -45,6 +45,11 @@ class PermissionDAO(DAOInterface):
                 statement: Select = statement \
                     .join(GroupsVsPermissions, GroupsVsPermissions.permission_id == Permission.id) \
                     .where(GroupsVsPermissions.group_id == dto.group_id)
+
+            if dto.user_id:
+                statement: Select = statement \
+                    .join(UsersVsPermissions, UsersVsPermissions.permission_id == Permission.id) \
+                    .where(UsersVsPermissions.user_id == dto.user_id)
 
             if dto.name:
                 statement: Select = statement.where(Permission.name.like(f"%{dto.name}%"))

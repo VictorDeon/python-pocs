@@ -1,9 +1,9 @@
 from sqlalchemy import ForeignKey, BIGINT
-from src.infrastructure.databases.base import Base
+from src.infrastructure.databases import BaseModel
 from sqlalchemy.orm import Mapped, mapped_column
 
 
-class UsersVsGroups(Base):
+class UsersVsGroups(BaseModel):
     """
     Relacionamento NxM entre usuários e grupos.
     """
@@ -14,7 +14,7 @@ class UsersVsGroups(Base):
     group_id: Mapped[int] = mapped_column(BIGINT, ForeignKey('groups.id'), primary_key=True)
 
 
-class UsersVsPermissions(Base):
+class UsersVsPermissions(BaseModel):
     """
     Relacionamento NxM entre usuários e permissões.
     """
@@ -25,7 +25,7 @@ class UsersVsPermissions(Base):
     permission_id: Mapped[int] = mapped_column(BIGINT, ForeignKey('permissions.id'), primary_key=True)
 
 
-class GroupsVsPermissions(Base):
+class GroupsVsPermissions(BaseModel):
     """
     Relacionamento NxM entre grupos e permissões.
     """

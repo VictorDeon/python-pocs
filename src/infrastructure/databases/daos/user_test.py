@@ -4,7 +4,7 @@ from src.adapters.dtos import (
     CreateCompanyInputDTO, ListUserInputDTO,
     RetrieveUserInputDTO, UpdateUserInputDTO,
     UpdateProfileInputDTO, ListPermissionInputDTO,
-    ListGroupInputDTO
+    ListGroupInputDTO, ListCompaniesInputDTO
 )
 from src.infrastructure.databases import DBConnectionHandler
 from .group import GroupDAO
@@ -44,29 +44,29 @@ async def test_create_user_dao():
         )
 
         user_dao = UserDAO(session=session)
-        # owner_dto = CreateUserInputDTO(
-        #     name="Usuários dono",
-        #     email="usuario-dono@gmail.com",
-        #    password="Django1234",
-        #    profile=CreateProfileInputDTO()
-        # )
-        # user_owner = await user_dao.create(dto=owner_dto)
+        owner_dto = CreateUserInputDTO(
+            name="Usuários dono",
+            email="usuario-dono@gmail.com",
+            password="Django1234",
+            profile=CreateProfileInputDTO()
+        )
+        user_owner = await user_dao.create(dto=owner_dto)
 
-        # company_dao = CompanyDAO(session=session)
-        # company = await company_dao.create(
-        #     dto=CreateCompanyInputDTO(
-        #         cnpj="11111111111111",
-        #         name="Empresa 01 LTDA",
-        #         fantasy_name="Empresa 01",
-        #         owner_id=user_owner.id
-        #     )
-        #  )
+        company_dao = CompanyDAO(session=session)
+        company = await company_dao.create(
+            dto=CreateCompanyInputDTO(
+                cnpj="11111111111111",
+                name="Empresa 01 LTDA",
+                fantasy_name="Empresa 01",
+                owner_id=user_owner.id
+            )
+        )
 
         dto = CreateUserInputDTO(
             name="Fulano de tal",
             email="fulano@gmail.com",
             password="******",
-            # work_company_cnpj=company.cnpj,
+            work_company_cnpj=company.cnpj,
             profile=CreateProfileInputDTO(phone="6399485956"),
             permissions=[permission01.code],
             groups=[group.id]
@@ -74,14 +74,17 @@ async def test_create_user_dao():
         user = await user_dao.create(dto=dto)
         permissions = await permission_dao.list(dto=ListPermissionInputDTO(user_id=user.id))
         groups = await group_dao.list(dto=ListGroupInputDTO(user_id=user.id))
+        companies = await company_dao.list(dto=ListCompaniesInputDTO(owner_id=user.id))
+        profile_dao = ProfileDAO(session=session)
+        profile = await profile_dao.get_by_id(user_id=user.id)
 
         try:
             assert user.id is not None
             assert user.name == dto.name
             assert user.email == dto.email
-            # assert user.work_company_cnpj == company.cnpj
-            # assert len(companies) == 0
-            assert user.profile_id is not None
+            assert user.work_company_cnpj == company.cnpj
+            assert len(companies) == 0
+            assert profile.user_id == user.id
             assert len(permissions) == 1
             assert len(groups) == 1
         finally:
