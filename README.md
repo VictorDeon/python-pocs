@@ -70,20 +70,18 @@ Nas proximas vezes só precisa executar os emuladores `docker compose --profile 
     - Criar todos os user_cases
     - Criar todos os controllers
     - Criar todas as rotas
-* Autenticação e autorização - vwauth
-* Desenvolver vários tipos de consumos de APIs usando corotines, queues, threads e processos
 * Inserir um sistema de logs inteligentes
+* Desenvolver vários tipos de consumos de APIs usando corotines, queues, threads e processos
 * Finalizar o leitor de PDF
-* Criar um interface com o tkinter para o CRUD de usuários definir via header.
 * Endpoints que faz o upload de um arquivo excel com dados de usuários.
-* Script que consume todos os arquivos excel da pasta de upload, pegar os dados e armazenar em varios bancos de dados
+* Script que consume todos os arquivos excel da pasta de upload, pegar os dados e armazenar em varios locais
 e arquivos e enviar o excel para outra pasta de processados.
-    - Mongodb
-    - MySql
-    - Postgres
-    - SqLite
+    - NoSQL (mongodb)
+    - SQL (sqlalchemy)
     - CSV
+    - XML
     - JSON
 * Endpoints de consulta desses dados de usuários pelos diversos meios acima.
+* Criar um interface com o tkinter para o CRUD de usuários definir via header.
+* Autenticação e autorização - vwauth
 * Sistema de autenticação e autorização
-* Testes automatizados
