@@ -40,16 +40,11 @@ async def test_create_group_dao():
         group = await dao.create(dto=dto)
         permissions = await permission_dao.list(dto=ListPermissionInputDTO(group_id=group.id))
 
-        try:
-            assert group.id is not None
-            assert group.name == dto.name
-            assert len(permissions) == 2
-            assert permissions[0] == permission01
-            assert permissions[1] == permission02
-        finally:
-            await dao.delete(_id=group.id)
-            await permission_dao.delete(_id=permission01.id)
-            await permission_dao.delete(_id=permission02.id)
+        assert group.id is not None
+        assert group.name == dto.name
+        assert len(permissions) == 2
+        assert permissions[0] == permission01
+        assert permissions[1] == permission02
 
 
 async def test_create_not_found_group_dao():
@@ -66,7 +61,7 @@ async def test_create_not_found_group_dao():
             )
         )
 
-        permission02 = await permission_dao.create(
+        await permission_dao.create(
             dto=CreatePermissionInputDTO(
                 name="Teste permissão para atualização de permissões",
                 code="t_permission_update"
@@ -82,15 +77,10 @@ async def test_create_not_found_group_dao():
         group = await dao.create(dto=dto)
         permissions = await permission_dao.list(dto=ListPermissionInputDTO(group_id=group.id))
 
-        try:
-            assert group.id is not None
-            assert group.name == dto.name
-            assert len(permissions) == 1
-            assert permissions[0] == permission01
-        finally:
-            await dao.delete(_id=group.id)
-            await permission_dao.delete(_id=permission01.id)
-            await permission_dao.delete(_id=permission02.id)
+        assert group.id is not None
+        assert group.name == dto.name
+        assert len(permissions) == 1
+        assert permissions[0] == permission01
 
 
 async def test_list_by_permission_code_group_dao():
@@ -100,14 +90,14 @@ async def test_list_by_permission_code_group_dao():
 
     async with DBConnectionHandler() as session:
         permission_dao = PermissionDAO(session=session)
-        permission01 = await permission_dao.create(
+        await permission_dao.create(
             dto=CreatePermissionInputDTO(
                 name="Teste permissão para criação de permissões",
                 code="t_permission_create"
             )
         )
 
-        permission02 = await permission_dao.create(
+        await permission_dao.create(
             dto=CreatePermissionInputDTO(
                 name="Teste permissão para atualização de permissões",
                 code="t_permission_update"
@@ -129,7 +119,7 @@ async def test_list_by_permission_code_group_dao():
             )
         )
 
-        group03 = await dao.create(
+        await dao.create(
             dto=CreateGroupInputDTO(
                 name="Grupo 03",
                 permissions=[]
@@ -139,22 +129,15 @@ async def test_list_by_permission_code_group_dao():
         dto = ListGroupInputDTO(code="t_permission_update")
         groups = await dao.list(dto=dto)
 
-        try:
-            assert len(groups) == 2
-            assert groups[0].id == group01.id
-            assert groups[0].name == group01.name
-            permissions = await permission_dao.list(dto=ListPermissionInputDTO(group_id=groups[0].id))
-            assert len(permissions) == 2
-            assert groups[1].id == group02.id
-            assert groups[1].name == group02.name
-            permissions = await permission_dao.list(dto=ListPermissionInputDTO(group_id=groups[1].id))
-            assert len(permissions) == 1
-        finally:
-            await dao.delete(_id=group01.id)
-            await dao.delete(_id=group02.id)
-            await dao.delete(_id=group03.id)
-            await permission_dao.delete(_id=permission01.id)
-            await permission_dao.delete(_id=permission02.id)
+        assert len(groups) == 2
+        assert groups[0].id == group01.id
+        assert groups[0].name == group01.name
+        permissions = await permission_dao.list(dto=ListPermissionInputDTO(group_id=groups[0].id))
+        assert len(permissions) == 2
+        assert groups[1].id == group02.id
+        assert groups[1].name == group02.name
+        permissions = await permission_dao.list(dto=ListPermissionInputDTO(group_id=groups[1].id))
+        assert len(permissions) == 1
 
 
 async def test_list_by_name_group_dao():
@@ -164,14 +147,14 @@ async def test_list_by_name_group_dao():
 
     async with DBConnectionHandler() as session:
         permission_dao = PermissionDAO(session=session)
-        permission01 = await permission_dao.create(
+        await permission_dao.create(
             dto=CreatePermissionInputDTO(
                 name="Teste permissão para criação de permissões",
                 code="t_permission_create"
             )
         )
 
-        permission02 = await permission_dao.create(
+        await permission_dao.create(
             dto=CreatePermissionInputDTO(
                 name="Teste permissão para atualização de permissões",
                 code="t_permission_update"
@@ -203,26 +186,19 @@ async def test_list_by_name_group_dao():
         dto = ListGroupInputDTO(name="Grupo")
         groups = await dao.list(dto=dto)
 
-        try:
-            assert len(groups) == 3
-            assert groups[0].id == group01.id
-            assert groups[0].name == group01.name
-            permissions = await permission_dao.list(dto=ListPermissionInputDTO(group_id=groups[0].id))
-            assert len(permissions) == 2
-            assert groups[1].id == group02.id
-            assert groups[1].name == group02.name
-            permissions = await permission_dao.list(dto=ListPermissionInputDTO(group_id=groups[1].id))
-            assert len(permissions) == 1
-            assert groups[2].id == group03.id
-            assert groups[2].name == group03.name
-            permissions = await permission_dao.list(dto=ListPermissionInputDTO(group_id=groups[2].id))
-            assert len(permissions) == 0
-        finally:
-            await dao.delete(_id=group01.id)
-            await dao.delete(_id=group02.id)
-            await dao.delete(_id=group03.id)
-            await permission_dao.delete(_id=permission01.id)
-            await permission_dao.delete(_id=permission02.id)
+        assert len(groups) == 3
+        assert groups[0].id == group01.id
+        assert groups[0].name == group01.name
+        permissions = await permission_dao.list(dto=ListPermissionInputDTO(group_id=groups[0].id))
+        assert len(permissions) == 2
+        assert groups[1].id == group02.id
+        assert groups[1].name == group02.name
+        permissions = await permission_dao.list(dto=ListPermissionInputDTO(group_id=groups[1].id))
+        assert len(permissions) == 1
+        assert groups[2].id == group03.id
+        assert groups[2].name == group03.name
+        permissions = await permission_dao.list(dto=ListPermissionInputDTO(group_id=groups[2].id))
+        assert len(permissions) == 0
 
 
 async def test_list_by_permission_code_and_group_name_group_dao():
@@ -232,14 +208,14 @@ async def test_list_by_permission_code_and_group_name_group_dao():
 
     async with DBConnectionHandler() as session:
         permission_dao = PermissionDAO(session=session)
-        permission01 = await permission_dao.create(
+        await permission_dao.create(
             dto=CreatePermissionInputDTO(
                 name="Teste permissão para criação de permissões",
                 code="t_permission_create"
             )
         )
 
-        permission02 = await permission_dao.create(
+        await permission_dao.create(
             dto=CreatePermissionInputDTO(
                 name="Teste permissão para atualização de permissões",
                 code="t_permission_update"
@@ -261,7 +237,7 @@ async def test_list_by_permission_code_and_group_name_group_dao():
             )
         )
 
-        group03 = await dao.create(
+        await dao.create(
             dto=CreateGroupInputDTO(
                 name="Grupo 03",
                 permissions=[]
@@ -271,22 +247,15 @@ async def test_list_by_permission_code_and_group_name_group_dao():
         dto = ListGroupInputDTO(name="Grupo", code="t_permission_update")
         groups = await dao.list(dto=dto)
 
-        try:
-            assert len(groups) == 2
-            assert groups[0].id == group01.id
-            assert groups[0].name == group01.name
-            permissions = await permission_dao.list(dto=ListPermissionInputDTO(group_id=groups[0].id))
-            assert len(permissions) == 2
-            assert groups[1].id == group02.id
-            assert groups[1].name == group02.name
-            permissions = await permission_dao.list(dto=ListPermissionInputDTO(group_id=groups[1].id))
-            assert len(permissions) == 1
-        finally:
-            await dao.delete(_id=group01.id)
-            await dao.delete(_id=group02.id)
-            await dao.delete(_id=group03.id)
-            await permission_dao.delete(_id=permission01.id)
-            await permission_dao.delete(_id=permission02.id)
+        assert len(groups) == 2
+        assert groups[0].id == group01.id
+        assert groups[0].name == group01.name
+        permissions = await permission_dao.list(dto=ListPermissionInputDTO(group_id=groups[0].id))
+        assert len(permissions) == 2
+        assert groups[1].id == group02.id
+        assert groups[1].name == group02.name
+        permissions = await permission_dao.list(dto=ListPermissionInputDTO(group_id=groups[1].id))
+        assert len(permissions) == 1
 
 
 async def test_get_by_id_group_dao():
@@ -307,12 +276,9 @@ async def test_get_by_id_group_dao():
         permission_dao = PermissionDAO(session=session)
         permissions = await permission_dao.list(dto=ListPermissionInputDTO(group_id=seached_group.id))
 
-        try:
-            assert group.id == seached_group.id
-            assert group.name == seached_group.name
-            assert len(permissions) == 0
-        finally:
-            await dao.delete(_id=group.id)
+        assert group.id == seached_group.id
+        assert group.name == seached_group.name
+        assert len(permissions) == 0
 
 
 async def test_update_group_dao():
@@ -322,19 +288,19 @@ async def test_update_group_dao():
 
     async with DBConnectionHandler() as session:
         permission_dao = PermissionDAO(session=session)
-        permission01 = await permission_dao.create(
+        await permission_dao.create(
             dto=CreatePermissionInputDTO(
                 name="Teste permissão para criação de permissões",
                 code="t_permission_create"
             )
         )
-        permission02 = await permission_dao.create(
+        await permission_dao.create(
             dto=CreatePermissionInputDTO(
                 name="Teste permissão para atualização de permissões",
                 code="t_permission_update"
             )
         )
-        permission03 = await permission_dao.create(
+        await permission_dao.create(
             dto=CreatePermissionInputDTO(
                 name="Teste permissão para deleção de permissões",
                 code="t_permission_delete"
@@ -354,18 +320,12 @@ async def test_update_group_dao():
             permissions=["t_permission_create", "t_permission_delete"]
         )
 
-        try:
-            updated_group = await dao.update(_id=group.id, dto=dto)
-            permissions = await permission_dao.list(dto=ListPermissionInputDTO(group_id=updated_group.id))
+        updated_group = await dao.update(_id=group.id, dto=dto)
+        permissions = await permission_dao.list(dto=ListPermissionInputDTO(group_id=updated_group.id))
 
-            assert group.id == updated_group.id
-            assert updated_group.name == dto.name
-            assert len(permissions) == 2
-        finally:
-            await dao.delete(_id=group.id)
-            await permission_dao.delete(_id=permission01.id)
-            await permission_dao.delete(_id=permission02.id)
-            await permission_dao.delete(_id=permission03.id)
+        assert group.id == updated_group.id
+        assert updated_group.name == dto.name
+        assert len(permissions) == 2
 
 
 async def test_update_group_permission_clean_dao():
@@ -375,7 +335,7 @@ async def test_update_group_permission_clean_dao():
 
     async with DBConnectionHandler() as session:
         permission_dao = PermissionDAO(session=session)
-        permission = await permission_dao.create(
+        await permission_dao.create(
             dto=CreatePermissionInputDTO(
                 name="Teste permissão para criação de permissões",
                 code="t_permission_create"
@@ -392,16 +352,12 @@ async def test_update_group_permission_clean_dao():
 
         dto = UpdateGroupInputDTO(name="Grupo 03", permissions=[])
 
-        try:
-            updated_group = await dao.update(_id=group.id, dto=dto)
-            permissions = await permission_dao.list(dto=ListPermissionInputDTO(group_id=updated_group.id))
+        updated_group = await dao.update(_id=group.id, dto=dto)
+        permissions = await permission_dao.list(dto=ListPermissionInputDTO(group_id=updated_group.id))
 
-            assert group.id == updated_group.id
-            assert group.name == updated_group.name
-            assert len(permissions) == 0
-        finally:
-            await dao.delete(_id=group.id)
-            await permission_dao.delete(_id=permission.id)
+        assert group.id == updated_group.id
+        assert group.name == updated_group.name
+        assert len(permissions) == 0
 
 
 async def test_delete_group_dao():

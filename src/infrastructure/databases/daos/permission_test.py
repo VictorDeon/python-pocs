@@ -25,12 +25,9 @@ async def test_create_permission_dao():
         dao = PermissionDAO(session=session)
         permission = await dao.create(dto=dto)
 
-        try:
-            assert permission.id is not None
-            assert permission.name == dto.name
-            assert permission.code == dto.code
-        finally:
-            await dao.delete(_id=permission.id)
+        assert permission.id is not None
+        assert permission.name == dto.name
+        assert permission.code == dto.code
 
 
 async def test_list_by_code_permissions_dao():
@@ -51,28 +48,23 @@ async def test_list_by_code_permissions_dao():
             name="Test Permissão de atualização de permissões",
             code="t_permission_update"
         )
-        permission02 = await dao.create(dto=dto02, commit=False)
+        await dao.create(dto=dto02, commit=False)
 
         dto03 = CreatePermissionInputDTO(
             name="Test Permissão de listagem de permissões",
             code="t_permission_list"
         )
-        permission03 = await dao.create(dto=dto03, commit=True)
+        await dao.create(dto=dto03, commit=True)
 
         dto = ListPermissionInputDTO(
             code="t_permission_create"
         )
         permissions = await dao.list(dto=dto)
 
-        try:
-            assert len(permissions) == 1
-            assert permissions[0].id == permission01.id
-            assert permissions[0].name == permission01.name
-            assert permissions[0].code == permission01.code
-        finally:
-            await dao.delete(_id=permission01.id, commit=False)
-            await dao.delete(_id=permission02.id, commit=False)
-            await dao.delete(_id=permission03.id, commit=True)
+        assert len(permissions) == 1
+        assert permissions[0].id == permission01.id
+        assert permissions[0].name == permission01.name
+        assert permissions[0].code == permission01.code
 
 
 async def test_list_by_name_permissions_dao():
@@ -93,7 +85,7 @@ async def test_list_by_name_permissions_dao():
             name="Test Permissão de atualização de permissões",
             code="t_permission_update"
         )
-        permission02 = await dao.create(dto=dto02, commit=False)
+        await dao.create(dto=dto02, commit=False)
 
         dto03 = CreatePermissionInputDTO(
             name="Test Permissão para listagem de permissões",
@@ -106,18 +98,13 @@ async def test_list_by_name_permissions_dao():
         )
         permissions = await dao.list(dto=dto)
 
-        try:
-            assert len(permissions) == 2
-            assert permissions[0].id == permission01.id
-            assert permissions[0].name == permission01.name
-            assert permissions[0].code == permission01.code
-            assert permissions[1].id == permission03.id
-            assert permissions[1].name == permission03.name
-            assert permissions[1].code == permission03.code
-        finally:
-            await dao.delete(_id=permission01.id, commit=False)
-            await dao.delete(_id=permission02.id, commit=False)
-            await dao.delete(_id=permission03.id, commit=True)
+        assert len(permissions) == 2
+        assert permissions[0].id == permission01.id
+        assert permissions[0].name == permission01.name
+        assert permissions[0].code == permission01.code
+        assert permissions[1].id == permission03.id
+        assert permissions[1].name == permission03.name
+        assert permissions[1].code == permission03.code
 
 
 async def test_list_by_name_and_code_permissions_dao():
@@ -132,13 +119,13 @@ async def test_list_by_name_and_code_permissions_dao():
             name="Test Permissão para criação de permissões",
             code="t_permission_create"
         )
-        permission01 = await dao.create(dto=dto01, commit=False)
+        await dao.create(dto=dto01, commit=False)
 
         dto02 = CreatePermissionInputDTO(
             name="Test Permissão de atualização de permissões",
             code="t_permission_update"
         )
-        permission02 = await dao.create(dto=dto02, commit=False)
+        await dao.create(dto=dto02, commit=False)
 
         dto03 = CreatePermissionInputDTO(
             name="Test Permissão para listagem de permissões",
@@ -152,15 +139,10 @@ async def test_list_by_name_and_code_permissions_dao():
         )
         permissions = await dao.list(dto=dto)
 
-        try:
-            assert len(permissions) == 1
-            assert permissions[0].id == permission03.id
-            assert permissions[0].name == permission03.name
-            assert permissions[0].code == permission03.code
-        finally:
-            await dao.delete(_id=permission01.id, commit=False)
-            await dao.delete(_id=permission02.id, commit=False)
-            await dao.delete(_id=permission03.id, commit=True)
+        assert len(permissions) == 1
+        assert permissions[0].id == permission03.id
+        assert permissions[0].name == permission03.name
+        assert permissions[0].code == permission03.code
 
 
 async def test_list_all_permissions_dao():
@@ -193,21 +175,16 @@ async def test_list_all_permissions_dao():
 
         qtd = await dao.count()
 
-        try:
-            assert len(permissions) == qtd
-            assert permissions[0].id == permission01.id
-            assert permissions[0].name == permission01.name
-            assert permissions[0].code == permission01.code
-            assert permissions[1].id == permission02.id
-            assert permissions[1].name == permission02.name
-            assert permissions[1].code == permission02.code
-            assert permissions[2].id == permission03.id
-            assert permissions[2].name == permission03.name
-            assert permissions[2].code == permission03.code
-        finally:
-            await dao.delete(_id=permission01.id, commit=False)
-            await dao.delete(_id=permission02.id, commit=False)
-            await dao.delete(_id=permission03.id, commit=True)
+        assert len(permissions) == qtd
+        assert permissions[0].id == permission01.id
+        assert permissions[0].name == permission01.name
+        assert permissions[0].code == permission01.code
+        assert permissions[1].id == permission02.id
+        assert permissions[1].name == permission02.name
+        assert permissions[1].code == permission02.code
+        assert permissions[2].id == permission03.id
+        assert permissions[2].name == permission03.name
+        assert permissions[2].code == permission03.code
 
 
 async def test_get_by_id_permission_dao():
@@ -226,12 +203,9 @@ async def test_get_by_id_permission_dao():
 
         searched_permissions = await dao.get_by_id(_id=permission.id)
 
-        try:
-            assert permission.id == searched_permissions.id
-            assert permission.name == searched_permissions.name
-            assert permission.code == searched_permissions.code
-        finally:
-            await dao.delete(_id=permission.id)
+        assert permission.id == searched_permissions.id
+        assert permission.name == searched_permissions.name
+        assert permission.code == searched_permissions.code
 
 
 async def test_get_by_id_not_found_permission_dao():
@@ -265,12 +239,9 @@ async def test_retrieve_by_code_permission_dao():
 
         searched_permissions = await dao.retrieve(dto=dto)
 
-        try:
-            assert permission01.id == searched_permissions.id
-            assert permission01.name == searched_permissions.name
-            assert permission01.code == searched_permissions.code
-        finally:
-            await dao.delete(_id=permission01.id)
+        assert permission01.id == searched_permissions.id
+        assert permission01.name == searched_permissions.name
+        assert permission01.code == searched_permissions.code
 
 
 async def test_retrieve_not_found_permission_dao():
@@ -306,13 +277,10 @@ async def test_update_code_permission_dao():
 
         updated_permission = await dao.update(_id=permission.id, dto=dto)
 
-        try:
-            assert permission.id == updated_permission.id
-            assert permission.name == updated_permission.name
-            assert permission.code == updated_permission.code
-            assert updated_permission.code == dto.code
-        finally:
-            await dao.delete(_id=permission.id)
+        assert permission.id == updated_permission.id
+        assert permission.name == updated_permission.name
+        assert permission.code == updated_permission.code
+        assert updated_permission.code == dto.code
 
 
 async def test_update_name_permission_dao():
@@ -336,13 +304,10 @@ async def test_update_name_permission_dao():
 
         updated_permission = await dao.update(_id=permission.id, dto=dto)
 
-        try:
-            assert permission.id == updated_permission.id
-            assert permission.name == updated_permission.name
-            assert permission.code == updated_permission.code
-            assert updated_permission.name == dto.name
-        finally:
-            await dao.delete(_id=permission.id)
+        assert permission.id == updated_permission.id
+        assert permission.name == updated_permission.name
+        assert permission.code == updated_permission.code
+        assert updated_permission.name == dto.name
 
 
 async def test_update_all_permission_dao():
@@ -366,14 +331,11 @@ async def test_update_all_permission_dao():
 
         updated_permission = await dao.update(_id=permission.id, dto=dto)
 
-        try:
-            assert permission.id == updated_permission.id
-            assert permission.name == updated_permission.name
-            assert permission.code == updated_permission.code
-            assert updated_permission.name == dto.name
-            assert updated_permission.code == dto.code
-        finally:
-            await dao.delete(_id=permission.id)
+        assert permission.id == updated_permission.id
+        assert permission.name == updated_permission.name
+        assert permission.code == updated_permission.code
+        assert updated_permission.name == dto.name
+        assert updated_permission.code == dto.code
 
 
 async def test_update_not_found_permission_dao():

@@ -28,7 +28,7 @@ async def test_create_user_dao():
             )
         )
 
-        permission02 = await permission_dao.create(
+        await permission_dao.create(
             dto=CreatePermissionInputDTO(
                 name="Teste permissão para atualização de permissões",
                 code="t_permission_update"
@@ -78,21 +78,14 @@ async def test_create_user_dao():
         profile_dao = ProfileDAO(session=session)
         profile = await profile_dao.get_by_id(user_id=user.id)
 
-        try:
-            assert user.id is not None
-            assert user.name == dto.name
-            assert user.email == dto.email
-            assert user.work_company_cnpj == company.cnpj
-            assert len(companies) == 0
-            assert profile.user_id == user.id
-            assert len(permissions) == 1
-            assert len(groups) == 1
-        finally:
-            await user_dao.delete(_id=user.id)
-            await user_dao.delete(_id=user_owner.id)
-            await group_dao.delete(_id=group.id)
-            await permission_dao.delete(_id=permission01.id)
-            await permission_dao.delete(_id=permission02.id)
+        assert user.id is not None
+        assert user.name == dto.name
+        assert user.email == dto.email
+        assert user.work_company_cnpj == company.cnpj
+        assert len(companies) == 0
+        assert profile.user_id == user.id
+        assert len(permissions) == 1
+        assert len(groups) == 1
 
 
 async def test_list_users_dao():
@@ -130,21 +123,16 @@ async def test_list_users_dao():
         dto = ListUserInputDTO()
         users = await dao.list(dto=dto)
 
-        try:
-            assert len(users) == await dao.count()
-            assert users[0].id == user01.id
-            assert users[0].name == user01.name
-            assert users[0].email == user01.email
-            assert users[1].id == user02.id
-            assert users[1].name == user02.name
-            assert users[1].email == user02.email
-            assert users[2].id == user03.id
-            assert users[2].name == user03.name
-            assert users[2].email == user03.email
-        finally:
-            await dao.delete(_id=user01.id, commit=False)
-            await dao.delete(_id=user02.id, commit=False)
-            await dao.delete(_id=user03.id, commit=True)
+        assert len(users) == await dao.count()
+        assert users[0].id == user01.id
+        assert users[0].name == user01.name
+        assert users[0].email == user01.email
+        assert users[1].id == user02.id
+        assert users[1].name == user02.name
+        assert users[1].email == user02.email
+        assert users[2].id == user03.id
+        assert users[2].name == user03.name
+        assert users[2].email == user03.email
 
 
 async def test_list_by_name_users_dao():
@@ -161,7 +149,7 @@ async def test_list_by_name_users_dao():
             password="Django1234",
             profile=CreateProfileInputDTO()
         )
-        user01 = await dao.create(dto=dto01, commit=False)
+        await dao.create(dto=dto01, commit=False)
 
         dto02 = CreateUserInputDTO(
             name="Usuários 02",
@@ -182,18 +170,13 @@ async def test_list_by_name_users_dao():
         dto = ListUserInputDTO(name="Usuários")
         users = await dao.list(dto=dto)
 
-        try:
-            assert len(users) == 2
-            assert users[0].id == user02.id
-            assert users[0].name == user02.name
-            assert users[0].email == user02.email
-            assert users[1].id == user03.id
-            assert users[1].name == user03.name
-            assert users[1].email == user03.email
-        finally:
-            await dao.delete(_id=user01.id, commit=False)
-            await dao.delete(_id=user02.id, commit=False)
-            await dao.delete(_id=user03.id, commit=True)
+        assert len(users) == 2
+        assert users[0].id == user02.id
+        assert users[0].name == user02.name
+        assert users[0].email == user02.email
+        assert users[1].id == user03.id
+        assert users[1].name == user03.name
+        assert users[1].email == user03.email
 
 
 async def test_list_by_email_users_dao():
@@ -210,7 +193,7 @@ async def test_list_by_email_users_dao():
             password="Django1234",
             profile=CreateProfileInputDTO()
         )
-        user01 = await dao.create(dto=dto01, commit=False)
+        await dao.create(dto=dto01, commit=False)
 
         dto02 = CreateUserInputDTO(
             name="Usuários 02",
@@ -226,20 +209,15 @@ async def test_list_by_email_users_dao():
             password="Django1234",
             profile=CreateProfileInputDTO()
         )
-        user03 = await dao.create(dto=dto03, commit=True)
+        await dao.create(dto=dto03, commit=True)
 
         dto = ListUserInputDTO(name="Usuários", email="usuario02@gmail.com")
         users = await dao.list(dto=dto)
 
-        try:
-            assert len(users) == 1
-            assert users[0].id == user02.id
-            assert users[0].name == user02.name
-            assert users[0].email == user02.email
-        finally:
-            await dao.delete(_id=user01.id, commit=False)
-            await dao.delete(_id=user02.id, commit=False)
-            await dao.delete(_id=user03.id, commit=True)
+        assert len(users) == 1
+        assert users[0].id == user02.id
+        assert users[0].name == user02.name
+        assert users[0].email == user02.email
 
 
 async def test_list_by_work_company_users_dao():
@@ -256,7 +234,7 @@ async def test_list_by_work_company_users_dao():
             password="Django1234",
             profile=CreateProfileInputDTO()
         )
-        user01 = await dao.create(dto=dto01, commit=False)
+        await dao.create(dto=dto01, commit=False)
 
         dto02 = CreateUserInputDTO(
             name="Usuários 02",
@@ -288,15 +266,10 @@ async def test_list_by_work_company_users_dao():
         dto = ListUserInputDTO(work_company_cnpj=company.cnpj)
         users = await dao.list(dto=dto)
 
-        try:
-            assert len(users) == 1
-            assert users[0].id == user03.id
-            assert users[0].name == user03.name
-            assert users[0].email == user03.email
-        finally:
-            await dao.delete(_id=user01.id, commit=False)
-            await dao.delete(_id=user03.id, commit=False)
-            await dao.delete(_id=user02.id, commit=True)
+        assert len(users) == 1
+        assert users[0].id == user03.id
+        assert users[0].name == user03.name
+        assert users[0].email == user03.email
 
 
 async def test_list_by_groups_users_dao():
@@ -321,7 +294,7 @@ async def test_list_by_groups_users_dao():
             profile=CreateProfileInputDTO(),
             groups=[group01.id]
         )
-        user01 = await user_dao.create(dto=dto01, commit=False)
+        await user_dao.create(dto=dto01, commit=False)
 
         dto02 = CreateUserInputDTO(
             name="Usuários 02",
@@ -344,20 +317,13 @@ async def test_list_by_groups_users_dao():
         dto = ListUserInputDTO(groups=[group01.id, group02.id], name="Usuários")
         users = await user_dao.list(dto=dto)
 
-        try:
-            assert len(users) == 2
-            assert users[0].id == user02.id
-            assert users[0].name == user02.name
-            assert users[0].email == user02.email
-            assert users[1].id == user03.id
-            assert users[1].name == user03.name
-            assert users[1].email == user03.email
-        finally:
-            await user_dao.delete(_id=user01.id, commit=False)
-            await user_dao.delete(_id=user02.id, commit=False)
-            await user_dao.delete(_id=user03.id, commit=False)
-            await group_dao.delete(_id=group01.id, commit=False)
-            await group_dao.delete(_id=group02.id, commit=True)
+        assert len(users) == 2
+        assert users[0].id == user02.id
+        assert users[0].name == user02.name
+        assert users[0].email == user02.email
+        assert users[1].id == user03.id
+        assert users[1].name == user03.name
+        assert users[1].email == user03.email
 
 
 async def test_get_by_id_user_dao():
@@ -378,12 +344,9 @@ async def test_get_by_id_user_dao():
 
         searched_user = await dao.get_by_id(_id=user.id)
 
-        try:
-            assert user.id == searched_user.id
-            assert user.name == searched_user.name
-            assert user.email == searched_user.email
-        finally:
-            await dao.delete(_id=user.id)
+        assert user.id == searched_user.id
+        assert user.name == searched_user.name
+        assert user.email == searched_user.email
 
 
 async def test_retrieve_by_email_user_dao():
@@ -408,12 +371,9 @@ async def test_retrieve_by_email_user_dao():
 
         searched_user = await dao.retrieve(dto=dto)
 
-        try:
-            assert user.id == searched_user.id
-            assert user.name == searched_user.name
-            assert user.email == searched_user.email
-        finally:
-            await dao.delete(_id=user.id)
+        assert user.id == searched_user.id
+        assert user.name == searched_user.name
+        assert user.email == searched_user.email
 
 
 async def test_update_user_dao():
@@ -425,14 +385,14 @@ async def test_update_user_dao():
         dao = UserDAO(session=session)
 
         permission_dao = PermissionDAO(session=session)
-        permission01 = await permission_dao.create(
+        await permission_dao.create(
             dto=CreatePermissionInputDTO(
                 name="Teste permissão para criação de permissões",
                 code="t_permission_create"
             )
         )
 
-        permission02 = await permission_dao.create(
+        await permission_dao.create(
             dto=CreatePermissionInputDTO(
                 name="Teste permissão para atualização de permissões",
                 code="t_permission_update"
@@ -495,24 +455,17 @@ async def test_update_user_dao():
         permissions = await permission_dao.list(dto=ListPermissionInputDTO(user_id=updated_user.id))
         groups = await group_dao.list(dto=ListGroupInputDTO(user_id=updated_user.id))
 
-        try:
-            assert user.id == updated_user.id
-            assert user.name == updated_user.name
-            assert user.email == updated_user.email
-            assert updated_user.name == dto.name
-            assert updated_user.email == dto.email
-            assert profile.phone == dto.profile.phone
-            assert profile.address == dto.profile.address
-            assert updated_user.work_company_cnpj == dto.work_company_cnpj
-            assert len(permissions) == 1
-            assert permissions[0].code == "t_permission_update"
-            assert len(groups) == 0
-        finally:
-            await dao.delete(_id=user.id)
-            await dao.delete(_id=owner.id)
-            await group_dao.delete(_id=group.id)
-            await permission_dao.delete(_id=permission01.id)
-            await permission_dao.delete(_id=permission02.id)
+        assert user.id == updated_user.id
+        assert user.name == updated_user.name
+        assert user.email == updated_user.email
+        assert updated_user.name == dto.name
+        assert updated_user.email == dto.email
+        assert profile.phone == dto.profile.phone
+        assert profile.address == dto.profile.address
+        assert updated_user.work_company_cnpj == dto.work_company_cnpj
+        assert len(permissions) == 1
+        assert permissions[0].code == "t_permission_update"
+        assert len(groups) == 0
 
 
 async def test_delete_user_dao():

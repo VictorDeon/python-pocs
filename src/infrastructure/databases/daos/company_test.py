@@ -29,7 +29,7 @@ async def test_create_company_dao():
             password="******",
             profile=CreateProfileInputDTO()
         )
-        user03 = await user_dao.create(dto=user_dto03)
+        await user_dao.create(dto=user_dto03)
 
         dao = CompanyDAO(session=session)
         dto = CreateCompanyInputDTO(
@@ -47,17 +47,12 @@ async def test_create_company_dao():
             work_company_cnpj=company.cnpj,
             profile=CreateProfileInputDTO()
         )
-        user02 = await user_dao.create(dto=user_dto02)
+        await user_dao.create(dto=user_dto02)
 
-        try:
-            assert company.cnpj == dto.cnpj
-            assert company.name == dto.name
-            assert company.fantasy_name == dto.fantasy_name
-            assert company.owner_id == user01.id
-        finally:
-            await user_dao.delete(_id=user02.id)
-            await user_dao.delete(_id=user03.id)
-            await user_dao.delete(_id=user01.id)
+        assert company.cnpj == dto.cnpj
+        assert company.name == dto.name
+        assert company.fantasy_name == dto.fantasy_name
+        assert company.owner_id == user01.id
 
 
 async def test_list_companies_dao():
@@ -89,7 +84,7 @@ async def test_list_companies_dao():
             password="******",
             profile=CreateProfileInputDTO()
         )
-        user03 = await user_dao.create(dto=user_dto03)
+        await user_dao.create(dto=user_dto03)
 
         dao = CompanyDAO(session=session)
         company_dto01 = CreateCompanyInputDTO(
@@ -111,20 +106,15 @@ async def test_list_companies_dao():
         dto = ListCompaniesInputDTO()
         companies = await dao.list(dto=dto)
 
-        try:
-            assert len(companies) == await dao.count()
-            assert companies[0].cnpj == company01.cnpj
-            assert companies[0].name == company01.name
-            assert companies[0].fantasy_name == company01.fantasy_name
-            assert companies[0].owner_id == user01.id
-            assert companies[1].cnpj == company02.cnpj
-            assert companies[1].name == company02.name
-            assert companies[1].fantasy_name == company02.fantasy_name
-            assert companies[1].owner_id == user02.id
-        finally:
-            await user_dao.delete(_id=user01.id, commit=False)
-            await user_dao.delete(_id=user02.id, commit=False)
-            await user_dao.delete(_id=user03.id, commit=True)
+        assert len(companies) == await dao.count()
+        assert companies[0].cnpj == company01.cnpj
+        assert companies[0].name == company01.name
+        assert companies[0].fantasy_name == company01.fantasy_name
+        assert companies[0].owner_id == user01.id
+        assert companies[1].cnpj == company02.cnpj
+        assert companies[1].name == company02.name
+        assert companies[1].fantasy_name == company02.fantasy_name
+        assert companies[1].owner_id == user02.id
 
 
 async def test_list_companies_by_owner_id_dao():
@@ -156,7 +146,7 @@ async def test_list_companies_by_owner_id_dao():
             password="******",
             profile=CreateProfileInputDTO()
         )
-        user03 = await user_dao.create(dto=user_dto03)
+        await user_dao.create(dto=user_dto03)
 
         dao = CompanyDAO(session=session)
         company_dto01 = CreateCompanyInputDTO(
@@ -178,16 +168,11 @@ async def test_list_companies_by_owner_id_dao():
         dto = ListCompaniesInputDTO(owner_id=user01.id)
         companies = await dao.list(dto=dto)
 
-        try:
-            assert len(companies) == 1
-            assert companies[0].cnpj == company01.cnpj
-            assert companies[0].name == company01.name
-            assert companies[0].fantasy_name == company01.fantasy_name
-            assert companies[0].owner_id == user01.id
-        finally:
-            await user_dao.delete(_id=user01.id, commit=False)
-            await user_dao.delete(_id=user02.id, commit=False)
-            await user_dao.delete(_id=user03.id, commit=True)
+        assert len(companies) == 1
+        assert companies[0].cnpj == company01.cnpj
+        assert companies[0].name == company01.name
+        assert companies[0].fantasy_name == company01.fantasy_name
+        assert companies[0].owner_id == user01.id
 
 
 async def test_list_companies_by_name_dao():
@@ -219,7 +204,7 @@ async def test_list_companies_by_name_dao():
             password="******",
             profile=CreateProfileInputDTO()
         )
-        user03 = await user_dao.create(dto=user_dto03)
+        await user_dao.create(dto=user_dto03)
 
         dao = CompanyDAO(session=session)
         company_dto01 = CreateCompanyInputDTO(
@@ -241,20 +226,15 @@ async def test_list_companies_by_name_dao():
         dto = ListCompaniesInputDTO(name="LTDA")
         companies = await dao.list(dto=dto)
 
-        try:
-            assert len(companies) == await dao.count()
-            assert companies[0].cnpj == company01.cnpj
-            assert companies[0].name == company01.name
-            assert companies[0].fantasy_name == company01.fantasy_name
-            assert companies[0].owner_id == user01.id
-            assert companies[1].cnpj == company02.cnpj
-            assert companies[1].name == company02.name
-            assert companies[1].fantasy_name == company02.fantasy_name
-            assert companies[1].owner_id == user02.id
-        finally:
-            await user_dao.delete(_id=user01.id, commit=False)
-            await user_dao.delete(_id=user02.id, commit=False)
-            await user_dao.delete(_id=user03.id, commit=True)
+        assert len(companies) == await dao.count()
+        assert companies[0].cnpj == company01.cnpj
+        assert companies[0].name == company01.name
+        assert companies[0].fantasy_name == company01.fantasy_name
+        assert companies[0].owner_id == user01.id
+        assert companies[1].cnpj == company02.cnpj
+        assert companies[1].name == company02.name
+        assert companies[1].fantasy_name == company02.fantasy_name
+        assert companies[1].owner_id == user02.id
 
 
 async def test_get_by_cnpj_company_dao():
@@ -288,7 +268,7 @@ async def test_get_by_cnpj_company_dao():
             work_company_cnpj=company.cnpj,
             profile=CreateProfileInputDTO()
         )
-        user02 = await user_dao.create(dto=user_dto02)
+        await user_dao.create(dto=user_dto02)
 
         user_dto03 = CreateUserInputDTO(
             name="Fulano 03",
@@ -297,19 +277,14 @@ async def test_get_by_cnpj_company_dao():
             work_company_cnpj=company.cnpj,
             profile=CreateProfileInputDTO()
         )
-        user03 = await user_dao.create(dto=user_dto03)
+        await user_dao.create(dto=user_dto03)
 
         searched_company = await dao.get_by_cnpj(cnpj=company.cnpj)
 
-        try:
-            assert company.cnpj == searched_company.cnpj
-            assert company.name == searched_company.name
-            assert company.fantasy_name == searched_company.fantasy_name
-            assert company.owner_id == searched_company.owner_id
-        finally:
-            await user_dao.delete(_id=user02.id)
-            await user_dao.delete(_id=user03.id)
-            await user_dao.delete(_id=user01.id)
+        assert company.cnpj == searched_company.cnpj
+        assert company.name == searched_company.name
+        assert company.fantasy_name == searched_company.fantasy_name
+        assert company.owner_id == searched_company.owner_id
 
 
 async def test_update_name_company_dao():
@@ -333,7 +308,7 @@ async def test_update_name_company_dao():
             password="******",
             profile=CreateProfileInputDTO()
         )
-        user02 = await user_dao.create(dto=user_dto02)
+        await user_dao.create(dto=user_dto02)
 
         user_dto03 = CreateUserInputDTO(
             name="Fulano 03",
@@ -341,7 +316,7 @@ async def test_update_name_company_dao():
             password="******",
             profile=CreateProfileInputDTO()
         )
-        user03 = await user_dao.create(dto=user_dto03)
+        await user_dao.create(dto=user_dto03)
 
         dao = CompanyDAO(session=session)
         company_dto = CreateCompanyInputDTO(
@@ -358,15 +333,10 @@ async def test_update_name_company_dao():
         )
         updated_company = await dao.update(cnpj=company.cnpj, dto=dto)
 
-        try:
-            assert updated_company.cnpj == company.cnpj
-            assert updated_company.name == dto.name
-            assert updated_company.fantasy_name == company.fantasy_name
-            assert updated_company.owner_id == company.owner_id
-        finally:
-            await user_dao.delete(_id=user01.id)
-            await user_dao.delete(_id=user02.id)
-            await user_dao.delete(_id=user03.id)
+        assert updated_company.cnpj == company.cnpj
+        assert updated_company.name == dto.name
+        assert updated_company.fantasy_name == company.fantasy_name
+        assert updated_company.owner_id == company.owner_id
 
 
 async def test_update_cnpj_company_dao():
@@ -390,7 +360,7 @@ async def test_update_cnpj_company_dao():
             password="******",
             profile=CreateProfileInputDTO()
         )
-        user02 = await user_dao.create(dto=user_dto02)
+        await user_dao.create(dto=user_dto02)
 
         user_dto03 = CreateUserInputDTO(
             name="Fulano 03",
@@ -398,7 +368,7 @@ async def test_update_cnpj_company_dao():
             password="******",
             profile=CreateProfileInputDTO()
         )
-        user03 = await user_dao.create(dto=user_dto03)
+        await user_dao.create(dto=user_dto03)
 
         dao = CompanyDAO(session=session)
         company_dto = CreateCompanyInputDTO(
@@ -415,15 +385,10 @@ async def test_update_cnpj_company_dao():
         )
         updated_company = await dao.update(cnpj=company.cnpj, dto=dto)
 
-        try:
-            assert updated_company.cnpj == dto.cnpj
-            assert updated_company.name == dto.name
-            assert updated_company.fantasy_name == company.fantasy_name
-            assert updated_company.owner_id == company.owner_id
-        finally:
-            await user_dao.delete(_id=user01.id)
-            await user_dao.delete(_id=user02.id)
-            await user_dao.delete(_id=user03.id)
+        assert updated_company.cnpj == dto.cnpj
+        assert updated_company.name == dto.name
+        assert updated_company.fantasy_name == company.fantasy_name
+        assert updated_company.owner_id == company.owner_id
 
 
 async def test_update_fantasy_name_company_dao():
@@ -447,7 +412,7 @@ async def test_update_fantasy_name_company_dao():
             password="******",
             profile=CreateProfileInputDTO()
         )
-        user02 = await user_dao.create(dto=user_dto02)
+        await user_dao.create(dto=user_dto02)
 
         user_dto03 = CreateUserInputDTO(
             name="Fulano 03",
@@ -455,7 +420,7 @@ async def test_update_fantasy_name_company_dao():
             password="******",
             profile=CreateProfileInputDTO()
         )
-        user03 = await user_dao.create(dto=user_dto03)
+        await user_dao.create(dto=user_dto03)
 
         dao = CompanyDAO(session=session)
         company_dto = CreateCompanyInputDTO(
@@ -473,15 +438,10 @@ async def test_update_fantasy_name_company_dao():
         )
         updated_company = await dao.update(cnpj=company.cnpj, dto=dto)
 
-        try:
-            assert updated_company.cnpj == company.cnpj
-            assert updated_company.name == dto.name
-            assert updated_company.fantasy_name == dto.fantasy_name
-            assert updated_company.owner_id == company.owner_id
-        finally:
-            await user_dao.delete(_id=user01.id)
-            await user_dao.delete(_id=user02.id)
-            await user_dao.delete(_id=user03.id)
+        assert updated_company.cnpj == company.cnpj
+        assert updated_company.name == dto.name
+        assert updated_company.fantasy_name == dto.fantasy_name
+        assert updated_company.owner_id == company.owner_id
 
 
 async def test_delete_company_dao():

@@ -66,10 +66,10 @@ Nas proximas vezes só precisa executar os emuladores `docker compose --profile 
 ### TODO:
 
 * Endpoint com o CRUD de usuários e seus relacionamentos (Criar, Listar, Visualizar, Deletar, Atualizar)
-    - Criar todos os presents + tests
-    - Criar todos os user_cases + tests
-    - Criar todos os controllers + tests
-    - Criar todas as rotas + tests
+    - Criar todos os presents
+    - Criar todos os user_cases
+    - Criar todos os controllers
+    - Criar todas as rotas
 * Autenticação e autorização - vwauth
 * Desenvolver vários tipos de consumos de APIs usando corotines, queues, threads e processos
 * Inserir um sistema de logs inteligentes
