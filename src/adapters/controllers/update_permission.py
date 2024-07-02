@@ -1,32 +1,32 @@
 from src.adapters import ControllerInterface
-from src.adapters.dtos import CreatePermissionInputDTO, CreatePermissionOutputDTO
-from src.adapters.presenters import CreatePermissionPresenter
-from src.domains.user_cases import CreateUserCase
+from src.adapters.dtos import UpdatePermissionInputDTO, UpdatePermissionOutputDTO
+from src.adapters.presenters import UpdatePermissionPresenter
+from src.domains.user_cases import UpdateUserCase
 from src.infrastructure.databases.daos import PermissionDAO
 from src.infrastructure.databases import DBConnectionHandler
 
 
-class CreatePermissionController(ControllerInterface):
+class UpdatePermissionController(ControllerInterface):
     """
-    Controladora de criação de permissões
+    Controladora de atualização de permissões
     """
 
-    def __init__(self, input: CreatePermissionInputDTO):
+    def __init__(self, input: UpdatePermissionInputDTO):
         """
         Construtor.
         """
 
         self.input = input
 
-    async def execute(self) -> CreatePermissionOutputDTO:
+    async def execute(self) -> UpdatePermissionOutputDTO:
         """
         Lida com a entrada e saida dos dados.
         """
 
         async with DBConnectionHandler() as session:
             repository = PermissionDAO(session=session)
-            output = CreatePermissionPresenter(session=session)
-            use_case = CreateUserCase(
+            output = UpdatePermissionPresenter(session=session)
+            use_case = UpdateUserCase(
                 presenter=output,
                 repository=repository
             )
