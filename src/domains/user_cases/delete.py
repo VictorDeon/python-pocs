@@ -1,14 +1,13 @@
 from src.domains import UserCaseInterface
-from src.infrastructure.databases.models import Permission
 from src.infrastructure.databases import DAOInterface
 
 
-class DeletePermissionUserCase(UserCaseInterface):
+class DeleteUserCase(UserCaseInterface):
     """
-    Caso de uso de deleção de permissões.
+    Caso de uso de deleção de um objeto.
     """
 
-    def __init__(self, repository: DAOInterface[int, Permission]):
+    def __init__(self, repository: DAOInterface):
         """
         Constructor.
         """
