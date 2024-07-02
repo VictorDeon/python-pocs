@@ -8,12 +8,16 @@ from .pdf_reader import PDFReaderPresenter
 from .create_permission import CreatePermissionPresenter
 from .create_group import CreateGroupPresenter
 from .create_user import CreateUserPresenter
+from .create_company import CreateCompanyPresenter
 from .retrieve_group import RetrieveGroupPresenter
 from .retrieve_permission import RetrievePermissionPresenter
 from .retrieve_user import RetrieveUserPresenter
+from .retrieve_company import RetrieveCompanyPresenter
 from .list_groups import ListGroupPresenter
 from .list_permissions import ListPermissionPresenter
 from .list_user import ListUserPresenter
+from .list_company import ListCompanyPresenter
 from .update_group import UpdateGroupPresenter
 from .update_permission import UpdatePermissionPresenter
 from .update_user import UpdateUserPresenter
+from .update_company import UpdateCompanyPresenter

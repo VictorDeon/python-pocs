@@ -11,7 +11,6 @@ class Company(BaseModel):
     cnpj: str = Field(..., description="CNPJ da empresa.")
     name: str = Field(..., description="Nome da empresa.")
     fantasy_name: Optional[str] = Field(None, description="Nome fantasia da empresa.")
-    owner: User = Field(..., description="Usuário dono da empresa.")
     employees: list[User] = Field([], description="Funcionários da empresa.")
 
     def to_dict(self):
@@ -31,7 +30,6 @@ class Company(BaseModel):
                 "cnpj": "19283049584322",
                 "name": "Empresa 01 LTDA",
                 "fantasy_name": "Empresa 01",
-                "owner": User.Config.json_schema_extra['example'],
                 "employees": [
                     {
                         "id": 2,
