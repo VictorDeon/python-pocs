@@ -1,7 +1,7 @@
 from src.adapters import ControllerInterface
 from src.adapters.dtos import CreatePermissionInputDTO, CreatePermissionOutputDTO
 from src.adapters.presenters import CreatePermissionPresenter
-from src.domains.user_cases import CreatePermission
+from src.domains.user_cases import CreatePermissionUserCase
 from src.infrastructure.databases.daos import PermissionDAO
 
 
@@ -24,5 +24,5 @@ class CreatePermissionController(ControllerInterface):
 
         repository = PermissionDAO()
         output = CreatePermissionPresenter()
-        use_case = CreatePermission(output, repository)
+        use_case = CreatePermissionUserCase(output, repository)
         return await use_case.execute(self.input)

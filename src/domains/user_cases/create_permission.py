@@ -5,7 +5,7 @@ from src.infrastructure.databases.models import Permission
 from src.infrastructure.databases import DAOInterface
 
 
-class CreatePermission(UserCaseInterface):
+class CreatePermissionUserCase(UserCaseInterface):
     """
     Caso de uso de criação de permissões.
     """
@@ -26,5 +26,5 @@ class CreatePermission(UserCaseInterface):
         Executa o caso de uso.
         """
 
-        user = await self.repository.create(dto=input_dto)
-        return self.presenter.present(user)
+        model = await self.repository.create(dto=input_dto)
+        return self.presenter.present(model)
