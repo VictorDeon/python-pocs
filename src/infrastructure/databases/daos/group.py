@@ -148,8 +148,8 @@ class GroupDAO(DAOInterface):
             statement: Delete = sql_delete(GroupsVsPermissions).where(GroupsVsPermissions.group_id == _id)
             await self.session.execute(statement)
 
-            statement: Delete = sql_delete(Group).where(Group.id == _id)
-            await self.session.execute(statement)
+            statement: Delete = sql_delete(Group).where(Group.id == _id).returning(Group.id)
+            group_id: int = await self.session.scalar(statement)
             if commit:
                 await self.session.commit()
                 logging.info("Grupos deletadas do banco.")
@@ -157,6 +157,8 @@ class GroupDAO(DAOInterface):
             logging.error(f"Ocorreu um problema ao deletar o grupo: {e}")
             await self.session.rollback()
             raise e
+
+        return group_id
 
     async def count(self) -> int:
         """

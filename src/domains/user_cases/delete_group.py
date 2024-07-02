@@ -1,14 +1,14 @@
 from src.domains import UserCaseInterface
-from src.infrastructure.databases.models import Permission
+from src.infrastructure.databases.models import Group
 from src.infrastructure.databases import DAOInterface
 
 
-class DeletePermissionUserCase(UserCaseInterface):
+class DeleteGroupUserCase(UserCaseInterface):
     """
-    Caso de uso de deleção de permissões.
+    Caso de uso de deleção de grupos.
     """
 
-    def __init__(self, repository: DAOInterface[int, Permission]):
+    def __init__(self, repository: DAOInterface[int, Group]):
         """
         Constructor.
         """
@@ -20,4 +20,4 @@ class DeletePermissionUserCase(UserCaseInterface):
         Executa o caso de uso.
         """
 
-        return await self.repository.delete(_id=_id)
+        return await self.repository.delete(_id)
