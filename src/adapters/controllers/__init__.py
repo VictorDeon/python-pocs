@@ -8,7 +8,6 @@ from .find_user import FindUserController
 from .create_permission import CreatePermissionController
 from .update_permission import UpdatePermissionController
 from .delete_permission import DeletePermissionController
-from .count_permissions import CountPermissionController
 from .retrieve_permission import RetrievePermissionController
 from .list_permissions import ListPermissionsController
 from .get_permission_by_id import GetPermissionByIdController

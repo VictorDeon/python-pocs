@@ -11,12 +11,13 @@ class UpdatePermissionController(ControllerInterface):
     Controladora de atualização de permissões
     """
 
-    def __init__(self, input: UpdatePermissionInputDTO):
+    def __init__(self, _id: int, input: UpdatePermissionInputDTO):
         """
         Construtor.
         """
 
         self.input = input
+        self.id = _id
 
     async def execute(self) -> UpdatePermissionOutputDTO:
         """
@@ -30,4 +31,4 @@ class UpdatePermissionController(ControllerInterface):
                 presenter=output,
                 repository=repository
             )
-            return await use_case.execute(self.input)
+            return await use_case.execute(self.id, self.input)
