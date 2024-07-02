@@ -1,3 +1,4 @@
+from sqlalchemy import select, Select, or_, insert, Insert, bindparam
 from src.adapters.dtos import (
     CreateUserInputDTO, CreatePermissionInputDTO,
     CreateGroupInputDTO, CreateProfileInputDTO,
@@ -7,6 +8,7 @@ from src.adapters.dtos import (
     ListGroupInputDTO, ListCompaniesInputDTO
 )
 from src.infrastructure.databases import DBConnectionHandler
+from src.infrastructure.databases.models import User
 from .group import GroupDAO
 from .permission import PermissionDAO
 from .user import UserDAO
@@ -565,3 +567,69 @@ async def test_delete_user_dao():
 
         await group_dao.delete(_id=group.id)
         await permission_dao.delete(_id=permission.id)
+
+
+async def test_complexy_queries():
+    """
+    Testando algumas queries complexas.
+    stmt = (
+        select(func.sum(OrderProducts.quantity).label('quantity'), User.full_name.label('name'))
+        .join(Order, Order.order_id == OrderProducts.order_id)
+        .join(User)
+        .group_by(User.telegram_id)
+        .having(func.sum(OrderProducts.quantity) > 10)
+    )
+    """
+
+    async with DBConnectionHandler() as session:
+        users = [
+            {
+                "name": "Fulano 01",
+                "email": "fulano01@gmail.com",
+                "password": "Django1234",
+            },
+            {
+                "name": "Fulano 02",
+                "email": "fulano02@gmail.com",
+                "password": "Django1234",
+            },
+            {
+                "name": "Fulano 03",
+                "email": "fulano03@gmail.com",
+                "password": "Django1234",
+            },
+            {
+                "name": "Fulano 04",
+                "email": "fulano04@gmail.com",
+                "password": "Django1234",
+            },
+            {
+                "name": "Fulano 05",
+                "email": "fulano05@gmail.com",
+                "password": "Django1234",
+            },
+        ]
+
+        statement: Insert = insert(User).values(
+            email=bindparam("email"),
+            password=bindparam("password"),
+            name=bindparam("name")
+        ).returning(User)
+        await session.execute(statement, params=users)
+        await session.commit()
+
+        statement: Select = select(User) \
+            .where(
+                or_(
+                    User.email == "fulano@gmail.com",
+                    User.work_company_cnpj == "11111111111111"
+                ),
+                User.name.ilike("%fulano%")) \
+            .order_by(User.created_at.desc()) \
+            .limit(10) \
+            .having(User.id >= 1) \
+            .group_by(User.id)
+
+        result = await session.scalars(statement)
+        users: list[User] = result.all()
+        assert len(users) == 0
