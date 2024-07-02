@@ -416,8 +416,7 @@ async def test_delete_permission_dao():
             dto=CreateGroupInputDTO(
                 name="Grupo 03",
                 permissions=["t_permission_create"]
-            ),
-            close_session=False
+            )
         )
         assert group is not None
 

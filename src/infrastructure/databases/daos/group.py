@@ -141,9 +141,11 @@ class GroupDAO(DAOInterface):
         Pega os dados de um grupo pelo _id
         """
 
-        statement: Delete = sql_delete(GroupsVsPermissions).where(GroupsVsPermissions.group_id == _id)
-
         try:
+            statement: Delete = sql_delete(UsersVsGroups).where(UsersVsGroups.group_id == _id)
+            await self.session.execute(statement)
+
+            statement: Delete = sql_delete(GroupsVsPermissions).where(GroupsVsPermissions.group_id == _id)
             await self.session.execute(statement)
 
             statement: Delete = sql_delete(Group).where(Group.id == _id)

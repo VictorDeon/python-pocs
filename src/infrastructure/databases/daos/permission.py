@@ -1,6 +1,11 @@
 import logging
 from typing import Optional
-from sqlalchemy import select, Select, insert, Insert, func, update, Update, delete, Delete
+from sqlalchemy import (
+    select, Select, func,
+    insert, Insert,
+    update as sql_update, Update,
+    delete as sql_delete, Delete
+)
 from src.adapters.dtos import (
     CreatePermissionInputDTO, ListPermissionInputDTO,
     RetrievePermissionInputDTO, UpdatePermissionInputDTO
@@ -100,7 +105,7 @@ class PermissionDAO(DAOInterface):
         Pega os dados de uma permissão pelo _id e atualiza
         """
 
-        statement: Update = update(Permission) \
+        statement: Update = sql_update(Permission) \
             .values(**dto.to_dict()) \
             .where(Permission.id == _id) \
             .returning(Permission)
@@ -125,8 +130,14 @@ class PermissionDAO(DAOInterface):
         Pega os dados de uma permissão pelo _id e deleta
         """
 
-        statement: Delete = delete(Permission).where(Permission.id == _id).returning(Permission.id)
         try:
+            statement: Delete = sql_delete(UsersVsPermissions).where(UsersVsPermissions.permission_id == _id)
+            await self.session.execute(statement)
+
+            statement: Delete = sql_delete(GroupsVsPermissions).where(GroupsVsPermissions.permission_id == _id)
+            await self.session.execute(statement)
+
+            statement: Delete = sql_delete(Permission).where(Permission.id == _id).returning(Permission.id)
             permission_id: int = await self.session.scalar(statement)
             if not permission_id:
                 raise GenericException(f"Permissão com id {_id} não encontrado.")
