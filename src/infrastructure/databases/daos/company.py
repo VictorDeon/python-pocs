@@ -100,7 +100,7 @@ class CompanyDAO(DAOInterface):
         Pega os dados de uma empresa pelo _id e deleta ela
         """
 
-        statement: Delete = sql_delete(Company).where(Company.cnpj == cnpj).returning(Company.id)
+        statement: Delete = sql_delete(Company).where(Company.cnpj == cnpj).returning(Company.cnpj)
 
         try:
             company_cnpj: str = await self.session.scalar(statement)
