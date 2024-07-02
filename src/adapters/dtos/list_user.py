@@ -8,9 +8,9 @@ class ListUserInputDTO(BaseModel):
     Dados de entrada para listar usuários.
     """
 
-    name: Optional[str] = Field(None, description="Filtrar pelo nome do usuário.")
-    email: Optional[str] = Field(None, description="Filtrar pelo email do usuário.")
-    groups: Optional[list[str]] = Field([], description="Filtrar pelos grupos.")
+    name: Optional[str] = Field(None, description="Filtrar todos os usuário com nome.")
+    email: Optional[str] = Field(None, description="Filtrar todos os usuário com um email.")
+    groups: Optional[list[int]] = Field(None, description="Filtrar todos os usuário de um determinado grupo.")
     work_company_cnpj: Optional[str] = Field(False, description="Listar todos os funcionários de uma empresa.")
 
     def to_dict(self):

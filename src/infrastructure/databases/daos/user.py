@@ -11,7 +11,9 @@ from src.adapters.dtos import (
     RetrieveUserInputDTO, UpdateUserInputDTO
 )
 from src.domains.utils.exceptions import GenericException
-from src.infrastructure.databases.models import User, UsersVsPermissions, UsersVsGroups, Company
+from src.infrastructure.databases.models import (
+    User, UsersVsPermissions, UsersVsGroups, Company, Group
+)
 from src.infrastructure.databases import DAOInterface
 from .permission import PermissionDAO
 from .company import CompanyDAO
@@ -93,6 +95,12 @@ class UserDAO(DAOInterface):
                     .join(Company, Company.cnpj == User.work_company_cnpj) \
                     .where(User.work_company_cnpj == dto.work_company_cnpj)
 
+            if dto.groups is not None:
+                statement: Select = statement \
+                    .join(UsersVsGroups, UsersVsGroups.user_id == User.id) \
+                    .join(Group, Group.id == UsersVsGroups.group_id) \
+                    .where(Group.id.in_(dto.groups))
+
             if dto.name:
                 statement: Select = statement.where(User.name.like(f"%{dto.name}%"))
 
@@ -162,7 +170,7 @@ class UserDAO(DAOInterface):
             if dto.profile:
                 profile_dao = ProfileDAO(session=self.session)
                 await profile_dao.update(
-                    _id=user.profile_id,
+                    user_id=user.id,
                     dto=dto.profile
                 )
 
