@@ -20,7 +20,6 @@ class RetrieveCompanyPresenter(PresenterInterface):
         """
 
         user_dao = UserDAO(session=self.session)
-
         employees: list[UserModel] = await user_dao.list(dto=ListUserInputDTO(work_company_cnpj=model.cnpj))
         list_user_presentes = ListUserPresenter(session=self.session)
 

@@ -5,7 +5,7 @@ from src.adapters.dtos import CreatePermissionOutputDTO, CreatePermissionInputDT
 
 @router.post(
     "/permissions",
-    tags=["Permissions"],
+    tags=["Banco de Dados"],
     response_model=CreatePermissionOutputDTO,
     summary="Cria uma permissão."
 )

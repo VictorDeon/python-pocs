@@ -2,7 +2,6 @@ from pydantic import BaseModel, Field
 from typing import Optional
 from .profile import Profile
 from .permission import Permission
-from .company import Company
 from .group import Group
 
 
@@ -15,8 +14,8 @@ class User(BaseModel):
     name: str = Field(..., description="Nome completo do usuário.")
     email: str = Field(..., description="Email do usuário.")
     profile: Profile = Field(..., description="Perfil do usuário com dados adicionais.")
-    companies: list[Company] = Field([], description="Empresas na qual o usuário é dono.")
-    work_company: Optional[Company] = Field(None, description="Empresa na qual o usuário trabalha.")
+    companies: list[str] = Field([], description="CNPJ das empresas na qual o usuário é dono.")
+    work_company: Optional[str] = Field(None, description="CNPJ da empresa na qual o usuário trabalha.")
     permissions: list[Permission] = Field([], description="Lista de permissões do usuário.")
     groups: list[Group] = Field([], description="Lista de grupos na qual o usuário pertence.")
 
