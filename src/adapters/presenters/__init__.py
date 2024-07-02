@@ -7,10 +7,13 @@ from .pdf_generator import PDFGeneratorPresenter
 from .pdf_reader import PDFReaderPresenter
 from .create_permission import CreatePermissionPresenter
 from .create_group import CreateGroupPresenter
-from .create_permission import CreatePermissionPresenter
+from .create_user import CreateUserPresenter
 from .retrieve_group import RetrieveGroupPresenter
 from .retrieve_permission import RetrievePermissionPresenter
+from .retrieve_user import RetrieveUserPresenter
 from .list_groups import ListGroupPresenter
 from .list_permissions import ListPermissionPresenter
+from .list_user import ListUserPresenter
 from .update_group import UpdateGroupPresenter
 from .update_permission import UpdatePermissionPresenter
+from .update_user import UpdateUserPresenter
