@@ -59,4 +59,4 @@ class PDFGeneratorUserCase(UserCaseInterface):
             timeout=600
         )
 
-        return self.presenter.present(path)
+        return await self.presenter.present(path)

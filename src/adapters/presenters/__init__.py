@@ -20,3 +20,4 @@ from .update_group import UpdateGroupPresenter
 from .update_permission import UpdatePermissionPresenter
 from .update_user import UpdateUserPresenter
 from .update_company import UpdateCompanyPresenter
+from .error import ErrorPresenter

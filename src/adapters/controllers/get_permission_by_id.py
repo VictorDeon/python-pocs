@@ -1,4 +1,5 @@
 from src.adapters import ControllerInterface
+from src.adapters.presenters import RetrievePermissionPresenter
 from src.domains.user_cases import GetByIdUserCase
 from src.infrastructure.databases.daos import PermissionDAO
 from src.infrastructure.databases import DBConnectionHandler
@@ -23,5 +24,9 @@ class GetPermissionByIdController(ControllerInterface):
 
         async with DBConnectionHandler() as session:
             repository = PermissionDAO(session=session)
-            use_case = GetByIdUserCase(repository=repository)
+            presenter = RetrievePermissionPresenter(session=session)
+            use_case = GetByIdUserCase(
+                presenter=presenter,
+                repository=repository
+            )
             return await use_case.execute(self.id)

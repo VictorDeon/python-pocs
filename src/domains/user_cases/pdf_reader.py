@@ -63,4 +63,4 @@ class PDFReaderUserCase(UserCaseInterface):
             # Extrair dados do pdf e inserir no response
             response.append(data)
 
-        return self.presenter.present(model=ReaderInvoices(path=path, invoices=response))
+        return await self.presenter.present(model=ReaderInvoices(path=path, invoices=response))

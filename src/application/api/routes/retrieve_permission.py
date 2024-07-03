@@ -1,26 +1,24 @@
-from fastapi import Path, Query
-from typing import Optional
+from fastapi import Path
+from typing import Union
 from src.application.api.routes import router
 from src.adapters.controllers import RetrievePermissionController, GetPermissionByIdController
-from src.adapters.dtos import RetrievePermissionInputDTO, RetrievePermissionOutputDTO
+from src.adapters.dtos import RetrievePermissionInputDTO, RetrievePermissionOutputDTO, ErrorOutputDTO
 
 
 @router.get(
     "/permissions/{permission_id}",
     tags=["Banco de Dados"],
-    response_model=RetrievePermissionOutputDTO,
+    response_model=Union[RetrievePermissionOutputDTO, ErrorOutputDTO],
     summary="Busca uma permissão."
 )
-async def retrieve_permission(
-    permission_id: int = Path(..., description="ID da permissão."),
-    code: Optional[str] = Query(None, description="Código da permissão.")):
+async def retrieve_permission(permission_id: Union[int, str] = Path(..., description="ID da permissão.")):
     """
     Busca uma permissão do usuário ou grupo pelo id ou pelo código.
     """
 
-    if code:
-        controller = RetrievePermissionController(input=RetrievePermissionInputDTO(code=code))
+    if permission_id.isnumeric():
+        controller = GetPermissionByIdController(_id=int(permission_id))
     else:
-        controller = GetPermissionByIdController(_id=permission_id)
+        controller = RetrievePermissionController(input=RetrievePermissionInputDTO(code=permission_id))
 
     return await controller.execute()

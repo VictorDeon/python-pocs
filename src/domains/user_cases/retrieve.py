@@ -23,4 +23,4 @@ class RetrieveUserCase(UserCaseInterface):
         """
 
         model = await self.repository.retrieve(dto=input_dto)
-        return self.presenter.present(model)
+        return await self.presenter.present(model)

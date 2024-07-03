@@ -23,4 +23,4 @@ class UpdateUserCase(UserCaseInterface):
         """
 
         model = await self.repository.update(_id, dto=input_dto)
-        return self.presenter.present(model)
+        return await self.presenter.present(model)

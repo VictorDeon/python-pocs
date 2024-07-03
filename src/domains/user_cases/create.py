@@ -23,4 +23,4 @@ class CreateUserCase(UserCaseInterface):
         """
 
         model = await self.repository.create(dto=input_dto)
-        return self.presenter.present(model)
+        return await self.presenter.present(model)

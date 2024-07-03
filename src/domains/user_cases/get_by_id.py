@@ -23,4 +23,4 @@ class GetByIdUserCase(UserCaseInterface):
         """
 
         model = await self.repository.get_by_id(_id)
-        return self.presenter.present(model)
+        return await self.presenter.present(model)

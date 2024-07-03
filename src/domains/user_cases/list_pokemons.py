@@ -29,4 +29,4 @@ class ListPokemonsUseCase:
             limit=input_dto.limit,
             offset=input_dto.offset
         )
-        return self.presenter.present(pokemons)
+        return await self.presenter.present(pokemons)

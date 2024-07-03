@@ -23,4 +23,4 @@ class ListUserCase(UserCaseInterface):
         """
 
         models = await self.repository.list(dto=input_dto)
-        return self.presenter.present(models, input_dto.limit, input_dto.offset)
+        return await self.presenter.present(models, input_dto.limit, input_dto.offset)

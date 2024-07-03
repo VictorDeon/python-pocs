@@ -2,6 +2,7 @@ from src.adapters.dtos import RetrievePermissionOutputDTO
 from src.adapters import PresenterInterface
 from src.infrastructure.databases.models import Permission as PermissionModel
 from src.domains.entities import Permission
+from .error import ErrorPresenter
 
 
 class RetrievePermissionPresenter(PresenterInterface):
@@ -9,10 +10,16 @@ class RetrievePermissionPresenter(PresenterInterface):
     Formatação de saída da API que buscar uma permissão.
     """
 
-    def present(self, model: PermissionModel) -> RetrievePermissionOutputDTO:
+    async def present(self, model: PermissionModel) -> RetrievePermissionOutputDTO:
         """
         Forma final de apresentação dos dados.
         """
+
+        if not model:
+            return await ErrorPresenter(session=self.session).present(
+                msg="Permissão não encontrada.",
+                status_code=200
+            )
 
         permission = Permission(
             id=model.id,
