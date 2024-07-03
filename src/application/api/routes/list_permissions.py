@@ -16,8 +16,8 @@ async def list_permission(
     code: Optional[str] = Query(None, description="Código da permissão."),
     group_id: Optional[int] = Query(None, description="ID do grupo na qual a permissão ta vinculada"),
     user_id: Optional[int] = Query(None, description="ID do usuário na qual a permissão ta vinculada"),
-    offset: Optional[int] = Query(None, description="Pular os N primeiros itens da lista."),
-    limit: Optional[int] = Query(None, description="Quantidade limite de itens que irá aparecer na listagem.")):
+    offset: int = Query(0, description="Pular os N primeiros itens da lista."),
+    limit: int = Query(25, description="Quantidade limite de itens que irá aparecer na listagem.")):
     """
     Listas as permissões do usuário ou grupo.
     """

@@ -65,6 +65,7 @@ Nas proximas vezes só precisa executar os emuladores `docker compose --profile 
 
 ### TODO:
 
+* Testar todos os endpoints e arrumar se tiver algo quebrado
 * Transformar os contexts em singletons com max connection + semaforo
 * Inserir um sistema de logs inteligentes
 * Desenvolver vários tipos de consumos de APIs usando corotines, queues, threads e processos
