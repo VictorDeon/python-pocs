@@ -15,7 +15,7 @@ async def retrieve_permission(
     permission_id: int = Path(..., description="ID da permissão."),
     code: Optional[str] = Query(None, description="Código da permissão.")):
     """
-    Busca uma permissão do usuário ou grupo.
+    Busca uma permissão do usuário ou grupo pelo id ou pelo código.
     """
 
     if code:

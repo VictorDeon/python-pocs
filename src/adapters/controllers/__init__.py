@@ -21,6 +21,13 @@ from .update_company import UpdateCompanyController
 from .delete_company import DeleteCompanyController
 from .get_company_by_cnpj import GetCompanyByCNPJController
 from .list_companies import ListCompaniesController
+from .create_user import CreateUserController
+from .list_users import ListUsersController
+from .update_user import UpdateUserController
+from .delete_user import DeleteUserController
+from .retrieve_user import RetrieveUserController
+from .get_user_by_id import GetUserByIdController
+from .delete_user import DeleteUserController
 from .blocked_requests import (
     BlockingRequestSyncController,
     BlockingRequestAsyncWithSyncController,
