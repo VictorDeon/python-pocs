@@ -1,3 +1,5 @@
+import asyncio
+import os
 from src.adapters import ControllerInterface
 from src.adapters.presenters import ListPokemonsPresenter
 from src.adapters.dtos import ListPokemonsInputDTO
@@ -24,8 +26,10 @@ class ListPokemonController(ControllerInterface):
         Executa os comandos para gerar o resultado.
         """
 
-        async with HTTPxClient() as client, RedisCache() as cache:
-            repository = PokemonPokeAPIRepository(client, cache)
-            presenter = ListPokemonsPresenter()
-            use_case = ListPokemonsUseCase(presenter, repository)
-            return await use_case.execute(self.input_dto)
+        # Limite a quantidade de requisições por segundo a 5
+        async with asyncio.Semaphore(int(os.environ.get("SEMAPHORE", 5))):
+            async with HTTPxClient() as client, RedisCache() as cache:
+                repository = PokemonPokeAPIRepository(client, cache)
+                presenter = ListPokemonsPresenter()
+                use_case = ListPokemonsUseCase(presenter, repository)
+                return await use_case.execute(self.input_dto)
