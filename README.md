@@ -65,9 +65,6 @@ Nas proximas vezes só precisa executar os emuladores `docker compose --profile 
 
 ### TODO:
 
-* Endpoint com o CRUD de usuários e seus relacionamentos (Criar, Listar, Visualizar, Deletar, Atualizar)
-    - Criar todos os controllers
-    - Criar todas as rotas
 * Transformar os contexts em singletons com max connection + semaforo
 * Inserir um sistema de logs inteligentes
 * Desenvolver vários tipos de consumos de APIs usando corotines, queues, threads e processos
@@ -81,7 +78,7 @@ e arquivos e enviar o excel para outra pasta de processados.
     - JSON
 * Endpoints de consulta desses dados de usuários pelos diversos meios acima.
 * Criar um interface com o tkinter para o CRUD de usuários definir via header.
-* Autenticação e autorização - vwauth
+* Autenticação e Autorização - vwauth
 * Finalizar o leitor de PDF
 * Instrumentalização com o new relic
 * Uso do lacost para teste de carga
