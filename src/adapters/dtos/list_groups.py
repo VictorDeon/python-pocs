@@ -11,8 +11,8 @@ class ListGroupInputDTO(BaseModel):
     name: Optional[str] = Field(None, description="Nome do grupo.")
     code: Optional[str] = Field(None, description="Código da permissão no grupo.")
     user_id: Optional[int] = Field(None, description="Filtrar todos os grupos de um usuário.")
-    offset: Optional[int] = Field(None, description="Pular os N primeiros itens da lista.")
-    limit: Optional[int] = Field(None, description="Quantidade limite de itens que irá aparecer na listagem.")
+    offset: int = Field(0, description="Pular os N primeiros itens da lista.")
+    limit: int = Field(25, description="Quantidade limite de itens que irá aparecer na listagem.")
 
     def to_dict(self):
         """

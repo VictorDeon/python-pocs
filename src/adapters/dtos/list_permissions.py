@@ -30,3 +30,19 @@ class ListPermissionOutputDTO(BaseModel):
 
     total: int = Field(..., description="Total de permissões.")
     permissions: list[Permission] = Field([], description="Lista de permissões filtradas.")
+
+    class Config:
+        """
+        Metadados da modelo
+        """
+
+        json_schema_extra = {
+            "example": {
+                "total": 1,
+                "permissions": [{
+                    "id": 371,
+                    "name": "Permissão para criar permissões",
+                    "code": "permission_create"
+                }]
+            }
+        }

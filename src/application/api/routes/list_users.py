@@ -16,8 +16,8 @@ async def list_user(
     email: Optional[str] = Query(None, description="Filtrar todos os usuário com um email."),
     groups: Optional[list[int]] = Query(None, description="Filtrar todos os usuário de um determinado grupo."),
     work_company_cnpj: Optional[str] = Query(None, description="Listar todos os funcionários de uma empresa."),
-    offset: Optional[int] = Query(None, description="Pular os N primeiros itens da lista."),
-    limit: Optional[int] = Query(None, description="Quantidade limite de itens que irá aparecer na listagem.")):
+    offset: int = Query(0, description="Pular os N primeiros itens da lista."),
+    limit: int = Query(25, description="Quantidade limite de itens que irá aparecer na listagem.")):
     """
     Listas os usuários
     """

@@ -14,8 +14,8 @@ from src.adapters.dtos import ListCompaniesInputDTO, ListCompaniesOutputDTO
 async def list_companies(
     name: Optional[str] = Query(None, description="Filtra pelo nome da empresa."),
     owner_id: Optional[int] = Query(None, description="Filtra pelo identificador do dona da empresa."),
-    offset: Optional[int] = Query(None, description="Pular os N primeiros itens da lista."),
-    limit: Optional[int] = Query(None, description="Quantidade limite de itens que irá aparecer na listagem.")):
+    offset: int = Query(0, description="Pular os N primeiros itens da lista."),
+    limit: int = Query(25, description="Quantidade limite de itens que irá aparecer na listagem.")):
     """
     Listas as empresas.
     """
