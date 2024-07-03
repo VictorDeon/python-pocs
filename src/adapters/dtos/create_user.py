@@ -4,21 +4,6 @@ from src.domains.entities import User
 from .create_profile import CreateProfileInputDTO
 
 
-class CreatePermissionInputDTO(BaseModel):
-    """
-    Dados de entrada para criar permissões.
-    """
-
-    name: str = Field(..., description="Nome do permissão.")
-
-    def to_dict(self):
-        """
-        Transforma os dados em dicionário.
-        """
-
-        return self.model_dump()
-
-
 class CreateUserInputDTO(BaseModel):
     """
     Dados de entrada para criar um usuário
@@ -31,6 +16,26 @@ class CreateUserInputDTO(BaseModel):
     work_company_cnpj: Optional[str] = Field(None, description="Empresa na qual o usuário trabalha")
     permissions: Optional[list[str]] = Field([], description="Lista de códigos das permissões do usuário.")
     groups: Optional[list[int]] = Field([], description="Lista de grupos na qual o usuário pertence.")
+
+    class Config:
+        """
+        Metadados da modelo
+        """
+
+        json_schema_extra = {
+            "example": {
+                "name": "Fulano 01",
+                "email": "fulano01@gmail.com",
+                "password": "Django1234",
+                "profile": {
+                    "address": "Rua ABC bairro Ipanema N 244, Sorocaba, SP. CEP: 7059483",
+                    "phone": "61998283934"
+                },
+                "work_company_cnpj": "11111111111111",
+                "groups": [226],
+                "permissions": ["permission_create", "permission_update"],
+            }
+        }
 
     def to_dict(self):
         """
@@ -46,3 +51,37 @@ class CreateUserOutputDTO(BaseModel):
     """
 
     user: User = Field(..., description="Dados do usuário criado.")
+
+    class Config:
+        """
+        Metadados da modelo
+        """
+
+        json_schema_extra = {
+            "example": {
+                "user": {
+                    "id": 1,
+                    "name": "Fulano 01",
+                    "email": "fulano01@gmail.com",
+                    "profile": {
+                        "id": 1,
+                        "address": "Rua ABC bairro Ipanema N 244, Sorocaba, SP. CEP: 7059483",
+                        "phone": "61998283934"
+                    },
+                    "work_company": "11111111111111",
+                    "companies": ["22222222222222", "33333333333333"],
+                    "groups": [{
+                        "id": 1,
+                        "name": "Grupo 01",
+                        "permissions": {
+                            "id": 1,
+                            "name": "Permissão 01"
+                        }
+                    }],
+                    "permissions": [{
+                        "id": 1,
+                        "name": "Permissão 01"
+                    }]
+                }
+            }
+        }

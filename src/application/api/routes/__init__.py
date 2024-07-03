@@ -17,13 +17,14 @@ from .create_group import create_group
 from .retrieve_group import retrieve_group
 from .update_group import update_group
 from .delete_group import delete_group
-from .list_companies import list_companies
-from .create_company import create_company
-from .retrieve_company import retrieve_company
-from .update_company import update_company
-from .delete_company import delete_company
 from .list_users import list_user
 from .create_user import create_user
 from .retrieve_user import retrieve_user
 from .update_user import update_user
 from .delete_user import delete_user
+from .list_companies import list_companies
+from .create_company import create_company
+from .retrieve_company import retrieve_company
+from .update_company import update_company
+from .delete_company import delete_company
+

@@ -66,6 +66,7 @@ Nas proximas vezes só precisa executar os emuladores `docker compose --profile 
 ### TODO:
 
 * Testar todos os endpoints e arrumar se tiver algo quebrado
+* Inserir o profile para medir desempenho
 * Transformar os contexts em singletons com max connection + semaforo
 * Inserir um sistema de logs inteligentes
 * Desenvolver vários tipos de consumos de APIs usando corotines, queues, threads e processos
@@ -83,3 +84,8 @@ e arquivos e enviar o excel para outra pasta de processados.
 * Finalizar o leitor de PDF
 * Instrumentalização com o new relic
 * Uso do lacost para teste de carga
+* Se is_deleted for True (Deleção lógica):
+    - Na criação, ao inves de criar, coloque is_deleted False e atualize os dados
+    - Na busca e listagem, remover os que tem o is_deleted True
+    - Na atualização não atualizar se is_delete for True (mensagem de error)
+    - Na remoção não deletar e inserir o is_deleted como True se não tiver, se ja tiver não faz nada. Fazer o is_deleted True em todos os relacionamentos

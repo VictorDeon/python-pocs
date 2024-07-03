@@ -30,25 +30,26 @@ class RetrieveUserPresenter(PresenterInterface):
             )
 
         permission_dao = PermissionDAO(session=self.session)
-        permissions: list[PermissionModel] = permission_dao.list(dto=ListPermissionInputDTO(user_id=model.id))
+        permissions: list[PermissionModel] = await permission_dao.list(dto=ListPermissionInputDTO(user_id=model.id))
         permission_presenter = ListPermissionPresenter(session=self.session)
         permission_result = await permission_presenter.present(permissions)
 
         group_dao = GroupDAO(session=self.session)
-        groups: list[GroupModel] = group_dao.list(dto=ListGroupInputDTO(user_id=model.id))
+        groups: list[GroupModel] = await group_dao.list(dto=ListGroupInputDTO(user_id=model.id))
         group_presenter = ListGroupPresenter(session=self.session)
         group_result = await group_presenter.present(groups)
 
         profile_dao = ProfileDAO(session=self.session)
-        profile_model: ProfileModel = profile_dao.get_by_id(user_id=model.id)
+        profile_model: ProfileModel = await profile_dao.get_by_id(user_id=model.id)
         profile: Profile = Profile(id=profile_model.id, phone=profile_model.phone, address=profile_model.address)
 
         company_dao = CompanyDAO(session=self.session)
-        company_models: list[CompanyModel] = company_dao.list(dto=ListCompaniesInputDTO(owner_id=model.id))
+        company_models: list[CompanyModel] = await company_dao.list(dto=ListCompaniesInputDTO(owner_id=model.id))
 
         user = User(
             id=model.id,
             name=model.name,
+            email=model.email,
             profile=profile,
             work_company=model.work_company_cnpj,
             companies=[company.cnpj for company in company_models],
