@@ -71,17 +71,23 @@ class CreateUserOutputDTO(BaseModel):
                     "work_company": "11111111111111",
                     "companies": ["22222222222222", "33333333333333"],
                     "groups": [{
-                        "id": 1,
+                        "id": 226,
                         "name": "Grupo 01",
                         "permissions": {
                             "id": 1,
-                            "name": "Permissão 01"
+                            "name": "Permissão 02"
                         }
                     }],
-                    "permissions": [{
-                        "id": 1,
-                        "name": "Permissão 01"
-                    }]
+                    "permissions": [
+                        {
+                            "id": 1,
+                            "name": "Permissão de Criação"
+                        },
+                        {
+                            "id": 2,
+                            "name": "Permissão de Atualização"
+                        }
+                    ]
                 }
             }
         }

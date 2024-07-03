@@ -201,7 +201,7 @@ class UserDAO(DAOInterface):
                 for group_id in dto.groups:
                     group = await group_dao.get_by_id(_id=group_id)
                     if group:
-                        statement: Update = insert(UsersVsPermissions).values(
+                        statement: Update = insert(UsersVsGroups).values(
                             user_id=user.id,
                             group_id=group.id
                         )
