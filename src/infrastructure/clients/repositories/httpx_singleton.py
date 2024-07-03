@@ -22,8 +22,13 @@ class HTTPxSingleton:
 
         self.client: httpx.AsyncClient = httpx.AsyncClient(
             limits=httpx.Limits(
+                # Número de conexões que podem ser abertas ao mesmo tempo
                 max_connections=int(os.environ.get("HTTP_MAX_CONNECTIONS", 100)),
+                # Número máximo de conexões já finalizadas que queremos manter conectado e esperandos
+                # para ser usado novamente antes de ser fechado.
                 max_keepalive_connections=int(os.environ.get("HTTP_MAX_KEEP_ALIVE_CONNECTONS", 20)),
+                # Tempo em segundos que as conexões já finalizas ficam esperando antes de ser fechadas
+                # caso ninguem as solicite.
                 keepalive_expiry=int(os.environ.get("HTTP_KEEP_ALIVE_EXPIRE", 600))
             )
         )

@@ -26,7 +26,8 @@ class ListPokemonController(ControllerInterface):
         Executa os comandos para gerar o resultado.
         """
 
-        # Limite a quantidade de requisições por segundo a 5
+        # O semaforo limita a quantidade de tarefas/requisições a acessar
+        # um recurso simultaneamente por segundo, no caso: 5 TPS
         async with asyncio.Semaphore(int(os.environ.get("SEMAPHORE", 5))):
             async with HTTPxClient() as client, RedisCache() as cache:
                 repository = PokemonPokeAPIRepository(client, cache)
