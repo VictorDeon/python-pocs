@@ -2,6 +2,7 @@ from src.adapters import ControllerInterface
 from src.domains.user_cases import GetByIdUserCase
 from src.infrastructure.databases.daos import GroupDAO
 from src.infrastructure.databases import DBConnectionHandler
+from src.adapters.presenters import RetrieveGroupPresenter
 
 
 class GetGroupByIdController(ControllerInterface):
@@ -23,5 +24,9 @@ class GetGroupByIdController(ControllerInterface):
 
         async with DBConnectionHandler() as session:
             repository = GroupDAO(session=session)
-            use_case = GetByIdUserCase(repository=repository)
+            presenter = RetrieveGroupPresenter(session=session)
+            use_case = GetByIdUserCase(
+                presenter=presenter,
+                repository=repository
+            )
             return await use_case.execute(self.id)

@@ -23,3 +23,4 @@ from .update_profile import UpdateProfileInputDTO, UpdateProfileOutputDTO
 from .retrieve_permission import RetrievePermissionInputDTO, RetrievePermissionOutputDTO
 from .retrieve_company import RetrieveCompanyOutputDTO
 from .retrieve_user import RetrieveUserInputDTO, RetrieveUserOutputDTO
+from .retrieve_group import RetrieveGroupOutputDTO

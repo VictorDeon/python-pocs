@@ -1,4 +1,4 @@
-from src.adapters.dtos import ListPermissionInputDTO
+from src.adapters.dtos import ListPermissionInputDTO, RetrieveGroupOutputDTO
 from src.adapters import PresenterInterface
 from src.domains.entities import Group
 from src.infrastructure.databases.models import (
@@ -14,7 +14,7 @@ class RetrieveGroupPresenter(PresenterInterface):
     Formatação de saída da API que buscar um grupo.
     """
 
-    async def present(self, model: GroupModel) -> Group:
+    async def present(self, model: GroupModel) -> RetrieveGroupOutputDTO:
         """
         Forma final de apresentação dos dados.
         """
@@ -29,4 +29,4 @@ class RetrieveGroupPresenter(PresenterInterface):
             permissions=permission_presenter.present(permissions)
         )
 
-        return group
+        return RetrieveGroupOutputDTO(group=group)
