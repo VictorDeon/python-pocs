@@ -1,14 +1,14 @@
 from fastapi import Path, Query
-from typing import Optional
+from typing import Optional, Union
 from src.application.api.routes import router
 from src.adapters.controllers import RetrieveUserController, GetUserByIdController
-from src.adapters.dtos import RetrieveUserInputDTO, RetrieveUserOutputDTO
+from src.adapters.dtos import RetrieveUserInputDTO, RetrieveUserOutputDTO, ErrorOutputDTO
 
 
 @router.get(
     "/users/{user_id}",
     tags=["Banco de Dados"],
-    response_model=RetrieveUserOutputDTO,
+    response_model=Union[RetrieveUserOutputDTO, ErrorOutputDTO],
     summary="Busca um usuário."
 )
 async def retrieve_user(
