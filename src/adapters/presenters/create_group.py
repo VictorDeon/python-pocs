@@ -15,5 +15,5 @@ class CreateGroupPresenter(PresenterInterface):
         """
 
         presenter = RetrieveGroupPresenter(session=self.session)
-        group = await presenter.present(model)
-        return CreateGroupOutputDTO(group=group)
+        result = await presenter.present(model)
+        return CreateGroupOutputDTO(group=result.group)

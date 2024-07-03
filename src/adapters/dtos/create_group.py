@@ -37,3 +37,29 @@ class CreateGroupOutputDTO(BaseModel):
     """
 
     group: Group = Field(..., description="Dados do grupo criado.")
+
+    class Config:
+        """
+        Metadados da modelo
+        """
+
+        json_schema_extra = {
+            "example": {
+                "group": {
+                    "id": 224,
+                    "name": "Grupo 01",
+                    "permissions": [
+                        {
+                            "id": 371,
+                            "name": "Permissão para criar permissões",
+                            "code": "permission_create"
+                        },
+                        {
+                            "id": 373,
+                            "name": "Permissão para deletar permissões",
+                            "code": "permission_delete"
+                        }
+                    ]
+                }
+            }
+        }
