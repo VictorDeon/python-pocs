@@ -30,3 +30,38 @@ class ListUserOutputDTO(BaseModel):
 
     total: int = Field(..., description="Total de usuários.")
     users: list[User] = Field([], description="Lista de usuários filtrados.")
+
+    class Config:
+        """
+        Metadados da modelo
+        """
+
+        json_schema_extra = {
+            "example": {
+                "total": 1,
+                "users": [{
+                    "id": 1,
+                    "name": "Fulano 01",
+                    "email": "fulano01@gmail.com",
+                    "profile": {
+                        "id": 1,
+                        "address": "Rua ABC bairro Ipanema N 244, Sorocaba, SP. CEP: 7059483",
+                        "phone": "61998283934"
+                    },
+                    "work_company": "11111111111111",
+                    "companies": ["22222222222222", "33333333333333"],
+                    "groups": [{
+                        "id": 1,
+                        "name": "Grupo 01",
+                        "permissions": {
+                            "id": 1,
+                            "name": "Permissão 01"
+                        }
+                    }],
+                    "permissions": [{
+                        "id": 1,
+                        "name": "Permissão 01"
+                    }]
+                }]
+            }
+        }

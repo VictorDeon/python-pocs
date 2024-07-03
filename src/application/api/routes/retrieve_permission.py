@@ -11,7 +11,7 @@ from src.adapters.dtos import RetrievePermissionInputDTO, RetrievePermissionOutp
     response_model=Union[RetrievePermissionOutputDTO, ErrorOutputDTO],
     summary="Busca uma permissão."
 )
-async def retrieve_permission(permission_id: Union[int, str] = Path(..., description="ID da permissão.")):
+async def retrieve_permission(permission_id: Union[int, str] = Path(..., description="ID ou código da permissão.")):
     """
     Busca uma permissão do usuário ou grupo pelo id ou pelo código.
     """

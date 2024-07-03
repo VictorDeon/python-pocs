@@ -1,5 +1,5 @@
-from fastapi import Path, Query
-from typing import Optional, Union
+from fastapi import Path
+from typing import Union
 from src.application.api.routes import router
 from src.adapters.controllers import RetrieveUserController, GetUserByIdController
 from src.adapters.dtos import RetrieveUserInputDTO, RetrieveUserOutputDTO, ErrorOutputDTO
@@ -11,16 +11,14 @@ from src.adapters.dtos import RetrieveUserInputDTO, RetrieveUserOutputDTO, Error
     response_model=Union[RetrieveUserOutputDTO, ErrorOutputDTO],
     summary="Busca um usuário."
 )
-async def retrieve_user(
-    user_id: int = Path(..., description="ID da permissão."),
-    email: Optional[str] = Query(None, description="Email do usuário.")):
+async def retrieve_user(user_id: Union[int, str] = Path(..., description="ID ou email do usuário.")):
     """
     Busca um usuário pelo id ou pelo email.
     """
 
-    if email:
-        controller = RetrieveUserController(input=RetrieveUserInputDTO(email=email))
+    if user_id.isnumeric():
+        controller = GetUserByIdController(_id=int(user_id))
     else:
-        controller = GetUserByIdController(_id=user_id)
+        controller = RetrieveUserController(input=RetrieveUserInputDTO(email=user_id))
 
     return await controller.execute()
