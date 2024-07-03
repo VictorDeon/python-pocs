@@ -11,6 +11,7 @@ from src.infrastructure.databases.models import (
 from src.infrastructure.databases.daos import PermissionDAO, GroupDAO, ProfileDAO, CompanyDAO
 from .list_permissions import ListPermissionPresenter
 from .list_groups import ListGroupPresenter
+from .error import ErrorPresenter
 
 
 class RetrieveUserPresenter(PresenterInterface):
@@ -22,6 +23,11 @@ class RetrieveUserPresenter(PresenterInterface):
         """
         Forma final de apresentação dos dados.
         """
+
+        if not model:
+            return await ErrorPresenter(session=self.session).present(
+                message="Usuário não encontrado.",
+            )
 
         permission_dao = PermissionDAO(session=self.session)
         permissions: list[PermissionModel] = permission_dao.list(dto=ListPermissionInputDTO(user_id=model.id))

@@ -7,9 +7,9 @@ class ErrorPresenter(PresenterInterface):
     Formatação de saída da API que dispara um error.
     """
 
-    async def present(self, msg: str, status_code: int) -> ErrorOutputDTO:
+    async def present(self, message: str) -> ErrorOutputDTO:
         """
         Forma final de apresentação dos dados.
         """
 
-        return ErrorOutputDTO(msg=msg, status_code=status_code)
+        return ErrorOutputDTO(message=message)

@@ -17,8 +17,7 @@ class RetrievePermissionPresenter(PresenterInterface):
 
         if not model:
             return await ErrorPresenter(session=self.session).present(
-                msg="Permissão não encontrada.",
-                status_code=200
+                message="Permissão não encontrada.",
             )
 
         permission = Permission(

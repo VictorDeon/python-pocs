@@ -7,6 +7,7 @@ from src.infrastructure.databases.models import (
 )
 from src.infrastructure.databases.daos import PermissionDAO
 from .list_permissions import ListPermissionPresenter
+from .error import ErrorPresenter
 
 
 class RetrieveGroupPresenter(PresenterInterface):
@@ -18,6 +19,11 @@ class RetrieveGroupPresenter(PresenterInterface):
         """
         Forma final de apresentação dos dados.
         """
+
+        if not model:
+            return await ErrorPresenter(session=self.session).present(
+                message="Grupo não encontrado.",
+            )
 
         permission_dao = PermissionDAO(session=self.session)
         permissions: list[PermissionModel] = await permission_dao.list(dto=ListPermissionInputDTO(group_id=model.id))
