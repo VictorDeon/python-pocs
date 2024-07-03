@@ -8,11 +8,11 @@ down:
 
 install:
 	# Instala uma dependencia dentro do container remove flag user do docker compose
-	docker compose exec api pip install ${pkg}
+	docker compose exec --user root api pip install ${pkg}
 
 remove:
 	# Remove uma dependencia dentro do container remove flag user do docker compose
-	docker compose exec api pip uninstall ${pkg}
+	docker compose exec --user root api pip uninstall ${pkg}
 
 requirements:
 	# Lista os requirements do projeto

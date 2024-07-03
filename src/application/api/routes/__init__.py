@@ -2,9 +2,10 @@
 # pylint: disable=wrong-import-position
 from fastapi import APIRouter
 router = APIRouter()
-from .blocked_requests import *
-from .pdf_generator import *
-from .pdf_reader import *
+from .blocked_requests import blocked_requests
+from .profile_requests import profile_requests
+from .pdf_generator import create_pdf
+from .pdf_reader import pdf_reader
 from .list_pokemons import list_pokemons
 from .retrieve_pokemon import retrieve_pokemon
 from .list_permissions import list_permission

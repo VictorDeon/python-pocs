@@ -1,6 +1,7 @@
 """ DATA TRANSFER OBJECT (DTO) """
 # flake8: noqa
 from .error import ErrorOutputDTO
+from .profile_requests import ProfileRequestsOutputDTO
 from .retrieve_pokemon import RetrievePokemonInputDTO, RetrievePokemonOutputDTO
 from .list_pokemons import ListPokemonsInputDTO, ListPokemonsOutputDTO
 from .pdf_generator import PDFGeneratorInputDTO, PDFGeneratorOutputDTO
