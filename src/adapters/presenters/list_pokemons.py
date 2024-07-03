@@ -8,7 +8,7 @@ class ListPokemonsPresenter(PresenterInterface):
     Formatação de saída da API que lista os pokemons.
     """
 
-    def present(self, model: list[Pokemon]) -> ListPokemonsOutputDTO:
+    async def present(self, model: list[Pokemon]) -> ListPokemonsOutputDTO:
         """
         Forma final de apresentação dos dados.
         """

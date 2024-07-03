@@ -8,7 +8,7 @@ class PDFReaderPresenter(PresenterInterface):
     Formatação de saída da API da leitura de PDF.
     """
 
-    def present(self, model: ReaderInvoices) -> PDFReaderOutputDTO:
+    async def present(self, model: ReaderInvoices) -> PDFReaderOutputDTO:
         """
         Forma final de apresentação dos dados.
         """

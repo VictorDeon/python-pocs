@@ -11,7 +11,7 @@ class PresenterInterface(Generic[MODEL, OUTPUT], metaclass=ABCMeta):
     Interface de saída das APIs.
     """
 
-    def __init__(self, session: AsyncSession) -> None:
+    def __init__(self, session: AsyncSession = None) -> None:
         """
         Constructor.
         """
@@ -19,7 +19,7 @@ class PresenterInterface(Generic[MODEL, OUTPUT], metaclass=ABCMeta):
         self.session = session
 
     @abstractmethod
-    def present(self, model: MODEL, limit: int = None, offset: int = None) -> OUTPUT:
+    async def present(self, model: MODEL, limit: int = None, offset: int = None) -> OUTPUT:
         """
         Forma final de apresentação dos dados.
         """

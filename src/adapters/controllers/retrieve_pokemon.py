@@ -28,4 +28,4 @@ class RetrievePokemonController(ControllerInterface):
             repository = PokemonPokeAPIRepository(client, cache)
             output = RetrievePokemonPresenter()
             use_case = GetByIdUserCase(output, repository)
-            return await use_case.execute(self.input)
+            return await use_case.execute(self.input.id)

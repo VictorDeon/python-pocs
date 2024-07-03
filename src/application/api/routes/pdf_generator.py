@@ -14,5 +14,5 @@ async def create_pdf(data: PDFGeneratorInputDTO):
     Endpoint que gera um pdf a partir dos dados inseridos como parâmetro.
     """
 
-    controller = PDFGeneratorController(invoice=data)
+    controller = PDFGeneratorController(input=data)
     return await controller.execute()

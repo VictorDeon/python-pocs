@@ -9,7 +9,7 @@ class RetrievePokemonPresenter(PresenterInterface):
     Formatação de saída da API que busca um pokemon.
     """
 
-    def present(self, model: Pokemon) -> RetrievePokemonOutputDTO:
+    async def present(self, model: Pokemon) -> RetrievePokemonOutputDTO:
         """
         Forma final de apresentação dos dados.
         """
