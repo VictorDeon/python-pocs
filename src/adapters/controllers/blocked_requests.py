@@ -5,7 +5,7 @@ import asyncer
 from src.adapters import ControllerInterface
 from src.adapters.dtos import BlockedRequestsOutputDTO
 
-SLEEP = 20
+SLEEP = 5
 
 
 def io_bound_method(seconds: int) -> None:
