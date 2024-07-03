@@ -16,6 +16,11 @@ from .update_group import UpdateGroupController
 from .delete_group import DeleteGroupController
 from .get_group_by_id import GetGroupByIdController
 from .list_groups import ListGroupsController
+from .create_company import CreateCompanyController
+from .update_company import UpdateCompanyController
+from .delete_company import DeleteCompanyController
+from .get_company_by_cnpj import GetCompanyByCNPJController
+from .list_companies import ListCompaniesController
 from .blocked_requests import (
     BlockingRequestSyncController,
     BlockingRequestAsyncWithSyncController,

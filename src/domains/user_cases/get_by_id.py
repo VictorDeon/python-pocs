@@ -1,4 +1,4 @@
-from typing import Any
+from typing import Any, Union
 from src.adapters import PresenterInterface
 from src.domains import UserCaseInterface
 from src.infrastructure.databases import DAOInterface
@@ -17,7 +17,7 @@ class GetByIdUserCase(UserCaseInterface):
         self.presenter = presenter
         self.repository = repository
 
-    async def execute(self, _id: int) -> Any:
+    async def execute(self, _id: Union[int, str]) -> Any:
         """
         Executa o caso de uso.
         """
