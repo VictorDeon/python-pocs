@@ -14,7 +14,7 @@ from src.adapters.dtos import ListUserInputDTO, ListUserOutputDTO
 async def list_user(
     name: Optional[str] = Query(None, description="Filtrar todos os usuário com nome."),
     email: Optional[str] = Query(None, description="Filtrar todos os usuário com um email."),
-    groups: Optional[list[int]] = Query(None, description="Filtrar todos os usuário de um determinado grupo."),
+    group: Optional[int] = Query(None, description="Filtrar todos os usuário de um determinado grupo."),
     work_company_cnpj: Optional[str] = Query(None, description="Listar todos os funcionários de uma empresa."),
     offset: int = Query(0, description="Pular os N primeiros itens da lista."),
     limit: int = Query(25, description="Quantidade limite de itens que irá aparecer na listagem.")):
@@ -26,7 +26,7 @@ async def list_user(
         input=ListUserInputDTO(
             name=name,
             email=email,
-            groups=groups,
+            group=group,
             work_company_cnpj=work_company_cnpj,
             limit=limit,
             offset=offset

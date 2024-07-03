@@ -26,4 +26,5 @@ class ListCompaniesOutputDTO(BaseModel):
     Dados de saída para listar empresas.
     """
 
+    total: int = Field(..., description="Total de empresas.")
     companies: list[Company] = Field([], description="Lista de empresas filtradas.")

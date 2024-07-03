@@ -97,11 +97,11 @@ class UserDAO(DAOInterface):
                     .join(Company, Company.cnpj == User.work_company_cnpj) \
                     .where(User.work_company_cnpj == dto.work_company_cnpj)
 
-            if dto.groups is not None:
+            if dto.group:
                 statement: Select = statement \
                     .join(UsersVsGroups, UsersVsGroups.user_id == User.id) \
                     .join(Group, Group.id == UsersVsGroups.group_id) \
-                    .where(Group.id.in_(dto.groups))
+                    .where(Group.id == dto.group)
 
             if dto.name:
                 statement: Select = statement.where(User.name.like(f"%{dto.name}%"))

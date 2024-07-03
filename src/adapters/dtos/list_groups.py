@@ -27,4 +27,5 @@ class ListGroupOutputDTO(BaseModel):
     Dados de saída para listar grupos.
     """
 
+    total: int = Field(..., description="Total de grupos.")
     groups: list[Group] = Field([], description="Lista de grupos filtrados.")
