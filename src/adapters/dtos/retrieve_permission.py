@@ -24,3 +24,18 @@ class RetrievePermissionOutputDTO(BaseModel):
     """
 
     permission: Optional[Permission] = Field(None, description="Dados da permissão.")
+
+    class Config:
+        """
+        Metadados da modelo
+        """
+
+        json_schema_extra = {
+            "example": {
+                "permission": {
+                    "id": 371,
+                    "name": "Permissão para criar permissões",
+                    "code": "permission_create"
+                }
+            }
+        }

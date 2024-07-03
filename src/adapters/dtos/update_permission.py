@@ -11,6 +11,18 @@ class UpdatePermissionInputDTO(BaseModel):
     name: Optional[str] = Field(None, description="Nome da permissão.")
     code: Optional[str] = Field(None, description="Código da permissão.")
 
+    class Config:
+        """
+        Metadados da modelo
+        """
+
+        json_schema_extra = {
+            "example": {
+                "name": "Permissão para criar permissões atualizado",
+                "code": "permission_create"
+            },
+        }
+
     def to_dict(self):
         """
         Transforma os dados em dicionário.
@@ -25,3 +37,18 @@ class UpdatePermissionOutputDTO(BaseModel):
     """
 
     permission: Permission = Field(..., description="Dados da permissão atualizados.")
+
+    class Config:
+        """
+        Metadados da modelo
+        """
+
+        json_schema_extra = {
+            "example": {
+                "permission": {
+                    "id": 371,
+                    "name": "Permissão para criar permissões atualizado",
+                    "code": "permission_create"
+                }
+            }
+        }

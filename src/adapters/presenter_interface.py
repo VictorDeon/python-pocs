@@ -19,7 +19,7 @@ class PresenterInterface(Generic[MODEL, OUTPUT], metaclass=ABCMeta):
         self.session = session
 
     @abstractmethod
-    def present(self, model: MODEL) -> OUTPUT:
+    def present(self, model: MODEL, limit: int = None, offset: int = None) -> OUTPUT:
         """
         Forma final de apresentação dos dados.
         """
