@@ -6,9 +6,9 @@ from src.adapters.controllers import PDFReaderController
 
 
 @router.get(
-    "/invoices",
-    tags=["PDFs"],
-    name="Lista de Invoices",
+    "/pdfs",
+    tags=["Outputs"],
+    name="Lista de PDFs",
     response_model=PDFReaderOutputDTO
 )
 async def list_invoices(

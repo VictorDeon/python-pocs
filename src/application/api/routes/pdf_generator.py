@@ -4,12 +4,12 @@ from src.adapters.controllers import PDFGeneratorController
 
 
 @router.post(
-    "/invoices",
-    tags=["PDFs"],
+    "/pdfs",
+    tags=["Outputs"],
     response_model=PDFGeneratorOutputDTO,
-    name="Geração de Invoice"
+    name="Geração de pdf"
 )
-async def create_invoice(data: PDFGeneratorInputDTO):
+async def create_pdf(data: PDFGeneratorInputDTO):
     """
     Endpoint que gera um pdf a partir dos dados inseridos como parâmetro.
     """

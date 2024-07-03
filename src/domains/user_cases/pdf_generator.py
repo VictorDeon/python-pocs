@@ -8,7 +8,7 @@ from src.infrastructure.pdf import GeneratePDF
 from src.infrastructure.storage import StorageSingletonInterface
 
 
-class PDFGenerator(UserCaseInterface):
+class PDFGeneratorUserCase(UserCaseInterface):
     """
     Caso de uso de procura de um usuários.
     """

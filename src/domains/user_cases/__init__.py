@@ -1,7 +1,7 @@
 # flake8: noqa
 from .list_pokemons import ListPokemonsUseCase
-from .pdf_generator import PDFGenerator
-from .pdf_reader import PDFReader
+from .pdf_generator import PDFGeneratorUserCase
+from .pdf_reader import PDFReaderUserCase
 from .create import CreateUserCase
 from .list import ListUserCase
 from .retrieve import RetrieveUserCase

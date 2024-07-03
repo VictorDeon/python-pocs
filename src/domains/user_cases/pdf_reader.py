@@ -5,7 +5,7 @@ from src.domains.entities import ReaderInvoices
 from src.infrastructure.storage import StorageSingletonInterface
 
 
-class PDFReader(UserCaseInterface):
+class PDFReaderUserCase(UserCaseInterface):
     """
     Caso de uso de procura de um usuários.
     """

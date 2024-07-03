@@ -1,7 +1,7 @@
 from src.adapters import ControllerInterface
 from src.adapters.dtos import PDFReaderInputDTO
 from src.adapters.presenters import PDFReaderPresenter
-from src.domains.user_cases import PDFReader
+from src.domains.user_cases import PDFReaderUserCase
 from src.infrastructure.storage.repositories import LocalStorageSingleton
 
 
@@ -24,5 +24,5 @@ class PDFReaderController(ControllerInterface):
 
         repository = await LocalStorageSingleton.get_instance()
         output = PDFReaderPresenter()
-        use_case = PDFReader(output, repository)
+        use_case = PDFReaderUserCase(output, repository)
         return await use_case.execute(self.input_dto)
