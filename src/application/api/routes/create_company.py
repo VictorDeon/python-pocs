@@ -1,3 +1,4 @@
+from fastapi import status
 from src.application.api.routes import router
 from src.adapters.controllers import CreateCompanyController
 from src.adapters.dtos import CreateCompanyInputDTO, CreateCompanyOutputDTO
@@ -7,6 +8,7 @@ from src.adapters.dtos import CreateCompanyInputDTO, CreateCompanyOutputDTO
     "/companies",
     tags=["Banco de Dados"],
     response_model=CreateCompanyOutputDTO,
+    status_code=status.HTTP_201_CREATED,
     summary="Cria uma empresa."
 )
 async def create_company(data: CreateCompanyInputDTO):

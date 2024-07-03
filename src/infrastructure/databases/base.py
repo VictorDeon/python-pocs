@@ -24,7 +24,6 @@ class BaseModel(DeclarativeBase):
     updated_at: Mapped[Optional[datetime]] = mapped_column(
         TIMESTAMP,
         server_default=func.now(),
-        server_onupdate=func.now(),
         nullable=False
     )
     is_deleted: Mapped[bool] = mapped_column(

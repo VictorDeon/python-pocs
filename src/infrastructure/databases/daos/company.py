@@ -1,5 +1,7 @@
 import logging
+import os
 from typing import Optional
+from datetime import datetime
 from sqlalchemy import (
     select, Select, func,
     insert, Insert,
@@ -80,7 +82,9 @@ class CompanyDAO(DAOInterface):
         Pega os dados de uma empresa pelo _id e atualiza
         """
 
-        statement: Update = sql_update(Company).values(**dto.to_dict()).where(Company.cnpj == cnpj).returning(Company)
+        statement: Update = sql_update(Company).values(
+            **dto.to_dict(), updated_at=datetime.now()
+        ).where(Company.cnpj == cnpj).returning(Company)
 
         try:
             company: Company = await self.session.scalar(statement)
@@ -100,7 +104,12 @@ class CompanyDAO(DAOInterface):
         Pega os dados de uma empresa pelo _id e deleta ela
         """
 
-        statement: Delete = sql_delete(Company).where(Company.cnpj == cnpj).returning(Company.cnpj)
+        if os.environ.get("APP_ENV") == "tests":
+            statement: Delete = sql_delete(Company).where(Company.cnpj == cnpj).returning(Company.cnpj)
+        else:
+            statement: Update = sql_update(Company).values(
+                is_deleted=True
+            ).where(Company.cnpj == cnpj).returning(Company.cnpj)
 
         try:
             company_cnpj: str = await self.session.scalar(statement)

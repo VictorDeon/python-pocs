@@ -1,4 +1,5 @@
 import logging
+import os
 from typing import Optional
 from datetime import datetime
 from sqlalchemy import (
@@ -138,7 +139,13 @@ class PermissionDAO(DAOInterface):
             statement: Delete = sql_delete(GroupsVsPermissions).where(GroupsVsPermissions.permission_id == _id)
             await self.session.execute(statement)
 
-            statement: Delete = sql_delete(Permission).where(Permission.id == _id).returning(Permission.id)
+            if os.environ.get("APP_ENV") == "tests":
+                statement: Delete = sql_delete(Permission).where(Permission.id == _id).returning(Permission.id)
+            else:
+                statement: Update = sql_update(Permission).values(
+                    is_deleted=True
+                ).where(Permission.id == _id).returning(Permission.id)
+
             permission_id: int = await self.session.scalar(statement)
             if not permission_id:
                 raise GenericException(f"Permissão com id {_id} não encontrado.")

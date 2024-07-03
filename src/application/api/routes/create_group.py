@@ -1,3 +1,4 @@
+from fastapi import status
 from src.application.api.routes import router
 from src.adapters.controllers import CreateGroupController
 from src.adapters.dtos import CreateGroupInputDTO, CreateGroupOutputDTO
@@ -7,6 +8,7 @@ from src.adapters.dtos import CreateGroupInputDTO, CreateGroupOutputDTO
     "/groups",
     tags=["Banco de Dados"],
     response_model=CreateGroupOutputDTO,
+    status_code=status.HTTP_201_CREATED,
     summary="Cria um grupo."
 )
 async def create_group(data: CreateGroupInputDTO):

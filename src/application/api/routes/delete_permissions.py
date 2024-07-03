@@ -1,4 +1,4 @@
-from fastapi import Path
+from fastapi import Path, status
 from src.application.api.routes import router
 from src.adapters.controllers import DeletePermissionController
 
@@ -6,6 +6,7 @@ from src.adapters.controllers import DeletePermissionController
 @router.delete(
     "/permissions/{permission_id}",
     tags=["Banco de Dados"],
+    status_code=status.HTTP_204_NO_CONTENT,
     summary="Deleta uma permissão."
 )
 async def delete_permission(permission_id: int = Path(..., description="ID da permissão")):
@@ -14,4 +15,4 @@ async def delete_permission(permission_id: int = Path(..., description="ID da pe
     """
 
     controller = DeletePermissionController(_id=permission_id)
-    return await controller.execute()
+    await controller.execute()

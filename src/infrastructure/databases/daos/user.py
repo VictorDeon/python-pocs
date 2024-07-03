@@ -1,5 +1,7 @@
 import logging
+import os
 from typing import Optional
+from datetime import datetime
 from sqlalchemy import (
     select, Select, func,
     insert, Insert,
@@ -12,7 +14,7 @@ from src.adapters.dtos import (
 )
 from src.domains.utils.exceptions import GenericException
 from src.infrastructure.databases.models import (
-    User, UsersVsPermissions, UsersVsGroups, Company, Group
+    User, UsersVsPermissions, UsersVsGroups, Company, Group, Profile
 )
 from src.infrastructure.databases import DAOInterface
 from .permission import PermissionDAO
@@ -160,6 +162,7 @@ class UserDAO(DAOInterface):
             statement: Update = sql_update(User).values(
                 name=dto.name,
                 email=dto.email,
+                updated_at=datetime.now(),
                 work_company_cnpj=dto.work_company_cnpj
             ).where(User.id == _id).returning(User)
 
@@ -227,7 +230,15 @@ class UserDAO(DAOInterface):
             statement: Delete = sql_delete(UsersVsPermissions).where(UsersVsPermissions.user_id == _id)
             await self.session.execute(statement)
 
-            statement: Delete = sql_delete(User).where(User.id == _id).returning(User.id)
+            if os.environ.get("APP_ENV") == "tests":
+                statement: Delete = sql_delete(User).where(User.id == _id).returning(User.id)
+            else:
+                statement: Update = sql_update(Profile).values(is_deleted=True).where(Profile.user_id == _id)
+                await self.session.execute(statement)
+                statement: Update = sql_update(Company).values(is_deleted=True).where(Company.owner_id == _id)
+                await self.session.execute(statement)
+                statement: Update = sql_update(User).values(is_deleted=True).where(User.id == _id).returning(User.id)
+
             user_id: int = await self.session.scalar(statement)
             if not user_id:
                 raise ValueError(f"Usuário com o id {_id} não encontrado.")

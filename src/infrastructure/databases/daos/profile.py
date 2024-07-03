@@ -1,5 +1,6 @@
 import logging
 from typing import Optional
+from datetime import datetime
 from sqlalchemy import select, Select, insert, Insert, update as sql_update, Update
 from src.adapters.dtos import CreateProfileInputDTO, UpdateProfileInputDTO
 from src.infrastructure.databases.models import Profile
@@ -52,7 +53,9 @@ class ProfileDAO(DAOInterface):
         Pega os dados de um perfil pelo _id e atualiza
         """
 
-        statement: Update = sql_update(Profile).values(**dto.to_dict()).where(Profile.user_id == user_id).returning(Profile)
+        statement: Update = sql_update(Profile).values(
+            **dto.to_dict(), updated_at=datetime.now()
+        ).where(Profile.user_id == user_id).returning(Profile)
 
         try:
             profile: Profile = await self.session.scalar(statement)
