@@ -33,6 +33,7 @@ class RetrieveCompanyPresenter(PresenterInterface):
         company = Company(
             cnpj=model.cnpj,
             name=model.name,
+            owner_id=model.owner_id,
             fantasy_name=model.fantasy_name,
             employees=presenter.users
         )

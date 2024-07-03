@@ -279,7 +279,7 @@ async def test_get_by_cnpj_company_dao():
         )
         await user_dao.create(dto=user_dto03)
 
-        searched_company = await dao.get_by_cnpj(cnpj=company.cnpj)
+        searched_company = await dao.retrieve(cnpj=company.cnpj)
 
         assert company.cnpj == searched_company.cnpj
         assert company.name == searched_company.name
@@ -490,7 +490,7 @@ async def test_delete_company_dao():
 
         await dao.delete(cnpj=company.cnpj)
 
-        company = await dao.get_by_cnpj(cnpj=company.cnpj)
+        company = await dao.retrieve(cnpj=company.cnpj)
         assert company is None
 
         user01 = await user_dao.get_by_id(_id=user01.id)

@@ -37,4 +37,3 @@ def paginated(objs: list[Any], offset: int = None, limit: int = None) -> list[An
         return objs[:limit]
     else:
         return objs
-

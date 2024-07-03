@@ -19,4 +19,4 @@ class DeleteUserCase(UserCaseInterface):
         Executa o caso de uso.
         """
 
-        return await self.repository.delete(_id=_id)
+        return await self.repository.delete(_id)

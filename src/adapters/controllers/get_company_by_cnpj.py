@@ -1,5 +1,5 @@
 from src.adapters import ControllerInterface
-from src.domains.user_cases import GetByIdUserCase
+from src.domains.user_cases import GetByDocumentUserCase
 from src.infrastructure.databases.daos import CompanyDAO
 from src.infrastructure.databases import DBConnectionHandler
 from src.adapters.presenters import RetrieveCompanyPresenter
@@ -25,7 +25,7 @@ class GetCompanyByCNPJController(ControllerInterface):
         async with DBConnectionHandler() as session:
             repository = CompanyDAO(session=session)
             presenter = RetrieveCompanyPresenter(session=session)
-            use_case = GetByIdUserCase(
+            use_case = GetByDocumentUserCase(
                 presenter=presenter,
                 repository=repository
             )

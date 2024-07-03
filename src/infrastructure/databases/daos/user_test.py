@@ -541,14 +541,14 @@ async def test_delete_user_dao():
 
         await user_dao.delete(_id=user.id)
 
-        company = await company_dao.get_by_cnpj(cnpj=company.cnpj)
+        company = await company_dao.retrieve(cnpj=company.cnpj)
         assert company is None
 
         profile_dao = ProfileDAO(session=session)
         profile = await profile_dao.get_by_id(user_id=user.id)
         assert profile is None
 
-        work_company = await company_dao.get_by_cnpj(cnpj=work_company.cnpj)
+        work_company = await company_dao.retrieve(cnpj=work_company.cnpj)
         assert work_company is not None
 
         owner_user = await user_dao.get_by_id(_id=owner_user.id)
@@ -556,7 +556,7 @@ async def test_delete_user_dao():
 
         await user_dao.delete(_id=owner_user.id)
 
-        work_company = await company_dao.get_by_cnpj(cnpj=work_company.cnpj)
+        work_company = await company_dao.retrieve(cnpj=work_company.cnpj)
         assert work_company is None
 
         permission = await permission_dao.get_by_id(_id=permission.id)

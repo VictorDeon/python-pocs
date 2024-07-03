@@ -1,5 +1,4 @@
 import logging
-import os
 from typing import Optional
 from datetime import datetime
 from sqlalchemy import (
@@ -152,10 +151,7 @@ class GroupDAO(DAOInterface):
             statement: Delete = sql_delete(GroupsVsPermissions).where(GroupsVsPermissions.group_id == _id)
             await self.session.execute(statement)
 
-            if os.environ.get("APP_ENV") == "tests":
-                statement: Delete = sql_delete(Group).where(Group.id == _id).returning(Group.id)
-            else:
-                statement: Update = sql_update(Group).values(is_deleted=True).where(Group.id == _id).returning(Group.id)
+            statement: Delete = sql_delete(Group).where(Group.id == _id).returning(Group.id)
 
             group_id: int = await self.session.scalar(statement)
             if commit:

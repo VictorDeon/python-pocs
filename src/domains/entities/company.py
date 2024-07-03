@@ -10,6 +10,7 @@ class Company(BaseModel):
 
     cnpj: str = Field(..., description="CNPJ da empresa.")
     name: str = Field(..., description="Nome da empresa.")
+    owner_id: int = Field(..., description="Identificador do dono.")
     fantasy_name: Optional[str] = Field(None, description="Nome fantasia da empresa.")
     employees: list[User] = Field([], description="Funcionários da empresa.")
 

@@ -1,5 +1,4 @@
 import logging
-import os
 from typing import Optional
 from datetime import datetime
 from sqlalchemy import (
@@ -14,7 +13,7 @@ from src.adapters.dtos import (
 )
 from src.domains.utils.exceptions import GenericException
 from src.infrastructure.databases.models import (
-    User, UsersVsPermissions, UsersVsGroups, Company, Group, Profile
+    User, UsersVsPermissions, UsersVsGroups, Company, Group
 )
 from src.infrastructure.databases import DAOInterface
 from .permission import PermissionDAO
@@ -40,7 +39,7 @@ class UserDAO(DAOInterface):
 
         try:
             if dto.work_company_cnpj:
-                work_company = await company_dao.get_by_cnpj(cnpj=dto.work_company_cnpj)
+                work_company = await company_dao.retrieve(cnpj=dto.work_company_cnpj)
                 if not work_company:
                     raise GenericException(f"Empresa com cnpj {dto.work_company_cnpj} não encontrado.")
 
@@ -155,7 +154,7 @@ class UserDAO(DAOInterface):
         try:
             if dto.work_company_cnpj:
                 company_dao = CompanyDAO(session=self.session)
-                company: Company = await company_dao.get_by_cnpj(cnpj=dto.work_company_cnpj)
+                company: Company = await company_dao.retrieve(cnpj=dto.work_company_cnpj)
                 if not company:
                     raise GenericException(f"Empresa com cnpj {dto.work_company_cnpj} não encontrado.")
 
@@ -230,14 +229,7 @@ class UserDAO(DAOInterface):
             statement: Delete = sql_delete(UsersVsPermissions).where(UsersVsPermissions.user_id == _id)
             await self.session.execute(statement)
 
-            if os.environ.get("APP_ENV") == "tests":
-                statement: Delete = sql_delete(User).where(User.id == _id).returning(User.id)
-            else:
-                statement: Update = sql_update(Profile).values(is_deleted=True).where(Profile.user_id == _id)
-                await self.session.execute(statement)
-                statement: Update = sql_update(Company).values(is_deleted=True).where(Company.owner_id == _id)
-                await self.session.execute(statement)
-                statement: Update = sql_update(User).values(is_deleted=True).where(User.id == _id).returning(User.id)
+            statement: Delete = sql_delete(User).where(User.id == _id).returning(User.id)
 
             user_id: int = await self.session.scalar(statement)
             if not user_id:

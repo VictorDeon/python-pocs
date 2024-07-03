@@ -1,5 +1,4 @@
 import logging
-import os
 from typing import Optional
 from datetime import datetime
 from sqlalchemy import (
@@ -63,7 +62,7 @@ class CompanyDAO(DAOInterface):
 
         return companies
 
-    async def get_by_cnpj(self, cnpj: str) -> Optional[Company]:
+    async def retrieve(self, cnpj: str) -> Optional[Company]:
         """
         Pega os dados de uma empresa pelo cnpj
         """
@@ -104,12 +103,7 @@ class CompanyDAO(DAOInterface):
         Pega os dados de uma empresa pelo _id e deleta ela
         """
 
-        if os.environ.get("APP_ENV") == "tests":
-            statement: Delete = sql_delete(Company).where(Company.cnpj == cnpj).returning(Company.cnpj)
-        else:
-            statement: Update = sql_update(Company).values(
-                is_deleted=True
-            ).where(Company.cnpj == cnpj).returning(Company.cnpj)
+        statement: Delete = sql_delete(Company).where(Company.cnpj == cnpj).returning(Company.cnpj)
 
         try:
             company_cnpj: str = await self.session.scalar(statement)
