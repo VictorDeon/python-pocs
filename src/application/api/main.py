@@ -1,5 +1,6 @@
 import os
 import logging
+from pathlib import Path
 from datetime import datetime
 from contextlib import asynccontextmanager
 from pytz import timezone
@@ -8,6 +9,7 @@ from fastapi.responses import JSONResponse
 from fastapi.encoders import jsonable_encoder
 from fastapi.exceptions import RequestValidationError
 from fastapi import FastAPI
+from pyinstrument import Profiler
 from src.application.api.routes import router
 
 
@@ -22,6 +24,7 @@ else:
     log = logging.INFO
 
 sp = timezone("America/Sao_Paulo")
+ENV = os.environ.get("APP_ENV")
 logging.Formatter.converter = lambda *args: datetime.now(tz=sp).timetuple()
 logging.basicConfig(
     level=log,
@@ -53,6 +56,21 @@ app = FastAPI(
     docs_url="/docs",
     lifespan=lifespan
 )
+
+
+@app.middleware("http")
+async def profile_request(request: Request, call_next):
+    profiling = request.query_params.get("profile", False)
+    if profiling:
+        profiler = Profiler(async_mode="enabled")
+        profiler.start()
+        response = await call_next(request)
+        profiler.stop()
+        profile_path = Path("assets/profiles").mkdir(exist_ok=True)
+        profiler.write_html(profile_path + "profile.html")
+        return response
+    else:
+        return await call_next(request)
 
 
 @app.get("/")

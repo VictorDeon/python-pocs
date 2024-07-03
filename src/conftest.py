@@ -4,6 +4,8 @@ import logging
 from unittest import mock
 import pytest
 import pytest_asyncio
+from pathlib import Path
+from pyinstrument import Profiler
 from faker import Faker
 from datetime import datetime, timedelta
 from sqlalchemy import delete, Delete
@@ -43,6 +45,18 @@ def envs():
         "GOOGLE_CLOUD_PROJECT": "vksoftware"
     }):
         yield
+
+
+@pytest.fixture(scope="function")
+def auto_profile(request):
+    profile_path = Path("assets/profiles").mkdir(exist_ok=True)
+    profiler = Profiler()
+    profiler.start()
+
+    yield
+
+    profiler.stop()
+    profiler.write_html(profile_path + f"{request.node.name}.html")
 
 
 @pytest_asyncio.fixture(autouse=True, scope="function")
