@@ -1,7 +1,6 @@
 """ DATA TRANSFER OBJECT (DTO) """
 # flake8: noqa
-from .find_pokemon import FindPokemonInputDTO, FindPokemonOutputDTO
-from .find_user import FindUserInputDTO, FindUserOutputDTO
+from .retrieve_pokemon import RetrievePokemonInputDTO, RetrievePokemonOutputDTO
 from .list_pokemons import ListPokemonsInputDTO, ListPokemonsOutputDTO
 from .pdf_generator import PDFGeneratorInputDTO, PDFGeneratorOutputDTO
 from .pdf_reader import PDFReaderInputDTO, PDFReaderOutputDTO

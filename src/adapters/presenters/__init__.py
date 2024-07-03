@@ -1,6 +1,5 @@
 # flake8: noqa
-from .find_pokemon import FindPokemonPresenter
-from .find_user import FindUserPresenter
+from .retrieve_pokemon import RetrievePokemonPresenter
 from .list_pokemons import ListPokemonsPresenter
 from .list_xml_pokemons import ListXMLPokemonsPresenter
 from .pdf_generator import PDFGeneratorPresenter

@@ -6,7 +6,7 @@ from .blocked_requests import *
 from .pdf_generator import *
 from .pdf_reader import *
 from .list_pokemons import list_pokemons
-from .find_pokemon import *
+from .retrieve_pokemon import retrieve_pokemon
 from .list_permissions import list_permission
 from .create_permission import create_permission
 from .retrieve_permission import retrieve_permission

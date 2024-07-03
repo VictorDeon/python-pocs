@@ -80,7 +80,7 @@ class PokemonPokeAPIRepository(RequestRepositoryInterface):
 
         return [Pokemon.from_dict(pokemon) for pokemon in responses]
 
-    async def find_by_id(self, _id: int) -> Pokemon:
+    async def get_by_id(self, _id: int) -> Pokemon:
         """
         Método responsável por encontrar um determinado pokemon.
         """

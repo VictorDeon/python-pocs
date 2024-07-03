@@ -1,13 +1,13 @@
 from src.adapters import ControllerInterface
-from src.adapters.presenters import FindPokemonPresenter
-from src.adapters.dtos import FindPokemonInputDTO
-from src.domains.user_cases import FindPokemonUseCase
+from src.adapters.presenters import RetrievePokemonPresenter
+from src.adapters.dtos import RetrievePokemonInputDTO
+from src.domains.user_cases import GetByIdUserCase
 from src.infrastructure.caches.repositories import RedisCache
 from src.infrastructure.clients.repositories import HTTPxClient
 from src.infrastructure.requests.repositories import PokemonPokeAPIRepository
 
 
-class FindPokemonController(ControllerInterface):
+class RetrievePokemonController(ControllerInterface):
     """
     Constroladora para encontrar um pokemon.
     """
@@ -17,7 +17,7 @@ class FindPokemonController(ControllerInterface):
         Construtor.
         """
 
-        self.input = FindPokemonInputDTO(id=pokemon_id)
+        self.input = RetrievePokemonInputDTO(id=pokemon_id)
 
     async def execute(self) -> dict:
         """
@@ -26,6 +26,6 @@ class FindPokemonController(ControllerInterface):
 
         async with HTTPxClient() as client, RedisCache() as cache:
             repository = PokemonPokeAPIRepository(client, cache)
-            output = FindPokemonPresenter()
-            use_case = FindPokemonUseCase(output, repository)
+            output = RetrievePokemonPresenter()
+            use_case = GetByIdUserCase(output, repository)
             return await use_case.execute(self.input)

@@ -1,15 +1,15 @@
 import math
-from src.adapters.dtos.find_pokemon import FindPokemonOutputDTO, PokemonOutput
+from src.adapters.dtos.retrieve_pokemon import RetrievePokemonOutputDTO, PokemonOutput
 from src.adapters import PresenterInterface
 from src.domains.entities import Pokemon
 
 
-class FindPokemonPresenter(PresenterInterface):
+class RetrievePokemonPresenter(PresenterInterface):
     """
     Formatação de saída da API que busca um pokemon.
     """
 
-    def present(self, model: Pokemon) -> FindPokemonOutputDTO:
+    def present(self, model: Pokemon) -> RetrievePokemonOutputDTO:
         """
         Forma final de apresentação dos dados.
         """
@@ -32,7 +32,7 @@ class FindPokemonPresenter(PresenterInterface):
             status=status
         )
 
-        return FindPokemonOutputDTO(pokemon=pokemon)
+        return RetrievePokemonOutputDTO(pokemon=pokemon)
 
     def __convert_decimeters_to_feet_and_inches(self, decimeters: int) -> str:
         """

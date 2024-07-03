@@ -2,7 +2,7 @@ from pydantic import BaseModel, Field
 from typing import Optional
 
 
-class FindPokemonInputDTO(BaseModel):
+class RetrievePokemonInputDTO(BaseModel):
     """
     Dados de entrada para encontrar um pokemon
     """
@@ -28,7 +28,7 @@ class PokemonOutput(BaseModel):
     category: Optional[str] = Field(None, description="Espécie do pokemon.")
 
 
-class FindPokemonOutputDTO(BaseModel):
+class RetrievePokemonOutputDTO(BaseModel):
     """
     Dados de saída para encontrar um pokemon
     """

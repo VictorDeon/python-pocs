@@ -16,7 +16,7 @@ class RequestRepositoryInterface(Generic[MODEL], metaclass=ABCMeta):
         """
 
     @abstractmethod
-    async def find_by_id(self, _id: int) -> MODEL:
+    async def get_by_id(self, _id: int) -> MODEL:
         """
         Método responsável por encontrar um determinado objeto na API.
         """

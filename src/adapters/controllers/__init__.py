@@ -1,10 +1,9 @@
 # flake8: noqa
-from .find_pokemon import FindPokemonController
+from .retrieve_pokemon import RetrievePokemonController
 from .list_pokemon import ListPokemonController
 from .list_xml_pokemon import ListXMLPokemonController
 from .pdf_generator import PDFGeneratorController
 from .pdf_reader import PDFReaderController
-from .find_user import FindUserController
 from .create_permission import CreatePermissionController
 from .update_permission import UpdatePermissionController
 from .delete_permission import DeletePermissionController
