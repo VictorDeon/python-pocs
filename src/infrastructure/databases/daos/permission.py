@@ -1,5 +1,6 @@
 import logging
 from typing import Optional
+from datetime import datetime
 from sqlalchemy import (
     select, Select, func,
     insert, Insert,
@@ -106,7 +107,7 @@ class PermissionDAO(DAOInterface):
         """
 
         statement: Update = sql_update(Permission) \
-            .values(**dto.to_dict()) \
+            .values(**dto.to_dict(), updated_at=datetime.now()) \
             .where(Permission.id == _id) \
             .returning(Permission)
 

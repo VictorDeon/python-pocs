@@ -9,10 +9,10 @@ class UpdatePermissionPresenter(PresenterInterface):
     Formatação de saída da API que atualizar uma permissão.
     """
 
-    def present(self, model: PermissionModel) -> UpdatePermissionOutputDTO:
+    async def present(self, model: PermissionModel) -> UpdatePermissionOutputDTO:
         """
         Forma final de apresentação dos dados.
         """
 
-        presenter = RetrievePermissionPresenter(session=self.session).present(model)
+        presenter = await RetrievePermissionPresenter(session=self.session).present(model)
         return UpdatePermissionOutputDTO(permission=presenter.permission)
