@@ -11,6 +11,11 @@ from .delete_permission import DeletePermissionController
 from .retrieve_permission import RetrievePermissionController
 from .list_permissions import ListPermissionsController
 from .get_permission_by_id import GetPermissionByIdController
+from .create_group import CreateGroupController
+from .update_group import UpdateGroupController
+from .delete_group import DeleteGroupController
+from .get_group_by_id import GetGroupByIdController
+from .list_groups import ListGroupsController
 from .blocked_requests import (
     BlockingRequestSyncController,
     BlockingRequestAsyncWithSyncController,

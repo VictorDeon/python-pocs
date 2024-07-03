@@ -8,7 +8,7 @@ from src.adapters.controllers import DeletePermissionController
     tags=["Banco de Dados"],
     summary="Deleta uma permissão."
 )
-async def update_permission(permission_id: int = Path(..., description="ID da permissão")):
+async def delete_permission(permission_id: int = Path(..., description="ID da permissão")):
     """
     Deleta uma permissão do usuário ou grupo.
     """
