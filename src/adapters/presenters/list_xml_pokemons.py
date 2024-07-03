@@ -1,5 +1,5 @@
 from xml.etree.ElementTree import Element, tostring
-from src.adapters.dtos import ListPokemonsOutputDTO
+from src.domains.entities import Pokemon
 from src.adapters import PresenterInterface
 
 
@@ -8,12 +8,12 @@ class ListXMLPokemonsPresenter(PresenterInterface):
     Formatação de saída da API que lista os pokemons em XML.
     """
 
-    def present(self, output: ListPokemonsOutputDTO) -> str:
+    async def present(self, pokemons: list[Pokemon]) -> str:
         """
         Forma final de apresentação dos dados.
         """
 
-        sorted_pokemons = sorted(output.pokemons, key=lambda pokemon: pokemon.id)
+        sorted_pokemons = sorted(pokemons, key=lambda pokemon: pokemon.id)
         root = Element('pokemons')
         for pokemon in sorted_pokemons:
             pokemon_element = Element('pokemon')

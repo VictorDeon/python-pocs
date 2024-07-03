@@ -31,8 +31,8 @@ async def list_pokemons(
     response_description="Lista de pokemons em XML"
 )
 async def list_xml_pokemons(
-    limit: int = Query(None, description="Quantidade limite de itens que irá aparecer na listagem."),
-    offset: int = Query(None, description="Pular os N primeiros itens da lista.")):
+    limit: int = Query(20, description="Quantidade limite de itens que irá aparecer na listagem."),
+    offset: int = Query(0, description="Pular os N primeiros itens da lista.")):
     """
     Lista todos os pokemons no formato XML.
     """
