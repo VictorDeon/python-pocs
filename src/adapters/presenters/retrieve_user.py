@@ -26,10 +26,12 @@ class RetrieveUserPresenter(PresenterInterface):
         permission_dao = PermissionDAO(session=self.session)
         permissions: list[PermissionModel] = permission_dao.list(dto=ListPermissionInputDTO(user_id=model.id))
         permission_presenter = ListPermissionPresenter(session=self.session)
+        permission_result = await permission_presenter.present(permissions)
 
         group_dao = GroupDAO(session=self.session)
         groups: list[GroupModel] = group_dao.list(dto=ListGroupInputDTO(user_id=model.id))
         group_presenter = ListGroupPresenter(session=self.session)
+        group_result = await group_presenter.present(groups)
 
         profile_dao = ProfileDAO(session=self.session)
         profile_model: ProfileModel = profile_dao.get_by_id(user_id=model.id)
@@ -44,8 +46,8 @@ class RetrieveUserPresenter(PresenterInterface):
             profile=profile,
             work_company=model.work_company_cnpj,
             companies=[company.cnpj for company in company_models],
-            groups=group_presenter.present(groups),
-            permissions=permission_presenter.present(permissions)
+            groups=group_result.groups,
+            permissions=permission_result.permissions
         )
 
         return RetrieveUserOutputDTO(user=user)

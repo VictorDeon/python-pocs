@@ -11,7 +11,7 @@ class ListPermissionPresenter(PresenterInterface):
     Formatação de saída da API que lista as permissões.
     """
 
-    def present(self, models: list[PermissionModel], limit: int, offset: int) -> ListPermissionOutputDTO:
+    async def present(self, models: list[PermissionModel], limit: int = None, offset: int = None) -> ListPermissionOutputDTO:
         """
         Forma final de apresentação dos dados.
         """
@@ -19,8 +19,8 @@ class ListPermissionPresenter(PresenterInterface):
         permissions: list[Permission] = []
         presenter = RetrievePermissionPresenter(session=self.session)
         for model in models:
-            permission = presenter.present(model).permission
-            permissions.append(permission)
+            result = await presenter.present(model)
+            permissions.append(result.permission)
 
         paginated_permissions: list[Permission] = paginated(permissions, offset, limit)
 

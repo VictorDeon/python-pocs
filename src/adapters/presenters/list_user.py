@@ -11,7 +11,7 @@ class ListUserPresenter(PresenterInterface):
     Formatação de saída da API que listar usuários.
     """
 
-    async def present(self, models: list[UserModel], limit: int, offset: int) -> ListUserOutputDTO:
+    async def present(self, models: list[UserModel], limit: int = None, offset: int = None) -> ListUserOutputDTO:
         """
         Forma final de apresentação dos dados.
         """

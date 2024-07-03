@@ -22,12 +22,13 @@ class RetrieveCompanyPresenter(PresenterInterface):
         user_dao = UserDAO(session=self.session)
         employees: list[UserModel] = await user_dao.list(dto=ListUserInputDTO(work_company_cnpj=model.cnpj))
         list_user_presentes = ListUserPresenter(session=self.session)
+        presenter = await list_user_presentes.present(employees)
 
         company = Company(
             cnpj=model.cnpj,
             name=model.name,
             fantasy_name=model.fantasy_name,
-            employees=list_user_presentes.present(employees)
+            employees=presenter.users
         )
 
         return RetrieveCompanyOutputDTO(company=company)

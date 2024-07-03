@@ -11,7 +11,7 @@ class ListCompanyPresenter(PresenterInterface):
     Formatação de saída da API que listar empresas.
     """
 
-    async def present(self, models: list[CompanyModel], limit: int, offset: int) -> ListCompaniesOutputDTO:
+    async def present(self, models: list[CompanyModel], limit: int = None, offset: int = None) -> ListCompaniesOutputDTO:
         """
         Forma final de apresentação dos dados.
         """

@@ -22,11 +22,12 @@ class RetrieveGroupPresenter(PresenterInterface):
         permission_dao = PermissionDAO(session=self.session)
         permissions: list[PermissionModel] = await permission_dao.list(dto=ListPermissionInputDTO(group_id=model.id))
         permission_presenter = ListPermissionPresenter(session=self.session)
+        presenter = await permission_presenter.present(permissions)
 
         group = Group(
             id=model.id,
             name=model.name,
-            permissions=permission_presenter.present(permissions)
+            permissions=presenter.permissions
         )
 
         return RetrieveGroupOutputDTO(group=group)

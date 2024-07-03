@@ -11,6 +11,18 @@ class CreateGroupInputDTO(BaseModel):
     name: str = Field(..., description="Nome do grupo.")
     permissions: Optional[list[str]] = Field([], description="Lista de códigos de permissões do grupo de usuários.")
 
+    class Config:
+        """
+        Metadados da modelo
+        """
+
+        json_schema_extra = {
+            "example": {
+                "name": "Grupo 01",
+                "permissions": ["permission_create", "permission_delete"]
+            },
+        }
+
     def to_dict(self):
         """
         Transforma os dados em dicionário.

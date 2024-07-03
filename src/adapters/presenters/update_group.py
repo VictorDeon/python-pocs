@@ -15,5 +15,5 @@ class UpdateGroupPresenter(PresenterInterface):
         """
 
         presenter = RetrieveGroupPresenter(session=self.session)
-        group = await presenter.present(model)
-        return UpdateGroupOutputDTO(group=group)
+        result = await presenter.present(model)
+        return UpdateGroupOutputDTO(group=result.group)

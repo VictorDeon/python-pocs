@@ -11,7 +11,7 @@ class ListGroupPresenter(PresenterInterface):
     Formatação de saída da API que listar grupos.
     """
 
-    async def present(self, models: list[GroupModel], limit: int, offset: int) -> ListGroupOutputDTO:
+    async def present(self, models: list[GroupModel], limit: int = None, offset: int = None) -> ListGroupOutputDTO:
         """
         Forma final de apresentação dos dados.
         """
@@ -19,8 +19,8 @@ class ListGroupPresenter(PresenterInterface):
         groups: list[Group] = []
         presenter = RetrieveGroupPresenter(session=self.session)
         for model in models:
-            group = await presenter.present(model)
-            groups.append(group)
+            result = await presenter.present(model)
+            groups.append(result.group)
 
         paginated_groups: list[Group] = paginated(groups, offset, limit)
 
