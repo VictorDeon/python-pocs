@@ -204,6 +204,7 @@ services:
       - POSTGRES_PASSWORD=poc
       - PYTHONUNBUFFERED=1
       - TRACE=0
+      - PROFILE=1
       - LOG_LEVEL=INFO
     networks:
       - vksoftware

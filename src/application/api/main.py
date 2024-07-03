@@ -24,7 +24,6 @@ else:
     log = logging.INFO
 
 sp = timezone("America/Sao_Paulo")
-ENV = os.environ.get("APP_ENV")
 logging.Formatter.converter = lambda *args: datetime.now(tz=sp).timetuple()
 logging.basicConfig(
     level=log,
@@ -60,14 +59,16 @@ app = FastAPI(
 
 @app.middleware("http")
 async def profile_request(request: Request, call_next):
-    profiling = request.query_params.get("profile", False)
-    if profiling:
-        profiler = Profiler(async_mode="enabled")
+    PROFILE = int(os.environ.get("PROFILE", 0))
+    if PROFILE:
+        profiler = Profiler(interval=0.001, async_mode="enabled")
         profiler.start()
         response = await call_next(request)
         profiler.stop()
-        profile_path = Path("assets/profiles").mkdir(exist_ok=True)
-        profiler.write_html(profile_path + "profile.html")
+        profile_path = Path("/software/assets/profiles")
+        profile_path.mkdir(parents=True, exist_ok=True)
+        full_path = profile_path / "profile.html"
+        profiler.write_html(str(full_path.resolve()))
         return response
     else:
         return await call_next(request)

@@ -164,3 +164,4 @@ cython_debug/
 service_account.json
 *.sqlite
 *.pdf
+assets/profiles/*.html
