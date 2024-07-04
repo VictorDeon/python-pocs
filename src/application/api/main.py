@@ -61,6 +61,7 @@ app = FastAPI(
 async def profile_request(request: Request, call_next):
     PROFILE = int(os.environ.get("PROFILE", 0))
     if PROFILE:
+        logging.info("Iniciando o profiling das requisições.")
         profiler = Profiler(interval=0.001, async_mode="enabled")
         profiler.start()
         response = await call_next(request)
@@ -68,7 +69,9 @@ async def profile_request(request: Request, call_next):
         profile_path = Path("/software/assets/profiles")
         profile_path.mkdir(parents=True, exist_ok=True)
         full_path = profile_path / "profile.html"
-        profiler.write_html(str(full_path.resolve()))
+        string_path = str(full_path.resolve())
+        profiler.write_html(string_path)
+        logging.info(f"Finalizando o profiling da requisição {request.url} e salvando em {string_path}.")
         return response
     else:
         return await call_next(request)

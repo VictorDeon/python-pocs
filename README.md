@@ -65,7 +65,6 @@ Nas proximas vezes só precisa executar os emuladores `docker compose --profile 
 
 ### TODO:
 
-* Inserir o profile para medir desempenho
 * Inserir um sistema de logs inteligentes
 * Desenvolver vários tipos de consumos de APIs usando corotines, queues, threads e processos
 * Endpoints que faz o upload de um arquivo excel com dados de usuários.

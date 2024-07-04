@@ -1,6 +1,5 @@
 from timeit import repeat
-from cProfile import Profile
-from pstats import Stats
+from pyinstrument import Profiler
 from statistics import mean
 from memory_profiler import profile
 from src.adapters import ControllerInterface
@@ -29,8 +28,8 @@ class ProfileRequestController(ControllerInterface):
         Essa requisição executa códigos
         """
 
-        profile = Profile()
-        profile.enable()
+        profile = Profiler(interval=0.001, async_mode="enabled")
+        profile.start()
 
         result = repeat(self.memory_consume, repeat=1, number=qtd)
         result_min = min(result)
@@ -45,8 +44,7 @@ class ProfileRequestController(ControllerInterface):
             total=round(result_total, 4)
         )
 
-        profile.disable()
-        stats = Stats(profile).sort_stats(sort)
-        stats.print_stats()
+        profile.stop()
+        profile.print()
 
         return result
