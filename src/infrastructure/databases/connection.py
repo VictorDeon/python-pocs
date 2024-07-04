@@ -1,11 +1,34 @@
 import os
 import logging
+import time
 from typing import Optional, Any
 from pathlib import Path
+from sqlalchemy import event, Engine
 from sqlalchemy.ext.asyncio import (
     create_async_engine, async_sessionmaker,
     AsyncSession, AsyncEngine
 )
+
+
+@event.listens_for(Engine, "before_cursor_execute")
+def before_cursor_execute(conn, cursor, statement, parameters, context, executemany):
+    """
+    Executado antes da consulta SQL
+    """
+
+    context._query_start_time = time.time()
+    logging.info("Start Query:\n%s" % statement)
+    logging.info("Parameters: %r" % (parameters,))
+
+
+@event.listens_for(Engine, "after_cursor_execute")
+def after_cursor_execute(conn, cursor, statement, parameters, context, executemany):
+    """
+    Executado após a consulta SQL
+    """
+
+    total = time.time() - context._query_start_time
+    logging.info("Query Complete! Total Time: %.02fms" % (total * 1000))
 
 
 class DBConnectionHandler:
