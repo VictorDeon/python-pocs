@@ -34,13 +34,13 @@ class HTTPxSingleton:
         )
 
     @classmethod
-    def connect(cls) -> "HTTPxClient":
+    def get_instance(cls) -> "HTTPxSingleton":
         """
-        Realiza a conexão do singleton.
+        Realiza a conexão do singleton e retorna sua instância.
         """
 
         if not cls.__instance:
-            cls.__instance = HTTPxClient()
+            cls.__instance = HTTPxSingleton()
 
         return cls.__instance
 

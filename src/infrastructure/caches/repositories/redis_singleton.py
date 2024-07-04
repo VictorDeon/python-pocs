@@ -2,30 +2,45 @@ import os
 import json
 import logging
 from typing import Any, Union
+from fastapi import HTTPException
 from redis.asyncio import Redis
 from redis.exceptions import ConnectionError
 from src.domains.utils.formatters import JsonFormatter
-from src.infrastructure.caches import CacheInterface
 
 
-class RedisCache(CacheInterface):
+class RedisSingleton:
     """
-    Modulo de cache do redis.
+    Modulo de cache do redis como singleton.
     """
 
-    async def __aenter__(self) -> None:
+    __instance = None
+
+    def __init__(self) -> None:
         """
-        Cria a instância de cache.
+        Construtor.
         """
+
+        if self.__instance:
+            raise HTTPException(status_code=500, detail="Não se pode instânciar uma classe singleton.")
 
         self.cache = Redis(
             host=os.environ.get("CACHE_HOST"),
             port=os.environ.get("CACHE_PORT"),
             decode_responses=True,
+            socket_keepalive=True,
             max_connections=int(os.environ.get("CACHE_MAX_CONNECTIONS", 20))
         )
 
-        return self
+    @classmethod
+    def get_instance(cls) -> "RedisSingleton":
+        """
+        Realiza a conexão do singleton e retorna sua instância.
+        """
+
+        if not cls.__instance:
+            cls.__instance = RedisSingleton()
+
+        return cls.__instance
 
     async def set(self, key: str, value: Any, exp: int = 86400) -> bool:
         """
@@ -79,10 +94,3 @@ class RedisCache(CacheInterface):
         """
 
         await self.cache.delete(*await self.cache.keys())
-
-    async def __aexit__(self, exc_type, exc_val, exc_tb) -> None:
-        """
-        Fecha a conexão com o cache.
-        """
-
-        await self.cache.close()
