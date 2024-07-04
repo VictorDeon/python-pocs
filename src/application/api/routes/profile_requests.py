@@ -1,10 +1,7 @@
-from fastapi import Header, Query
+from fastapi import Query
 from src.application.api.routes import router
-from src.adapters.controllers import (
-    ProfileRequestTimeitController,
-)
+from src.adapters.controllers import ProfileRequestController
 from src.adapters.dtos import ProfileRequestsOutputDTO
-from src.infrastructure.mediator.repositories import Mediator
 
 
 @router.get(
@@ -14,17 +11,39 @@ from src.infrastructure.mediator.repositories import Mediator
     summary="Realiza requisições de perfil."
 )
 async def profile_requests(
-    func: str = Query(..., description="Caminho da função que será executada."),
-    qtd: int = Query(..., description="Quantidade de vezes a ser executada a função."),
-    command: str = Header(..., description="Comando de requisição.")
-):
+    qtd: int = Query(..., description="Quantidade de vezes a ser executada o comando."),
+    sort: str = Query("tottime", description="Ordenar pelo parâmetro listado.")):
     """
-    Tipos de requisições para teste de profile
+    Executa e calcula o desempenho e consume de memória com o cprofile.
+    ## Linha de comando:
 
-    * TimeIt
+    ### Gerar o cprofile do seu código
+    * python -m cProfile -o output.stats uvicorn ...
+    * python -m pstats output.stats
+        - stats N
+        - sort <params>
+        - quit
+
+    ### Com o output.stats gere uma imagem com a arvore de chamadas
+    * pip install gprof2dot
+    * gprof2dot -f pstats output.stats | dot -T png -o output.png
+
+    ### Verifique sua aplicação em tempo real
+    * pip install py-spy
+    * py-spy top -- python uvicorn ...
+
+    ### profile com corotines
+    * pip install pyinstrument
+    * pyinstrument uvicorn ...
+
+    ## Parâmetros:
+    * **ncalls**: Números de chamadas do método
+    * **tottime**: Tempo total de execução do método sem as chamadas internas a outros métodos * ncalls
+    * **percall**: Tempo total de execução do método sem as chamadas internas a outros métodos
+    * **cumtime**: Tempo de espera que esse método teve com suas chamadas internas a outros métodos * ncalls
+    * **percall**: Tempo de espera que esse método teve com suas chamadas internas a outros métodos
+    * **filename**: Caminho do método
     """
 
-    mediator = Mediator()
-    mediator.add(ProfileRequestTimeitController())
-
-    return await mediator.send(command, func, qtd)
+    controller = ProfileRequestController()
+    return await controller.execute(qtd, sort)

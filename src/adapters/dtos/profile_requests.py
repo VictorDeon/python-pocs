@@ -20,6 +20,7 @@ class ProfileRequestsOutputDTO(BaseModel):
             "example": {
                 "min": 0.0033,
                 "max": 0.2324,
-                "mean": 0.0233
+                "mean": 0.0233,
+                "total": 0.2457
             },
         }

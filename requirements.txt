@@ -13,6 +13,7 @@ asyncpg==0.29.0
 aioredis==2.0.1
 redis==5.0.5
 httpx==0.26.0
+memory-profiler==0.61.0
 # development dependencies
 ipython==8.25.0
 flake8==7.0.0

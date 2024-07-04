@@ -27,7 +27,7 @@ from .delete_user import DeleteUserController
 from .retrieve_user import RetrieveUserController
 from .get_user_by_id import GetUserByIdController
 from .delete_user import DeleteUserController
-from .profile_requests import ProfileRequestTimeitController
+from .profile_requests import ProfileRequestController
 from .blocked_requests import (
     BlockingRequestSyncController,
     BlockingRequestAsyncWithSyncController,
