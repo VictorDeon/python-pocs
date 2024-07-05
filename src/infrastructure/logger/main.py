@@ -5,6 +5,35 @@ from datetime import datetime
 from pytz import timezone
 
 
+class CustomFilter(logging.Filter):
+    """
+    Remove determinados logs
+    """
+
+    def filter(self, record: logging.LogRecord) -> bool:
+        """
+        Realiza o filtro se vai ou não mostrar determinado log.
+        """
+
+        if "..." in record.msg:
+            return False
+
+        return True
+
+
+class CustomHandler(logging.Handler):
+    """
+    Cria um handler customizavel.
+    """
+
+    def emit(self, record: logging.LogRecord) -> None:
+        """
+        Configura onde deseja enviar o log.
+        """
+
+        print(f"Custom handler: {record.getMessage()}")
+
+
 class ProjectLoggerSingleton:
     """
     Log do projeto
@@ -25,6 +54,7 @@ class ProjectLoggerSingleton:
         # Configurar o level do log
         self.level = os.environ.get("LOG_LEVEL")
         self.__logger.setLevel(level=self.__get_log_level())
+        self.__logger.propagate = False
 
         # Formatar a saída de dados do log
         formatter = logging.Formatter(
@@ -38,7 +68,6 @@ class ProjectLoggerSingleton:
         console_handler = logging.StreamHandler()
         console_handler.setFormatter(formatter)
         self.__logger.addHandler(console_handler)
-        self.__logger.propagate = False
 
         # Inserir o handler de arquivo rotativo, ou seja, se chegar a 2MB o arquivo, cria
         # um novo com o nome debug.log.[1..5]
@@ -48,8 +77,15 @@ class ProjectLoggerSingleton:
             maxBytes=2 * (1024 * 1024),
             backupCount=5
         )
+        file_handler.setLevel(logging.WARNING)
         file_handler.setFormatter(formatter)
         self.__logger.addHandler(file_handler)
+
+        # Inserindo filtros
+        # self.__logger.addFilter(HealthCheckFilter())
+
+        # Inserindo handlers customizados
+        # self.__logger.addHandler(CustomHandler())
 
     @classmethod
     def get_logger(cls):

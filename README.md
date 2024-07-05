@@ -76,6 +76,7 @@ e arquivos e enviar o excel para outra pasta de processados.
     - CSV
     - XML
     - JSON
+    - YAML (pyyaml)
 * Endpoints de consulta desses dados de usuários pelos diversos meios acima.
 * Criar um interface com o tkinter para o CRUD de usuários definir via header.
 * Autenticação e Autorização - vwauth
