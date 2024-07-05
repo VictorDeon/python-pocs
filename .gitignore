@@ -165,3 +165,4 @@ service_account.json
 *.sqlite
 *.pdf
 assets/profiles/*.html
+assets/profiles/*.log.*

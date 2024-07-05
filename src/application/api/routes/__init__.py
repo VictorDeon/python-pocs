@@ -2,6 +2,7 @@
 # pylint: disable=wrong-import-position
 from fastapi import APIRouter
 router = APIRouter()
+from .logger_request import logger_request
 from .blocked_requests import blocked_requests
 from .profile_requests import profile_requests
 from .pdf_generator import create_pdf

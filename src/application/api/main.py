@@ -1,9 +1,6 @@
 import os
-import logging
 from pathlib import Path
-from datetime import datetime
 from contextlib import asynccontextmanager
-from pytz import timezone
 from fastapi import Request, status, HTTPException
 from fastapi.responses import JSONResponse
 from fastapi.encoders import jsonable_encoder
@@ -11,28 +8,9 @@ from fastapi.exceptions import RequestValidationError
 from fastapi import FastAPI
 from pyinstrument import Profiler
 from src.application.api.routes import router
+from src.infrastructure.logger import ProjectLoggerSingleton
 
-
-log_level = os.environ.get("LOG_LEVEL") or "INFO"
-if log_level == "DEBUG":
-    log = logging.DEBUG
-elif log_level == "ERROR":
-    log = logging.ERROR
-elif log_level == "WARNING":
-    log = logging.WARNING
-else:
-    log = logging.INFO
-
-sp = timezone("America/Sao_Paulo")
-logging.Formatter.converter = lambda *args: datetime.now(tz=sp).timetuple()
-logging.basicConfig(
-    level=log,
-    format="%(asctime)s %(levelname)s %(message)s",
-    datefmt="%d/%m/%Y %H:%M:%S"
-)
-logging.getLogger('httpx').propagate = False
-logging.getLogger('asyncio').propagate = False
-logging.getLogger('urllib3').propagate = False
+logger = ProjectLoggerSingleton.get_logger()
 
 
 @asynccontextmanager
@@ -41,11 +19,11 @@ async def lifespan(_: FastAPI):
     Executado antes e depois de dar o start no fastapi
     """
 
-    logging.debug("Iniciando o projeto.")
+    logger.debug("Iniciando o projeto.")
 
     yield
 
-    logging.debug("Finalizando o projeto.")
+    logger.debug("Finalizando o projeto.")
 
 
 app = FastAPI(
@@ -61,7 +39,7 @@ app = FastAPI(
 async def profile_request(request: Request, call_next):
     PROFILE = int(os.environ.get("PROFILE", 0))
     if PROFILE:
-        logging.info("Iniciando o profiling das requisições.")
+        logger.info("Iniciando o profiling das requisições.")
         profiler = Profiler(interval=0.001, async_mode="enabled")
         profiler.start()
         response = await call_next(request)
@@ -71,7 +49,7 @@ async def profile_request(request: Request, call_next):
         full_path = profile_path / "profile.html"
         string_path = str(full_path.resolve())
         profiler.write_html(string_path)
-        logging.info(f"Finalizando o profiling da requisição {request.url} e salvando em {string_path}.")
+        logger.info(f"Finalizando o profiling da requisição {request.url} e salvando em {string_path}.")
         return response
     else:
         return await call_next(request)
