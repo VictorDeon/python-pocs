@@ -1,4 +1,3 @@
-import logging
 from typing import Optional
 from datetime import datetime
 from sqlalchemy import select, Select, insert, Insert, update as sql_update, Update
@@ -26,9 +25,9 @@ class ProfileDAO(DAOInterface):
             profile: Profile = await self.session.scalar(statement)
             if commit:
                 await self.session.commit()
-                logging.info("Perfil inseridado no banco.")
+                self.logger.info("Perfil inseridado no banco.")
         except Exception as e:
-            logging.error(f"Ocorreu um problema ao criar o perfil: {e}")
+            self.logger.error(f"Ocorreu um problema ao criar o perfil: {e}")
             await self.session.rollback()
             raise e
 
@@ -43,7 +42,7 @@ class ProfileDAO(DAOInterface):
         try:
             profile: Profile = await self.session.scalar(statement)
         except Exception as e:
-            logging.error(f"Ocorreu um problema ao pegar os dados do perfil: {e}")
+            self.logger.error(f"Ocorreu um problema ao pegar os dados do perfil: {e}")
             raise e
 
         return profile
@@ -61,9 +60,9 @@ class ProfileDAO(DAOInterface):
             profile: Profile = await self.session.scalar(statement)
             if commit:
                 await self.session.commit()
-                logging.info("Perfil atualizado no banco.")
+                self.logger.info("Perfil atualizado no banco.")
         except Exception as e:
-            logging.error(f"Ocorreu um problema ao atualizar o pefil: {e}")
+            self.logger.error(f"Ocorreu um problema ao atualizar o pefil: {e}")
             await self.session.rollback()
             raise e
 

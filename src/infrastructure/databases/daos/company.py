@@ -1,4 +1,3 @@
-import logging
 from typing import Optional
 from datetime import datetime
 from sqlalchemy import (
@@ -31,9 +30,9 @@ class CompanyDAO(DAOInterface):
 
             if commit:
                 await self.session.commit()
-                logging.info("Empresa inseridada no banco.")
+                self.logger.info("Empresa inseridada no banco.")
         except Exception as e:
-            logging.error(f"Ocorreu um problema ao criar a empresa: {e}")
+            self.logger.error(f"Ocorreu um problema ao criar a empresa: {e}")
             await self.session.rollback()
             raise e
 
@@ -57,7 +56,7 @@ class CompanyDAO(DAOInterface):
             results = await self.session.scalars(statement=statement)
             companies: list[Company] = results.all()
         except Exception as e:
-            logging.error(f"Ocorreu um problema ao listar as empresas: {e}")
+            self.logger.error(f"Ocorreu um problema ao listar as empresas: {e}")
             raise e
 
         return companies
@@ -71,7 +70,7 @@ class CompanyDAO(DAOInterface):
         try:
             company: Company = await self.session.scalar(statement)
         except Exception as e:
-            logging.error(f"Ocorreu um problema ao pegar os dados da empresa: {e}")
+            self.logger.error(f"Ocorreu um problema ao pegar os dados da empresa: {e}")
             raise e
 
         return company
@@ -90,9 +89,9 @@ class CompanyDAO(DAOInterface):
 
             if commit:
                 await self.session.commit()
-                logging.info("Empresa atualizada no banco.")
+                self.logger.info("Empresa atualizada no banco.")
         except Exception as e:
-            logging.error(f"Ocorreu um problema ao atualizar a empresa: {e}")
+            self.logger.error(f"Ocorreu um problema ao atualizar a empresa: {e}")
             await self.session.rollback()
             raise e
 
@@ -112,9 +111,9 @@ class CompanyDAO(DAOInterface):
 
             if commit:
                 await self.session.commit()
-                logging.info("Empresa deletada do banco.")
+                self.logger.info("Empresa deletada do banco.")
         except Exception as e:
-            logging.error(f"Ocorreu um problema ao deletar a empresa: {e}")
+            self.logger.error(f"Ocorreu um problema ao deletar a empresa: {e}")
             await self.session.rollback()
             raise e
 
@@ -129,7 +128,7 @@ class CompanyDAO(DAOInterface):
         try:
             qtd: int = await self.session.scalar(statement)
         except Exception as e:
-            logging.error(f"Ocorreu um problema ao realizar a contagem de empresas: {e}")
+            self.logger.error(f"Ocorreu um problema ao realizar a contagem de empresas: {e}")
             raise e
 
         return qtd

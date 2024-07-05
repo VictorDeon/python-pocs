@@ -1,10 +1,10 @@
 import os
 import json
-import logging
 from typing import Any, Union
 from fastapi import HTTPException
 from redis.asyncio import Redis
 from redis.exceptions import ConnectionError
+from src.infrastructure.logger import ProjectLoggerSingleton
 from src.domains.utils.formatters import JsonFormatter
 
 
@@ -30,6 +30,7 @@ class RedisSingleton:
             socket_keepalive=True,
             max_connections=int(os.environ.get("CACHE_MAX_CONNECTIONS", 20))
         )
+        self.logger = ProjectLoggerSingleton.get_logger()
 
     @classmethod
     def get_instance(cls) -> "RedisSingleton":
@@ -51,7 +52,7 @@ class RedisSingleton:
         try:
             await self.cache.setex(key, exp, json.dumps(value, cls=JsonFormatter, ensure_ascii=False))
         except ConnectionError as error:
-            logging.error(f"Conexão com o redis falhou: {error}")
+            self.logger.error(f"Conexão com o redis falhou: {error}")
             success = False
 
         return success
@@ -67,7 +68,7 @@ class RedisSingleton:
             if number <= 0:
                 success = False
         except ConnectionError as error:
-            logging.error(f"Conexão com o redis falhou: {error}")
+            self.logger.error(f"Conexão com o redis falhou: {error}")
             success = False
 
         return success
@@ -82,9 +83,9 @@ class RedisSingleton:
             try:
                 result = json.loads(await self.cache.get(key))
             except ConnectionError as error:
-                logging.error(f"Conexão com o redis falhou: {error}")
+                self.logger.error(f"Conexão com o redis falhou: {error}")
             except (TypeError, json.JSONDecodeError) as error:
-                logging.error(f"Ocorreu um error ao puxar os dados do cache: {error}")
+                self.logger.error(f"Ocorreu um error ao puxar os dados do cache: {error}")
 
         return result
 

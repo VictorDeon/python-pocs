@@ -1,6 +1,6 @@
-import logging.handlers
 import os
 import logging
+import logging.handlers
 from datetime import datetime
 from pytz import timezone
 

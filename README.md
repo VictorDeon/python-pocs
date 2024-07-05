@@ -65,6 +65,7 @@ Nas proximas vezes só precisa executar os emuladores `docker compose --profile 
 
 ### TODO:
 
+* Configurar com variavel de ambiente o uso do debugpy e o uso do pyinstrument
 * Inserir um sistema de logs inteligentes
 * Desenvolver vários tipos de consumos de APIs usando corotines, queues, threads e processos
 * Endpoints que faz o upload de um arquivo excel com dados de usuários.

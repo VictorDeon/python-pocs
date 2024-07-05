@@ -1,4 +1,3 @@
-import logging
 from typing import Optional
 from datetime import datetime
 from sqlalchemy import (
@@ -75,9 +74,9 @@ class UserDAO(DAOInterface):
 
             if commit:
                 await self.session.commit()
-                logging.info("Usuário inseridado no banco.")
+                self.logger.info("Usuário inseridado no banco.")
         except Exception as e:
-            logging.error(f"Ocorreu um problema ao criar o usuário: {e}")
+            self.logger.error(f"Ocorreu um problema ao criar o usuário: {e}")
             await self.session.rollback()
             raise e
 
@@ -112,7 +111,7 @@ class UserDAO(DAOInterface):
             results = await self.session.scalars(statement=statement)
             users: list[User] = results.all()
         except Exception as e:
-            logging.error(f"Ocorreu um problema ao listar os usuários: {e}")
+            self.logger.error(f"Ocorreu um problema ao listar os usuários: {e}")
             raise e
 
         return users
@@ -126,7 +125,7 @@ class UserDAO(DAOInterface):
         try:
             user: User = await self.session.scalar(statement)
         except Exception as e:
-            logging.error(f"Ocorreu um problema ao pegar os dados do usuário: {e}")
+            self.logger.error(f"Ocorreu um problema ao pegar os dados do usuário: {e}")
             raise e
 
         return user
@@ -141,7 +140,7 @@ class UserDAO(DAOInterface):
         try:
             user: User = await self.session.scalar(statement)
         except Exception as e:
-            logging.error(f"Ocorreu um problema ao pegar os dados do usuário: {e}")
+            self.logger.error(f"Ocorreu um problema ao pegar os dados do usuário: {e}")
             raise e
 
         return user
@@ -208,9 +207,9 @@ class UserDAO(DAOInterface):
 
             if commit:
                 await self.session.commit()
-                logging.info("Usuário atualizado no banco.")
+                self.logger.info("Usuário atualizado no banco.")
         except Exception as e:
-            logging.error(f"Ocorreu um problema ao atualizar o usuário: {e}")
+            self.logger.error(f"Ocorreu um problema ao atualizar o usuário: {e}")
             await self.session.rollback()
             raise e
 
@@ -237,9 +236,9 @@ class UserDAO(DAOInterface):
 
             if commit:
                 await self.session.commit()
-                logging.info("Usuário deletado do banco.")
+                self.logger.info("Usuário deletado do banco.")
         except Exception as e:
-            logging.error(f"Ocorreu um problema ao deletar o usuário: {e}")
+            self.logger.error(f"Ocorreu um problema ao deletar o usuário: {e}")
             await self.session.rollback()
             raise e
 
@@ -254,7 +253,7 @@ class UserDAO(DAOInterface):
         try:
             qtd: int = await self.session.scalar(statement)
         except Exception as e:
-            logging.error(f"Ocorreu um problema ao realizar a contagem de usuários: {e}")
+            self.logger.error(f"Ocorreu um problema ao realizar a contagem de usuários: {e}")
             raise e
 
         return qtd

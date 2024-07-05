@@ -1,4 +1,3 @@
-import logging
 from typing import Optional
 from datetime import datetime
 from sqlalchemy import (
@@ -46,9 +45,9 @@ class GroupDAO(DAOInterface):
 
             if commit:
                 await self.session.commit()
-                logging.info("Grupo atualizado no banco.")
+                self.logger.info("Grupo atualizado no banco.")
         except Exception as e:
-            logging.error(f"Ocorreu um problema ao criar o grupo: {e}")
+            self.logger.error(f"Ocorreu um problema ao criar o grupo: {e}")
             await self.session.rollback()
             raise e
 
@@ -80,7 +79,7 @@ class GroupDAO(DAOInterface):
             result = await self.session.scalars(statement=statement)
             groups: list[Group] = result.all()
         except Exception as e:
-            logging.error(f"Ocorreu um problema ao listar os grupos: {e}")
+            self.logger.error(f"Ocorreu um problema ao listar os grupos: {e}")
             raise e
 
         return groups
@@ -94,7 +93,7 @@ class GroupDAO(DAOInterface):
         try:
             group: Group = await self.session.scalar(statement)
         except Exception as e:
-            logging.error(f"Ocorreu um problema ao pegar os dados do grupo: {e}")
+            self.logger.error(f"Ocorreu um problema ao pegar os dados do grupo: {e}")
             raise e
 
         return group
@@ -131,9 +130,9 @@ class GroupDAO(DAOInterface):
 
             if commit:
                 await self.session.commit()
-                logging.info("Grupo atualizado no banco.")
+                self.logger.info("Grupo atualizado no banco.")
         except Exception as e:
-            logging.error(f"Ocorreu um problema ao atualizar o grupo: {e}")
+            self.logger.error(f"Ocorreu um problema ao atualizar o grupo: {e}")
             await self.session.rollback()
             raise e
 
@@ -156,9 +155,9 @@ class GroupDAO(DAOInterface):
             group_id: int = await self.session.scalar(statement)
             if commit:
                 await self.session.commit()
-                logging.info("Grupos deletadas do banco.")
+                self.logger.info("Grupos deletadas do banco.")
         except Exception as e:
-            logging.error(f"Ocorreu um problema ao deletar o grupo: {e}")
+            self.logger.error(f"Ocorreu um problema ao deletar o grupo: {e}")
             await self.session.rollback()
             raise e
 
@@ -174,7 +173,7 @@ class GroupDAO(DAOInterface):
         try:
             qtd = await self.session.scalar(statement)
         except Exception as e:
-            logging.error(f"Ocorreu um problema ao realizar a contagem de grupos: {e}")
+            self.logger.error(f"Ocorreu um problema ao realizar a contagem de grupos: {e}")
             raise e
 
         return qtd

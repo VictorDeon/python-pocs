@@ -1,5 +1,4 @@
 import os
-import logging
 import time
 from typing import Optional, Any
 from pathlib import Path
@@ -8,6 +7,9 @@ from sqlalchemy.ext.asyncio import (
     create_async_engine, async_sessionmaker,
     AsyncSession, AsyncEngine
 )
+from src.infrastructure.logger import ProjectLoggerSingleton
+
+logger = ProjectLoggerSingleton.get_logger()
 
 
 @event.listens_for(Engine, "before_cursor_execute")
@@ -17,8 +19,8 @@ def before_cursor_execute(conn, cursor, statement, parameters, context, executem
     """
 
     context._query_start_time = time.time()
-    logging.info("Start Query:\n%s" % statement)
-    logging.info("Parameters: %r" % (parameters,))
+    logger.info("Start Query:\n%s" % statement)
+    logger.info("Parameters: %r" % (parameters,))
 
 
 @event.listens_for(Engine, "after_cursor_execute")
@@ -28,7 +30,7 @@ def after_cursor_execute(conn, cursor, statement, parameters, context, executema
     """
 
     total = time.time() - context._query_start_time
-    logging.info("Query Complete! Total Time: %.02fms" % (total * 1000))
+    logger.info("Query Complete! Total Time: %.02fms" % (total * 1000))
 
 
 class DBConnectionHandler:
@@ -72,7 +74,7 @@ class DBConnectionHandler:
 
         __session = async_sessionmaker(bind=engine, expire_on_commit=False)
         self.session: AsyncSession = __session()
-        logging.debug("DB pool de conexões iniciado.")
+        logger.debug("DB pool de conexões iniciado.")
 
     async def __aenter__(self) -> AsyncSession:
         """
@@ -95,4 +97,4 @@ class DBConnectionHandler:
 
         await self.session.close()
         self.session = None
-        logging.debug("DB pool de conexões finalizada.")
+        logger.debug("DB pool de conexões finalizada.")

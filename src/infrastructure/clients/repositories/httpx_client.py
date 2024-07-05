@@ -1,6 +1,6 @@
-import logging
 import json
 import httpx
+from src.infrastructure.logger import ProjectLoggerSingleton
 from src.infrastructure.clients import HttpClientInterface
 
 
@@ -15,6 +15,7 @@ class HTTPxClient(HttpClientInterface):
         """
 
         self.client = httpx.AsyncClient()
+        self.logger = ProjectLoggerSingleton.get_logger()
         return self
 
     async def get(self, url: str, params: dict = None, headers: dict = None, timeout: int = 600) -> dict:
@@ -27,10 +28,10 @@ class HTTPxClient(HttpClientInterface):
             response.raise_for_status()
             result = response.json()
         except (httpx.HTTPStatusError, httpx.RequestError) as error:
-            logging.error(f"Ocorreu um error na requisição a GET url {url}: {error}")
+            self.logger.error(f"Ocorreu um error na requisição a GET url {url}: {error}")
             result = None
         except json.JSONDecodeError as error:
-            logging.error(f"Ocorreu um error ao decodificar o json no GET da url {url}: {error}")
+            self.logger.error(f"Ocorreu um error ao decodificar o json no GET da url {url}: {error}")
             result = None
 
         return result
@@ -45,10 +46,10 @@ class HTTPxClient(HttpClientInterface):
             response.raise_for_status()
             result = response.json()
         except (httpx.HTTPStatusError, httpx.RequestError) as error:
-            logging.error(f"Ocorreu um error na requisição a POST url {url}: {error}")
+            self.logger.error(f"Ocorreu um error na requisição a POST url {url}: {error}")
             result = None
         except json.JSONDecodeError as error:
-            logging.error(f"Ocorreu um error ao decodificar o json no POST da url {url}: {error}")
+            self.logger.error(f"Ocorreu um error ao decodificar o json no POST da url {url}: {error}")
             result = None
 
         return result
@@ -63,10 +64,10 @@ class HTTPxClient(HttpClientInterface):
             response.raise_for_status()
             result = response.json()
         except (httpx.HTTPStatusError, httpx.RequestError) as error:
-            logging.error(f"Ocorreu um error na requisição a PUT url {url}: {error}")
+            self.logger.error(f"Ocorreu um error na requisição a PUT url {url}: {error}")
             result = None
         except json.JSONDecodeError as error:
-            logging.error(f"Ocorreu um error ao decodificar o json no PUT da url {url}: {error}")
+            self.logger.error(f"Ocorreu um error ao decodificar o json no PUT da url {url}: {error}")
             result = None
 
         return result
@@ -81,10 +82,10 @@ class HTTPxClient(HttpClientInterface):
             response.raise_for_status()
             result = response.json()
         except (httpx.HTTPStatusError, httpx.RequestError) as error:
-            logging.error(f"Ocorreu um error na requisição a PATCH url {url}: {error}")
+            self.logger.error(f"Ocorreu um error na requisição a PATCH url {url}: {error}")
             result = None
         except json.JSONDecodeError as error:
-            logging.error(f"Ocorreu um error ao decodificar o json no PATCH da url {url}: {error}")
+            self.logger.error(f"Ocorreu um error ao decodificar o json no PATCH da url {url}: {error}")
             result = None
 
         return result
@@ -99,10 +100,10 @@ class HTTPxClient(HttpClientInterface):
             response.raise_for_status()
             result = response.json()
         except (httpx.HTTPStatusError, httpx.RequestError) as error:
-            logging.error(f"Ocorreu um error na requisição a DELETE url {url}: {error}")
+            self.logger.error(f"Ocorreu um error na requisição a DELETE url {url}: {error}")
             result = None
         except json.JSONDecodeError as error:
-            logging.error(f"Ocorreu um error ao decodificar o json no DELETE da url {url}: {error}")
+            self.logger.error(f"Ocorreu um error ao decodificar o json no DELETE da url {url}: {error}")
             result = None
 
         return result

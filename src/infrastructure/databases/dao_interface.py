@@ -1,5 +1,6 @@
 from typing import TypeVar, Generic, Optional
 from sqlalchemy.ext.asyncio import AsyncSession
+from src.infrastructure.logger import ProjectLoggerSingleton
 
 INPUT = TypeVar("INPUT")
 DB_MODEL = TypeVar("DB_MODEL")
@@ -16,6 +17,7 @@ class DAOInterface(Generic[INPUT, DB_MODEL]):
         """
 
         self.session = session
+        self.logger = ProjectLoggerSingleton.get_logger()
 
     async def create(self, dto: INPUT, commit: bool = True) -> DB_MODEL:
         """

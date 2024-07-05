@@ -2,6 +2,7 @@ import asyncio
 import os
 from typing import List
 from src.domains.entities.pokemon import Pokemon
+from src.infrastructure.logger import ProjectLoggerSingleton
 from src.infrastructure.constants import POKEAPI_URL
 from src.infrastructure.caches import CacheInterface
 from src.infrastructure.clients import HttpClientInterface
@@ -21,6 +22,7 @@ class PokemonPokeAPIRepository(RequestRepositoryInterface):
         self.base_url = POKEAPI_URL
         self.http_client = client
         self.cache_client = cache
+        self.logger = ProjectLoggerSingleton.get_logger()
         self.qtd_workers = int(os.environ.get("QTD_WORKERS", 20))
 
     async def __worker(self, url_queue: asyncio.Queue, responses: List[dict]) -> None:
@@ -33,7 +35,7 @@ class PokemonPokeAPIRepository(RequestRepositoryInterface):
             if pokemon is None:
                 break
 
-            print(f"Buscando dados do pokemon: {pokemon['name']}")
+            self.logger.info(f"Buscando dados do pokemon: {pokemon['name']}")
             response = await self.cache_client.get(pokemon['url'])
 
             if not response:
@@ -47,6 +49,8 @@ class PokemonPokeAPIRepository(RequestRepositoryInterface):
         """
         Método responsável por listar todos os pokemons.
         """
+
+        self.logger.info("Iniciando a pesquisa")
 
         responses = []
         worker_tasks = []

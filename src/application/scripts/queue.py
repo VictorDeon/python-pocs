@@ -1,16 +1,13 @@
 import time
 import random
 import asyncio
-import logging
 import signal
 import os
 from asyncio import Queue, Event
 import asyncer
 from google.api_core.exceptions import GoogleAPIError
+from src.infrastructure.logger import ProjectLoggerSingleton
 from src.infrastructure.pubsub.repositories import GCPPubsubSingleton
-
-
-logging.basicConfig(level=logging.INFO)
 
 
 PROJECT_ID = os.environ.get("GOOGLE_CLOUD_PROJECT")
@@ -19,6 +16,7 @@ SUBSCRIPTION_ID = os.environ.get("SUBSCRIPTION_ID")
 MAX_MESSAGES = os.environ.get("MAX_MESSAGES", 1)
 EVALUATE_MESSAGE_TIMEOUT = os.environ.get("EVALUATE_MESSAGE_TIMEOUT", 600)
 QUEUE = f"projects/{PROJECT_ID}/subscriptions/{SUBSCRIPTION_ID}"
+logger = ProjectLoggerSingleton.get_logger()
 
 
 def force_shutdown():
@@ -44,33 +42,33 @@ async def get_messages_from_pubsub_and_put_in_queue(message_queue: Queue, pubsub
     """
 
     messages_to_get = MAX_MESSAGES - message_queue.qsize()
-    logging.debug(f"Pegando {messages_to_get} mensagens do pubsub")
+    logger.debug(f"Pegando {messages_to_get} mensagens do pubsub")
 
     if messages_to_get <= 0:
         return
 
     try:
-        logging.debug("Pegando mensagens do pubsub.")
+        logger.debug("Pegando mensagens do pubsub.")
         response = await asyncio.wait_for(pubsub.pull(QUEUE, messages_to_get), timeout=10)
     except asyncio.TimeoutError:
-        logging.error("A fila deu timeout. Desligando o serviço.")
+        logger.error("A fila deu timeout. Desligando o serviço.")
         await asyncer.asyncify(force_shutdown)
         return
     except GoogleAPIError as error:
-        logging.error(f"Fila bloqueada: {str(error)}. Desligando o serviço.")
+        logger.error(f"Fila bloqueada: {str(error)}. Desligando o serviço.")
         await asyncer.asyncify(force_shutdown)
         return
     except Exception as error:
-        logging.exception(f"Fila morreu: {str(error)}. Desligando o serviço.")
+        logger.exception(f"Fila morreu: {str(error)}. Desligando o serviço.")
         await asyncer.asyncify(force_shutdown)
         return
 
     if len(response.received_messages) == 0:
         return
 
-    logging.debug(f"Foi recebido {len(response.received_messages)} mensagens para inserção na fila local.")
+    logger.debug(f"Foi recebido {len(response.received_messages)} mensagens para inserção na fila local.")
     for message in response.received_messages:
-        logging.debug(f"Inserindo a mensagem {message.ack_id} na fila local")
+        logger.debug(f"Inserindo a mensagem {message.ack_id} na fila local")
         await message_queue.put(message)
 
 
@@ -82,15 +80,15 @@ async def subscribe_worker(message_queue: Queue, stop_event: Event):
     pubsub = GCPPubsubSingleton.get_instance()
 
     while True:
-        logging.debug("SUBSCRIBER WORKER: Checando o evento de parada.")
+        logger.debug("SUBSCRIBER WORKER: Checando o evento de parada.")
         if stop_event.is_set():
-            logging.warning("SUBSCRIBER WORKER: Evento de parada ativado. Desligando serviço.")
+            logger.warning("SUBSCRIBER WORKER: Evento de parada ativado. Desligando serviço.")
             break
 
-        logging.debug("SUBSCRIBER WORKER: Escrevendo arquivo health check")
+        logger.debug("SUBSCRIBER WORKER: Escrevendo arquivo health check")
         await asyncer.asyncify(write_health_check)
 
-        logging.debug("SUBSCRIBER WORKER: Pegando as mensagens do pubsub e inserindo na fila local")
+        logger.debug("SUBSCRIBER WORKER: Pegando as mensagens do pubsub e inserindo na fila local")
         await get_messages_from_pubsub_and_put_in_queue(message_queue, pubsub)
         await asyncio.sleep(1)
 
@@ -109,13 +107,13 @@ async def process_message(message, pubsub: GCPPubsubSingleton):
             success = False
 
         if success:
-            logging.info(f"Mensagem {message.ack_id} processada com sucesso.")
+            logger.info(f"Mensagem {message.ack_id} processada com sucesso.")
             await asyncio.wait_for(pubsub.ack(QUEUE, message.ack_id), timeout=10)
         else:
-            logging.error(f"Mensagem {message.ack_id} processada com erros.")
+            logger.error(f"Mensagem {message.ack_id} processada com erros.")
             await asyncio.wait_for(pubsub.unack(QUEUE, message.ack_id), timeout=10)
     except Exception as error:
-        logging.error(f'Error na mensagem: {str(message.ack_id)} error {str(error)}')
+        logger.error(f'Error na mensagem: {str(message.ack_id)} error {str(error)}')
         await asyncio.wait_for(pubsub.unack(QUEUE, message.ack_id), timeout=10)
 
 
@@ -127,28 +125,28 @@ async def process_message_worker(queue: Queue, stop_event: Event):
     pubsub = GCPPubsubSingleton.get_instance()
 
     while True:
-        logging.debug("PROCESS MESSAGE WORKER: Checando o evento de parada.")
+        logger.debug("PROCESS MESSAGE WORKER: Checando o evento de parada.")
         if stop_event.is_set():
-            logging.warning("PROCESS MESSAGE WORKER: Evento de parada ativado. Desligando serviço.")
+            logger.warning("PROCESS MESSAGE WORKER: Evento de parada ativado. Desligando serviço.")
             break
 
         try:
-            logging.debug("PROCESS MESSAGE WORKER: Pegando mensagens da fila local.")
+            logger.debug("PROCESS MESSAGE WORKER: Pegando mensagens da fila local.")
             message = queue.get_nowait()
             try:
-                logging.debug(f"Processando messagem {message.ack_id}")
+                logger.debug(f"Processando messagem {message.ack_id}")
                 await asyncio.wait_for(process_message(message, pubsub), timeout=EVALUATE_MESSAGE_TIMEOUT)
-                logging.debug(f"Mensagem {message.ack_id} processada com sucesso.")
+                logger.debug(f"Mensagem {message.ack_id} processada com sucesso.")
             except asyncio.TimeoutError:
-                logging.error(f'Timeout no processamento da mensagem {message.ack_id}.')
+                logger.error(f'Timeout no processamento da mensagem {message.ack_id}.')
                 await asyncio.wait_for(pubsub.unack(queue, message.ack_id), timeout=10)
             except Exception as error:
-                logging.error(f'Error no processamento da mensagem {message.ack_id}: {error}')
+                logger.error(f'Error no processamento da mensagem {message.ack_id}: {error}')
                 await asyncio.wait_for(pubsub.unack(queue, message.ack_id), timeout=10)
         except asyncio.QueueEmpty:
-            logging.debug("PROCESS MESSAGE WORKER: Queue empty.")
+            logger.debug("PROCESS MESSAGE WORKER: Queue empty.")
         except Exception as error:
-            logging.error(f'Error ao processar mensagem: {str(error)}. Desligando o serviço.')
+            logger.error(f'Error ao processar mensagem: {str(error)}. Desligando o serviço.')
             await asyncer.asyncify(force_shutdown)
             return
 

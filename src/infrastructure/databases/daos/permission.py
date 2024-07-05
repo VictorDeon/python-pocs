@@ -1,4 +1,3 @@
-import logging
 from typing import Optional
 from datetime import datetime
 from sqlalchemy import (
@@ -31,9 +30,9 @@ class PermissionDAO(DAOInterface):
             permission: Permission = await self.session.scalar(statement)
             if commit:
                 await self.session.commit()
-                logging.info("Permissões inseridadas no banco.")
+                self.logger.info("Permissões inseridadas no banco.")
         except Exception as e:
-            logging.error(f"Ocorreu um problema ao criar a permissão: {e}")
+            self.logger.error(f"Ocorreu um problema ao criar a permissão: {e}")
             await self.session.rollback()
             raise e
 
@@ -67,7 +66,7 @@ class PermissionDAO(DAOInterface):
             result = await self.session.scalars(statement=statement)
             permissions: list[Permission] = result.all()
         except Exception as e:
-            logging.error(f"Ocorreu um problema ao listar as permissões: {e}")
+            self.logger.error(f"Ocorreu um problema ao listar as permissões: {e}")
             raise e
 
         return permissions
@@ -81,7 +80,7 @@ class PermissionDAO(DAOInterface):
         try:
             permission: Permission = await self.session.scalar(statement)
         except Exception as e:
-            logging.error(f"Ocorreu um problema ao pegar os dados da permissão: {e}")
+            self.logger.error(f"Ocorreu um problema ao pegar os dados da permissão: {e}")
             raise e
 
         return permission
@@ -96,7 +95,7 @@ class PermissionDAO(DAOInterface):
         try:
             permission: Permission = await self.session.scalar(statement)
         except Exception as e:
-            logging.error(f"Ocorreu um problema ao pegar os dados da permissão: {e}")
+            self.logger.error(f"Ocorreu um problema ao pegar os dados da permissão: {e}")
             raise e
 
         return permission
@@ -118,9 +117,9 @@ class PermissionDAO(DAOInterface):
 
             if commit:
                 await self.session.commit()
-                logging.info("Permissões atualizadas no banco.")
+                self.logger.info("Permissões atualizadas no banco.")
         except Exception as e:
-            logging.error(f"Ocorreu um problema ao atualizar a permissão: {e}")
+            self.logger.error(f"Ocorreu um problema ao atualizar a permissão: {e}")
             await self.session.rollback()
             raise e
 
@@ -146,9 +145,9 @@ class PermissionDAO(DAOInterface):
 
             if commit:
                 await self.session.commit()
-                logging.info("Permissões deletadas do banco.")
+                self.logger.info("Permissões deletadas do banco.")
         except Exception as e:
-            logging.error(f"Ocorreu um problema ao deletar a permissão: {e}")
+            self.logger.error(f"Ocorreu um problema ao deletar a permissão: {e}")
             await self.session.rollback()
             raise e
 
@@ -163,7 +162,7 @@ class PermissionDAO(DAOInterface):
         try:
             qtd: int = await self.session.scalar(statement)
         except Exception as e:
-            logging.error(f"Ocorreu um problema ao realizar a contagem de permissões: {e}")
+            self.logger.error(f"Ocorreu um problema ao realizar a contagem de permissões: {e}")
             raise e
 
         return qtd

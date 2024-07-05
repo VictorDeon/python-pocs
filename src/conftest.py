@@ -1,6 +1,5 @@
 import os
 import asyncio
-import logging
 from unittest import mock
 import pytest
 import pytest_asyncio
@@ -9,6 +8,7 @@ from pyinstrument import Profiler
 from faker import Faker
 from datetime import datetime, timedelta
 from sqlalchemy import delete, Delete
+from src.infrastructure.logger import ProjectLoggerSingleton
 from src.infrastructure.databases import DBConnectionHandler, models
 
 
@@ -65,11 +65,12 @@ async def clean_db():
     Limpando o banco de dados
     """
 
-    logging.info("Iniciando teste")
+    logger = ProjectLoggerSingleton.get_logger()
+    logger.info("Iniciando teste")
 
     yield
 
-    logging.info("Finalizando teste")
+    logger.info("Finalizando teste")
 
     now = datetime.now()
     past = now - timedelta(minutes=5)

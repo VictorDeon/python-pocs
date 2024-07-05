@@ -1,11 +1,12 @@
 import time
-import logging
 import asyncio
 import asyncer
 from src.adapters import ControllerInterface
 from src.adapters.dtos import BlockedRequestsOutputDTO
+from src.infrastructure.logger import ProjectLoggerSingleton
 
 SLEEP = 5
+logger = ProjectLoggerSingleton.get_logger()
 
 
 def io_bound_method(seconds: int) -> None:
@@ -13,9 +14,9 @@ def io_bound_method(seconds: int) -> None:
     Método que bloqueia.
     """
 
-    logging.info(f"Iniciando o método de sleep {seconds}")
+    logger.info(f"Iniciando o método de sleep {seconds}")
     time.sleep(seconds)
-    logging.info(f"Finalizando o método de sleep {seconds}")
+    logger.info(f"Finalizando o método de sleep {seconds}")
 
 
 class BlockingRequestSyncController(ControllerInterface):
@@ -36,7 +37,7 @@ class BlockingRequestSyncController(ControllerInterface):
         """
 
         start_time = time.time()
-        logging.info(f"Iniciando a chamada {self.command}")
+        logger.info(f"Iniciando a chamada {self.command}")
         io_bound_method(SLEEP)
         end_time = time.time() - start_time
         return BlockedRequestsOutputDTO(result=f"Requisição executada em {round(end_time, 2)} segundos")
@@ -61,7 +62,7 @@ class BlockingRequestAsyncWithSyncController(ControllerInterface):
         """
 
         start_time = time.time()
-        logging.info(f"Iniciando a chamada {self.command}")
+        logger.info(f"Iniciando a chamada {self.command}")
         io_bound_method(SLEEP)
         end_time = time.time() - start_time
         return BlockedRequestsOutputDTO(result=f"Requisição executada em {round(end_time, 2)} segundos")
@@ -86,7 +87,7 @@ class NotBlockingRequestAsyncWithSyncController(ControllerInterface):
         """
 
         start_time = time.time()
-        logging.info(f"Iniciando a chamada {self.command}")
+        logger.info(f"Iniciando a chamada {self.command}")
         await asyncer.asyncify(io_bound_method)(SLEEP)
         end_time = time.time() - start_time
         return BlockedRequestsOutputDTO(result=f"Requisição executada em {round(end_time, 2)} segundos")
@@ -110,7 +111,7 @@ class NotBlockingRequestAsyncController(ControllerInterface):
         """
 
         start_time = time.time()
-        logging.info(f"Iniciando a chamada {self.command}")
+        logger.info(f"Iniciando a chamada {self.command}")
         await asyncio.sleep(SLEEP)
         end_time = time.time() - start_time
         return BlockedRequestsOutputDTO(result=f"Requisição executada em {round(end_time, 2)} segundos")
@@ -135,7 +136,7 @@ class NotBlockingRequestTaskController(ControllerInterface):
         """
 
         start_time = time.time()
-        logging.info(f"Iniciando a chamada {self.command}")
+        logger.info(f"Iniciando a chamada {self.command}")
         asyncio.create_task(asyncio.sleep(SLEEP))
         end_time = time.time() - start_time
         return BlockedRequestsOutputDTO(result=f"Requisição executada em {round(end_time, 2)} segundos")
