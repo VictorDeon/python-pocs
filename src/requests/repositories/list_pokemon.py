@@ -4,7 +4,7 @@ from ..presenters import ListPokemonsPresenter
 from ..dtos import ListPokemonsInputDTO
 from src.engines.caches import RedisCache
 from src.engines.clients import HTTPxClient
-from src.engines.requests import PokemonPokeAPIRepository
+from src.engines.requests import PokemonQueueRequestRepository
 
 
 class ListPokemonRepository:
@@ -28,7 +28,7 @@ class ListPokemonRepository:
         # um recurso simultaneamente por segundo, no caso: 5 TPS
         async with asyncio.Semaphore(int(os.environ.get("SEMAPHORE", 5))):
             async with HTTPxClient() as client, RedisCache() as cache:
-                repository = PokemonPokeAPIRepository(client, cache)
+                repository = PokemonQueueRequestRepository(client, cache)
                 presenter = ListPokemonsPresenter()
                 pokemons = await repository.list(
                     limit=self.input_dto.limit,

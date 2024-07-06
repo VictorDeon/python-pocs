@@ -8,9 +8,10 @@ from src.engines.caches import RedisCache
 from src.engines.clients import HTTPxClient
 
 
-class PokemonPokeAPIRepository:
+class PokemonQueueRequestRepository:
     """
-    Repositorio que faz a lógica de consulta de pesquisa do pokemon.
+    Repositorio que faz a lógica de consulta de pesquisa do pokemon
+    usando a estratégia de requisição assincrona com Queue.
     """
 
     def __init__(self, client: HTTPxClient, cache: RedisCache) -> None:

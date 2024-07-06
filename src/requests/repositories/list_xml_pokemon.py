@@ -2,7 +2,7 @@ from ..presenters import ListXMLPokemonsPresenter
 from ..dtos import ListPokemonsInputDTO
 from src.engines.caches import RedisCache
 from src.engines.clients import HTTPxClient
-from src.engines.requests import PokemonPokeAPIRepository
+from src.engines.requests import PokemonQueueRequestRepository
 
 
 class ListXMLPokemonRepository:
@@ -23,7 +23,7 @@ class ListXMLPokemonRepository:
         """
 
         async with HTTPxClient() as client, RedisCache() as cache:
-            repository = PokemonPokeAPIRepository(client, cache)
+            repository = PokemonQueueRequestRepository(client, cache)
             presenter = ListXMLPokemonsPresenter()
             pokemons = await repository.list(
                 limit=self.input_dto.limit,

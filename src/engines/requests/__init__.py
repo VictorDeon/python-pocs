@@ -1,5 +1,5 @@
-from .pokemon import PokemonPokeAPIRepository
+from .pokemon_queue import PokemonQueueRequestRepository
 
 __all__ = [
-    "PokemonPokeAPIRepository"
+    "PokemonQueueRequestRepository"
 ]
