@@ -23,4 +23,3 @@ async def create_group(data: CreateGroupInputDTO):
         output = CreateGroupPresenter(session=session)
         model = await repository.execute(dto=data)
         return await output.present(model)
-

@@ -33,22 +33,25 @@ Nas proximas vezes só precisa executar os emuladores `docker compose --profile 
 
 ### TODO:
 
-* Desenvolver vários tipos de consumos de APIs usando corotines, queues, threads e processos
-* Endpoints que faz o upload de um arquivo excel com dados de usuários.
-* Script que consume todos os arquivos excel da pasta de upload, pegar os dados e armazenar em varios locais
-e arquivos e enviar o excel para outra pasta de processados.
-    - NoSQL (mongodb)
-    - SQL (sqlalchemy)
-    - CSV
-    - XML
-    - JSON
-    - YAML (pyyaml)
-* Endpoints de consulta desses dados de usuários pelos diversos meios acima.
-* Criar um interface com o tkinter para o CRUD de usuários definir via header.
-* Autenticação e Autorização - vwauth
-* Finalizar o leitor de PDF
-* Instrumentalização com o new relic
+#### Requests
+* Desenvolver vários tipos de consumos de APIs usando corotines, queues, threads e processos usando o pokemon como base
+* Validar o uso de pool de conexões no redis, httpx e banco de dados
+* Retornar pokemon em YAML e CSV
+
+#### Engines
 * Uso do lacost para teste de carga
+* Instrumentalização com o new relic
+* Tarefas distribuidas com celery e habbitmq
+
+#### Outputs
+* Finalizar o leitor de PDF
+* Criar um interface com o tkinter para o CRUD de usuários definir via header.
+* Script que consume todos os arquivos CSV da pasta de upload, pegar os dados de usuários e armazenar no banco de dados e enviar o excel para outra pasta de processados.
+* Receber dados de registro de usuários por XML, CSV, TXT, GRAPHQL e outros
+
+#### CRUD
+* Autenticação e Autorização - vwauth
+* Criar no repository os CRUD usando NoSQL MongoDb
 * Deleção lógica:
     - Na criação, se o objeto já existir ao inves de criar, coloque is_deleted False e atualize os dados
     - Na criação/atualização de qualquer modelo não pode se relacionar com outra model com is_deleted True
@@ -56,3 +59,16 @@ e arquivos e enviar o excel para outra pasta de processados.
     - Na atualização não atualizar se is_delete for True (mensagem de error)
     - Na remoção não deletar e inserir o is_deleted como True se não tiver, se ja tiver não faz nada. Fazer o is_deleted True em todos os relacionamentos
     - Em ambiente de teste deixar a deleção normal
+
+#### Projects
+* Implementar blockchain
+* Desenvolver padrões de projetos
+* Criando estruturas de dados e gerando um pacote python
+* Chatbot com openAI
+* Criar um jogo com pygames
+* Visão computacional
+* Machine learning
+* Data-Science
+
+#### Quality
+* Testes automatizados
