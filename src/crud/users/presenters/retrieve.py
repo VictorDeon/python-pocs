@@ -1,25 +1,34 @@
-from src.adapters.dtos import ListPermissionInputDTO, RetrieveUserOutputDTO, ListGroupInputDTO, ListCompaniesInputDTO
-from src.adapters import PresenterInterface
-from src.domains.entities import User, Profile
-from src.users.model import User as UserModel
-from src.infrastructure.databases.models import (
-    Group as GroupModel,
-    Permission as PermissionModel,
-    Profile as ProfileModel,
-    Company as CompanyModel
-)
-from src.infrastructure.databases.daos import PermissionDAO, GroupDAO, ProfileDAO, CompanyDAO
-from .list_permissions import ListPermissionPresenter
-from .list_groups import ListGroupPresenter
-from .error import ErrorPresenter
+from sqlalchemy.ext.asyncio import AsyncSession
+from src.shared.error import ErrorPresenter
+from src.crud.permissions.models import Permission
+from src.crud.permissions.presenters import ListPermissionPresenter
+from src.crud.permissions.dtos import ListPermissionInputDTO
+from src.crud.permissions.repositories import ListPermissionDAO
+from src.crud.groups.models import Group
+from src.crud.groups.dtos import ListGroupInputDTO
+from src.crud.groups.presenters import ListGroupPresenter
+from src.crud.groups.repositories import ListGroupDAO
+from src.crud.companies.dtos import ListCompaniesInputDTO
+from src.crud.companies.models import Company
+from src.crud.companies.repositories import ListCompanyDAO
+from ..dtos import RetrieveUserOutputDTO, RetrieveProfileOutputDTO
+from ..models import User, Profile
+from ..repositories import ProfileDAO
 
 
-class RetrieveUserPresenter(PresenterInterface):
+class RetrieveUserPresenter:
     """
     Formatação de saída da API que buscar um usuário.
     """
 
-    async def present(self, model: UserModel) -> RetrieveUserOutputDTO:
+    def __init__(self, session: AsyncSession = None) -> None:
+        """
+        Constructor.
+        """
+
+        self.session = session
+
+    async def present(self, model: User) -> RetrieveUserOutputDTO:
         """
         Forma final de apresentação dos dados.
         """
@@ -29,24 +38,28 @@ class RetrieveUserPresenter(PresenterInterface):
                 message="Usuário não encontrado.",
             )
 
-        permission_dao = PermissionDAO(session=self.session)
-        permissions: list[PermissionModel] = await permission_dao.list(dto=ListPermissionInputDTO(user_id=model.id))
+        permission_dao = ListPermissionDAO(session=self.session)
+        permissions: list[Permission] = await permission_dao.list(dto=ListPermissionInputDTO(user_id=model.id))
         permission_presenter = ListPermissionPresenter(session=self.session)
         permission_result = await permission_presenter.present(permissions)
 
-        group_dao = GroupDAO(session=self.session)
-        groups: list[GroupModel] = await group_dao.list(dto=ListGroupInputDTO(user_id=model.id))
+        group_dao = ListGroupDAO(session=self.session)
+        groups: list[Group] = await group_dao.list(dto=ListGroupInputDTO(user_id=model.id))
         group_presenter = ListGroupPresenter(session=self.session)
         group_result = await group_presenter.present(groups)
 
         profile_dao = ProfileDAO(session=self.session)
-        profile_model: ProfileModel = await profile_dao.get_by_id(user_id=model.id)
-        profile: Profile = Profile(id=profile_model.id, phone=profile_model.phone, address=profile_model.address)
+        profile_model: Profile = await profile_dao.get_by_id(user_id=model.id)
+        profile = RetrieveProfileOutputDTO(
+            id=profile_model.id,
+            phone=profile_model.phone,
+            address=profile_model.address
+        )
 
-        company_dao = CompanyDAO(session=self.session)
-        company_models: list[CompanyModel] = await company_dao.list(dto=ListCompaniesInputDTO(owner_id=model.id))
+        company_dao = ListCompanyDAO(session=self.session)
+        company_models: list[Company] = await company_dao.list(dto=ListCompaniesInputDTO(owner_id=model.id))
 
-        user = User(
+        return RetrieveUserOutputDTO(
             id=model.id,
             name=model.name,
             email=model.email,
@@ -56,5 +69,3 @@ class RetrieveUserPresenter(PresenterInterface):
             groups=group_result.groups,
             permissions=permission_result.permissions
         )
-
-        return RetrieveUserOutputDTO(user=user)

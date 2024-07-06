@@ -5,7 +5,7 @@ from src.crud.users.models import UsersVsGroups
 from ..models import Group, GroupsVsPermissions
 
 
-class DeleteGroupDAO(DAOInterface):
+class DeleteGroupDAO:
     """
     Repositorio de manipulação da entidade de grupos
     """

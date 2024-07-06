@@ -3,12 +3,12 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from src.engines.logger import ProjectLoggerSingleton
 from src.shared.exceptions import GenericException
 from src.crud.permissions.dtos import RetrievePermissionInputDTO
-from ..models import User, UsersVsGroups, UsersVsPermissions
-from ..dtos import CreateUserInputDTO
 from src.crud.permissions.repositories import RetrievePermissionDAO
 from src.crud.groups.repositories import RetrieveGroupDAO
 from src.crud.companies.repositories import RetrieveCompanyDAO
 from .profile import ProfileDAO
+from ..models import User, UsersVsGroups, UsersVsPermissions
+from ..dtos import CreateUserInputDTO
 
 
 class CreateUserRepository:

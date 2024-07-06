@@ -4,7 +4,7 @@ from ..models import Permission
 from ..dtos import UpdatePermissionOutputDTO
 
 
-class UpdatePermissionPresenter(PresenterInterface):
+class UpdatePermissionPresenter:
     """
     Formatação de saída da API que atualizar uma permissão.
     """

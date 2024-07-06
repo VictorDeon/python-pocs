@@ -1,6 +1,6 @@
 from fastapi import Path
 from src.routes import router
-from src.infrastructure.databases import DBConnectionHandler
+from src.engines.databases import DBConnectionHandler
 from ..repositories import UpdateUserRepository
 from ..dtos import UpdateUserInputDTO, UpdateUserOutputDTO
 from ..presenters import UpdateUserPresenter

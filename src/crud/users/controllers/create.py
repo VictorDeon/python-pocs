@@ -1,6 +1,6 @@
 from fastapi import status
 from src.routes import router
-from src.infrastructure.databases import DBConnectionHandler
+from src.engines.databases import DBConnectionHandler
 from ..presenters import CreateUserPresenter
 from ..dtos import CreateUserInputDTO, CreateUserOutputDTO
 from ..repositories import CreateUserRepository

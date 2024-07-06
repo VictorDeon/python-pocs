@@ -1,6 +1,6 @@
 from fastapi import Path, status
 from src.routes import router
-from src.infrastructure.databases import DBConnectionHandler
+from src.engines.databases import DBConnectionHandler
 from ..repositories import DeleteUserRepository
 
 

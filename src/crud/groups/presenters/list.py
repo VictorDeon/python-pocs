@@ -5,7 +5,7 @@ from ..dtos import ListGroupOutputDTO, RetrieveGroupOutputDTO
 from ..models import Group
 
 
-class ListGroupPresenter(PresenterInterface):
+class ListGroupPresenter:
     """
     Formatação de saída da API que listar grupos.
     """

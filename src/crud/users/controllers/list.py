@@ -1,7 +1,7 @@
 from fastapi import Query
 from typing import Optional
-from src.application.api.routes import router
-from src.infrastructure.databases import DBConnectionHandler
+from src.routes import router
+from src.engines.databases import DBConnectionHandler
 from ..repositories import ListUserRepository
 from ..dtos import ListUserOutputDTO, ListUserInputDTO
 from ..presenters import ListUserPresenter

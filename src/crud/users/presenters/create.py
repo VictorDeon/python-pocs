@@ -1,11 +1,10 @@
-from src.adapters import PresenterInterface
-from src.adapters.presenters.retrieve_user import RetrieveUserPresenter
 from sqlalchemy.ext.asyncio import AsyncSession
+from .retrieve import RetrieveUserPresenter
 from ..dtos import CreateUserOutputDTO
 from ..models import User
 
 
-class CreateUserPresenter(PresenterInterface):
+class CreateUserPresenter:
     """
     Formatação de saída da API que cria um usuário.
     """
@@ -23,5 +22,5 @@ class CreateUserPresenter(PresenterInterface):
         """
 
         presenter = RetrieveUserPresenter(session=self.session)
-        result = await presenter.present(model)
-        return CreateUserOutputDTO(user=result.user)
+        user = await presenter.present(model)
+        return CreateUserOutputDTO(**user.to_dict())

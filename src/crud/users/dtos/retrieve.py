@@ -50,6 +50,13 @@ class RetrieveUserOutputDTO(BaseModel):
     permissions: list[RetrievePermissionOutputDTO] = Field([], description="Lista de permissões do usuário.")
     groups: list[RetrieveGroupOutputDTO] = Field([], description="Lista de grupos na qual o usuário pertence.")
 
+    def to_dict(self):
+        """
+        Transforma os dados em dicionário.
+        """
+
+        return self.model_dump()
+
     class Config:
         """
         Metadados da modelo
