@@ -1,38 +1,6 @@
 # python-pocs
 
-POCs criadas em python para testar scripts e libs em python usando a Clean Architecture.
-
-### Clean Architecture
-
-![clean-architecture](https://github.com/VictorDeon/python-notebook/assets/14116020/cd51c91a-a0cb-405a-b90c-5b47b54ba5b5)
-
-#### Entities
-
-A pasta **infrastructure** é a camada de **Entities** do clean architeture.
-Ou seja, é a camada que encapsula as regras de negócio de toda a empresa. É o espelho de todos os dados da empresa
-e a definição de todos os casos de uso a ser implementados.
-
-#### User Cases
-
-A pasta **domains** é a camada **User Cases** do clean architecture. Esse contém as regras
-de negócios específicas do aplicativo. Ele encapsula e implementa todos os casos de uso do sistema definidos.
-
-#### Interface Adapters
-
-Nesta camada temos a pasta **adapters** com suas respectivas **controllers**. É a camada específica que a gente retira os dados de entrada, por exemplo, os dados HTTP trata eles para jogar nos casos de uso.
-
-#### Frameworks & Drivers
-
-A camada mais externa geralmente é composta por frameworks e ferramentas como banco de dados, arquivos, UI, entre outros tipos de entradas e dados que o usuário pode enviar. Essa camada está na pasta **application**
-
-#### Ordem de criação
-
-1. adapters/dtos
-2. infrastructure/repositories ou daos
-3. adapters/presenters
-4. domains/user_cases
-5. adapters/controllers
-6. application/api/routes
+POCs criadas em python para testar scripts e libs em python.
 
 ***
 ### Como subir a aplicação
@@ -65,8 +33,6 @@ Nas proximas vezes só precisa executar os emuladores `docker compose --profile 
 
 ### TODO:
 
-* Configurar com variavel de ambiente o uso do debugpy e o uso do pyinstrument
-* Inserir um sistema de logs inteligentes
 * Desenvolver vários tipos de consumos de APIs usando corotines, queues, threads e processos
 * Endpoints que faz o upload de um arquivo excel com dados de usuários.
 * Script que consume todos os arquivos excel da pasta de upload, pegar os dados e armazenar em varios locais
