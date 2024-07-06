@@ -9,7 +9,7 @@ from ..presenters import ListGroupPresenter
 
 @router.get(
     "/groups",
-    tags=["Banco de Dados"],
+    tags=["CRUDs"],
     response_model=ListGroupOutputDTO,
     summary="Lista grupos."
 )

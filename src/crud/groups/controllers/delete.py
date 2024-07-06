@@ -6,7 +6,7 @@ from ..repositories import DeleteGroupDAO
 
 @router.delete(
     "/groups/{group_id}",
-    tags=["Banco de Dados"],
+    tags=["CRUDs"],
     status_code=status.HTTP_204_NO_CONTENT,
     summary="Deleta um grupo."
 )

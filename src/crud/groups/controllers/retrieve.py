@@ -9,7 +9,7 @@ from ..presenters import RetrieveGroupPresenter
 
 @router.get(
     "/groups/{group_id}",
-    tags=["Banco de Dados"],
+    tags=["CRUDs"],
     response_model=Union[RetrieveGroupOutputDTO, ErrorOutputDTO],
     summary="Busca um grupo."
 )

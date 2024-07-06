@@ -10,7 +10,7 @@ from ..presenters import RetrieveCompanyPresenter
 
 @router.get(
     "/companies/{cnpj}",
-    tags=["Banco de Dados"],
+    tags=["CRUDs"],
     response_model=Union[RetrieveCompanyOutputDTO, ErrorOutputDTO],
     summary="Busca uma empresa."
 )

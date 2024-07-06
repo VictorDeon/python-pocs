@@ -8,7 +8,7 @@ from ..repositories import CreateUserRepository
 
 @router.post(
     "/users",
-    tags=["Banco de Dados"],
+    tags=["CRUDs"],
     response_model=CreateUserOutputDTO,
     status_code=status.HTTP_201_CREATED,
     summary="Cria um usuário."

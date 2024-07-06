@@ -10,7 +10,7 @@ from ..dtos import RetrieveUserOutputDTO
 
 @router.get(
     "/users/{user_id}",
-    tags=["Banco de Dados"],
+    tags=["CRUDs"],
     response_model=Union[RetrieveUserOutputDTO, ErrorOutputDTO],
     summary="Busca um usuário."
 )

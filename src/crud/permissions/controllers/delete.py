@@ -6,7 +6,7 @@ from ..repositories import DeletePermissionDAO
 
 @router.delete(
     "/permissions/{permission_id}",
-    tags=["Banco de Dados"],
+    tags=["CRUDs"],
     status_code=status.HTTP_204_NO_CONTENT,
     summary="Deleta uma permissão."
 )

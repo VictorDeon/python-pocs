@@ -8,7 +8,7 @@ from ..presenters import CreateCompanyPresenter
 
 @router.post(
     "/companies",
-    tags=["Banco de Dados"],
+    tags=["CRUDs"],
     response_model=CreateCompanyOutputDTO,
     status_code=status.HTTP_201_CREATED,
     summary="Cria uma empresa."

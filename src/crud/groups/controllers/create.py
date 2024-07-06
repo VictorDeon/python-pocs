@@ -8,7 +8,7 @@ from ..presenters import CreateGroupPresenter
 
 @router.post(
     "/groups",
-    tags=["Banco de Dados"],
+    tags=["CRUDs"],
     response_model=CreateGroupOutputDTO,
     status_code=status.HTTP_201_CREATED,
     summary="Cria um grupo."

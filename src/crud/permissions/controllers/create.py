@@ -8,7 +8,7 @@ from ..presenters import CreatePermissionPresenter
 
 @router.post(
     "/permissions",
-    tags=["Banco de Dados"],
+    tags=["CRUDs"],
     response_model=CreatePermissionOutputDTO,
     status_code=status.HTTP_201_CREATED,
     summary="Cria uma permissão."

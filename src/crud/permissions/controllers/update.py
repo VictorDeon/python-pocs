@@ -8,7 +8,7 @@ from ..presenters import UpdatePermissionPresenter
 
 @router.put(
     "/permissions/{permission_id}",
-    tags=["Banco de Dados"],
+    tags=["CRUDs"],
     response_model=UpdatePermissionOutputDTO,
     summary="Atualiza uma permissão."
 )

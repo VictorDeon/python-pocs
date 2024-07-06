@@ -9,7 +9,7 @@ from ..presenters import ListUserPresenter
 
 @router.get(
     "/users",
-    tags=["Banco de Dados"],
+    tags=["CRUDs"],
     response_model=ListUserOutputDTO,
     summary="Lista usuários."
 )

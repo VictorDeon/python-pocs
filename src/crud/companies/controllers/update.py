@@ -8,7 +8,7 @@ from ..presenters import UpdateCompanyPresenter
 
 @router.put(
     "/companies/{cnpj}",
-    tags=["Banco de Dados"],
+    tags=["CRUDs"],
     response_model=UpdateCompanyOutputDTO,
     summary="Atualiza uma empresa."
 )

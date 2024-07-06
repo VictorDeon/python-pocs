@@ -8,7 +8,7 @@ from ..presenters import UpdateUserPresenter
 
 @router.put(
     "/users/{user_id}",
-    tags=["Banco de Dados"],
+    tags=["CRUDs"],
     response_model=UpdateUserOutputDTO,
     summary="Atualiza um usuário."
 )

@@ -8,7 +8,7 @@ from ..repositories import UpdateGroupDAO
 
 @router.put(
     "/groups/{group_id}",
-    tags=["Banco de Dados"],
+    tags=["CRUDs"],
     response_model=UpdateGroupOutputDTO,
     summary="Atualiza um grupo."
 )

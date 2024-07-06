@@ -9,7 +9,7 @@ from ..repositories import ListCompanyDAO
 
 @router.get(
     "/companies",
-    tags=["Banco de Dados"],
+    tags=["CRUDs"],
     response_model=ListCompaniesOutputDTO,
     summary="Lista empresas."
 )

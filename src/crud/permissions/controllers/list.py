@@ -9,7 +9,7 @@ from ..presenters import ListPermissionPresenter
 
 @router.get(
     "/permissions",
-    tags=["Banco de Dados"],
+    tags=["CRUDs"],
     response_model=ListPermissionOutputDTO,
     summary="Lista permissões."
 )

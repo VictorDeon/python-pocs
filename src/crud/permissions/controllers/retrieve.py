@@ -10,7 +10,7 @@ from ..presenters import RetrievePermissionPresenter
 
 @router.get(
     "/permissions/{permission_id}",
-    tags=["Banco de Dados"],
+    tags=["CRUDs"],
     response_model=Union[RetrievePermissionOutputDTO, ErrorOutputDTO],
     summary="Busca uma permissão."
 )
