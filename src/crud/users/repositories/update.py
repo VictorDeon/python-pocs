@@ -45,7 +45,6 @@ class UpdateUserRepository:
 
             statement: Update = update(User).values(
                 name=dto.name,
-                email=dto.email,
                 updated_at=datetime.now(),
                 work_company_cnpj=dto.work_company_cnpj
             ).where(User.id == _id).returning(User)

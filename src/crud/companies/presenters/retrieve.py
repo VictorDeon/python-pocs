@@ -33,12 +33,12 @@ class RetrieveCompanyPresenter:
         user_dao = ListUserRepository(session=self.session)
         employees: list[User] = await user_dao.list(dto=ListUserInputDTO(work_company_cnpj=model.cnpj))
         list_user_presentes = ListUserPresenter(session=self.session)
-        users = await list_user_presentes.present(employees)
+        list_user_dto = await list_user_presentes.present(employees)
 
         return RetrieveCompanyOutputDTO(
             cnpj=model.cnpj,
             name=model.name,
             owner_id=model.owner_id,
             fantasy_name=model.fantasy_name,
-            employees=users
+            employees=list_user_dto.users
         )

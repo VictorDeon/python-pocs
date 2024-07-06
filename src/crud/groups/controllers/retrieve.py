@@ -1,6 +1,7 @@
 from fastapi import Path
 from typing import Union
 from src.routes import router
+from src.engines.databases import DBConnectionHandler
 from src.shared.error import ErrorOutputDTO
 from ..dtos import RetrieveGroupOutputDTO
 from ..repositories import RetrieveGroupDAO

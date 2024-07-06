@@ -1,7 +1,7 @@
 from sqlalchemy.ext.asyncio import AsyncSession
 from src.crud.permissions.models import Permission
 from src.crud.permissions.presenters import ListPermissionPresenter
-from src.crud.permissions.dtos import ListPermissionInputDTO
+from src.crud.permissions.dtos import ListPermissionInputDTO, ListPermissionOutputDTO
 from src.crud.permissions.repositories import ListPermissionDAO
 from src.shared.error import ErrorPresenter
 from ..dtos import RetrieveGroupOutputDTO
@@ -33,10 +33,10 @@ class RetrieveGroupPresenter:
         permission_dao = ListPermissionDAO(session=self.session)
         permissions: list[Permission] = await permission_dao.list(dto=ListPermissionInputDTO(group_id=model.id))
         permission_presenter = ListPermissionPresenter(session=self.session)
-        permissions = await permission_presenter.present(permissions)
+        list_permissions_dto: ListPermissionOutputDTO = await permission_presenter.present(permissions)
 
         return RetrieveGroupOutputDTO(
             id=model.id,
             name=model.name,
-            permissions=permissions
+            permissions=list_permissions_dto.permissions
         )

@@ -37,6 +37,7 @@ app = FastAPI(
 
 @app.middleware("http")
 async def profile_request(request: Request, call_next):
+    logger.info(f"########################## {request.method.upper()} {str(request.url)} #######################")
     PROFILE = int(os.environ.get("PROFILE", 0))
     if PROFILE:
         logger.info("Iniciando o profiling das requisições.")

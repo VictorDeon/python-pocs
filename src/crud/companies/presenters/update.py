@@ -23,4 +23,4 @@ class UpdateCompanyPresenter:
 
         presenter = RetrieveCompanyPresenter(session=self.session)
         company = await presenter.present(model)
-        return UpdateCompanyOutputDTO(company)
+        return UpdateCompanyOutputDTO(**company.to_dict())

@@ -23,7 +23,7 @@ async def retrieve_user(user_id: Union[int, str] = Path(..., description="ID ou 
         repository = RetrieveUserRepository(session=session)
         presenter = RetrieveUserPresenter(session=session)
         if user_id.isnumeric():
-            model = await repository.get_by_id(user_id)
+            model = await repository.get_by_id(int(user_id))
         else:
             model = await repository.retrieve(dto=RetrieveUserInputDTO(email=user_id))
 

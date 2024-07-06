@@ -18,7 +18,7 @@ class User(BaseModel):
 
     work_company_cnpj: Mapped[Optional[str]] = mapped_column(
         VARCHAR(14),
-        ForeignKey('companies.cnpj', name='fk_employee_company'),
+        ForeignKey('companies.cnpj', name='fk_employee_company', ondelete='SET NULL'),
         nullable=True
     )
 

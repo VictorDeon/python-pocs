@@ -22,9 +22,8 @@ class DeleteCompanyDAO:
         Pega os dados de uma empresa pelo _id e deleta ela
         """
 
-        statement: Delete = delete(Company).where(Company.cnpj == cnpj).returning(Company.cnpj)
-
         try:
+            statement: Delete = delete(Company).where(Company.cnpj == cnpj).returning(Company.cnpj)
             company_cnpj: str = await self.session.scalar(statement)
             if not company_cnpj:
                 raise ValueError(f"Empresa com o cnpj {company_cnpj} não encontrado.")

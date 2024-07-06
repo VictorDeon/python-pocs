@@ -23,4 +23,4 @@ class CreateCompanyPresenter:
 
         presenter = RetrieveCompanyPresenter(session=self.session)
         company = await presenter.present(model)
-        return CreateCompanyOutputDTO(company)
+        return CreateCompanyOutputDTO(**company.to_dict())
