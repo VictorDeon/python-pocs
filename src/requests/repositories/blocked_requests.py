@@ -18,7 +18,7 @@ def io_bound_method(seconds: int) -> None:
     logger.info(f"Finalizando o método de sleep {seconds}")
 
 
-class BlockingRequestSyncController(ControllerInterface):
+class BlockingRequestSyncRepository:
     """
     Realiza uma requisição sincrona qualquer que bloqueia as outras requisições.
     """
@@ -42,7 +42,7 @@ class BlockingRequestSyncController(ControllerInterface):
         return BlockedRequestsOutputDTO(result=f"Requisição executada em {round(end_time, 2)} segundos")
 
 
-class BlockingRequestAsyncWithSyncController(ControllerInterface):
+class BlockingRequestAsyncWithSyncRepository:
     """
     Aqui iremos testar uma requisição assincrona com código
     sincrono, ao executar ele bloqueia as outras requisições.
@@ -67,7 +67,7 @@ class BlockingRequestAsyncWithSyncController(ControllerInterface):
         return BlockedRequestsOutputDTO(result=f"Requisição executada em {round(end_time, 2)} segundos")
 
 
-class NotBlockingRequestAsyncWithSyncController(ControllerInterface):
+class NotBlockingRequestAsyncWithSyncRepository:
     """
     Aqui iremos testar uma requisição assincrona com código
     sincrono, porém sem bloquear as outras requisições.
@@ -92,7 +92,7 @@ class NotBlockingRequestAsyncWithSyncController(ControllerInterface):
         return BlockedRequestsOutputDTO(result=f"Requisição executada em {round(end_time, 2)} segundos")
 
 
-class NotBlockingRequestAsyncController(ControllerInterface):
+class NotBlockingRequestAsyncRepository:
     """
     Realizando a requisição com o método de sleep assincrono.
     """
@@ -116,7 +116,7 @@ class NotBlockingRequestAsyncController(ControllerInterface):
         return BlockedRequestsOutputDTO(result=f"Requisição executada em {round(end_time, 2)} segundos")
 
 
-class NotBlockingRequestTaskController(ControllerInterface):
+class NotBlockingRequestTaskRepository:
     """
     Aqui iremos testar uma requisição assincrona com código
     sincrono, porém sem bloquear as outras requisições.

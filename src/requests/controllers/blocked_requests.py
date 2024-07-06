@@ -1,11 +1,11 @@
 from fastapi import Header
 from src.routes import router
 from ..repositories import (
-    BlockingRequestSyncController,
-    BlockingRequestAsyncWithSyncController,
-    NotBlockingRequestAsyncWithSyncController,
-    NotBlockingRequestAsyncController,
-    NotBlockingRequestTaskController
+    BlockingRequestSyncRepository,
+    BlockingRequestAsyncWithSyncRepository,
+    NotBlockingRequestAsyncWithSyncRepository,
+    NotBlockingRequestAsyncRepository,
+    NotBlockingRequestTaskRepository
 )
 from ..dtos import BlockedRequestsOutputDTO
 from src.engines.mediator import Mediator
@@ -37,10 +37,10 @@ async def blocked_requests(command: str = Header(..., description="Comando de re
     """
 
     mediator = Mediator()
-    mediator.add(BlockingRequestSyncController())
-    mediator.add(BlockingRequestAsyncWithSyncController())
-    mediator.add(NotBlockingRequestAsyncWithSyncController())
-    mediator.add(NotBlockingRequestAsyncController())
-    mediator.add(NotBlockingRequestTaskController())
+    mediator.add(BlockingRequestSyncRepository())
+    mediator.add(BlockingRequestAsyncWithSyncRepository())
+    mediator.add(NotBlockingRequestAsyncWithSyncRepository())
+    mediator.add(NotBlockingRequestAsyncRepository())
+    mediator.add(NotBlockingRequestTaskRepository())
 
     return await mediator.send(command)

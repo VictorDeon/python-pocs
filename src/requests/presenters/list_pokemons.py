@@ -1,5 +1,4 @@
-from ..dtos import ListPokemonsOutputDTO, ListPokemonOutput
-from src.domains.entities import Pokemon
+from ..dtos import ListPokemonsOutputDTO, ListPokemonOutput, Pokemon
 
 
 class ListPokemonsPresenter:

@@ -1,6 +1,5 @@
 import math
-from ..dtos import RetrievePokemonOutputDTO, RetrievePokemonOutput
-from src.domains.entities import Pokemon
+from ..dtos import RetrievePokemonOutputDTO, RetrievePokemonOutput, Pokemon
 
 
 class RetrievePokemonPresenter:

@@ -1,5 +1,5 @@
 from xml.etree.ElementTree import Element, tostring
-from src.domains.entities import Pokemon
+from ..dtos import Pokemon
 
 
 class ListXMLPokemonsPresenter:

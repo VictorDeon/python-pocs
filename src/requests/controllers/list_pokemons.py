@@ -1,4 +1,5 @@
-from fastapi import Response, Query
+from fastapi import Query, Header
+from fastapi.responses import Response
 from src.routes import router
 from ..repositories import ListPokemonRepository, ListXMLPokemonRepository
 from ..dtos import ListPokemonsOutputDTO
@@ -12,34 +13,21 @@ from ..dtos import ListPokemonsOutputDTO
     response_description="Lista de pokemons"
 )
 async def list_pokemons(
-    limit: int = Query(None, description="Quantidade limite de itens que irá aparecer na listagem."),
-    offset: int = Query(None, description="Pular os N primeiros itens da lista.")):
+    content_accept: str = Header(default="application/json", description="Tipo de conteúdo de retorno da requisição"),
+    limit: int = Query(20, description="Quantidade limite de itens que irá aparecer na listagem."),
+    offset: int = Query(0, description="Pular os N primeiros itens da lista.")):
     """
     Endpoint para listar todos os pokemons.
     """
 
-    controller = ListPokemonRepository(limit=limit, offset=offset)
-    return await controller.execute()
-
-
-@router.get(
-    "/pokemons/xml",
-    summary="Lista pokemons em XML",
-    tags=["Requests"],
-    response_model=ListPokemonsOutputDTO,
-    response_description="Lista de pokemons em XML"
-)
-async def list_xml_pokemons(
-    limit: int = Query(20, description="Quantidade limite de itens que irá aparecer na listagem."),
-    offset: int = Query(0, description="Pular os N primeiros itens da lista.")):
-    """
-    Lista todos os pokemons no formato XML.
-    """
-
-    controller = ListXMLPokemonRepository(limit=limit, offset=offset)
-    xml_str = await controller.execute()
-    headers = {
-        "Content-Disposition": "attachment; filename=pokemons.xml",
-        "Content-Type": "application/xml"
-    }
-    return Response(content=xml_str, media_type="application/xml", headers=headers)
+    if content_accept == "application/xml":
+        controller = ListXMLPokemonRepository(limit=limit, offset=offset)
+        xml_str = await controller.execute()
+        headers = {
+            "Content-Disposition": "attachment; filename=pokemons.xml",
+            "Content-Type": "application/xml"
+        }
+        return Response(content=xml_str, media_type="application/xml", headers=headers)
+    else:
+        controller = ListPokemonRepository(limit=limit, offset=offset)
+        return await controller.execute()

@@ -1,7 +1,7 @@
 import asyncio
 import os
 from typing import List
-from requests.dtos.pokemon import Pokemon
+from src.requests.dtos.pokemon import Pokemon
 from src.engines.logger import ProjectLoggerSingleton
 from src.engines.constants import POKEAPI_URL
 from src.engines.caches import RedisCache
@@ -13,7 +13,7 @@ class PokemonPokeAPIRepository:
     Repositorio que faz a lógica de consulta de pesquisa do pokemon.
     """
 
-    def __init__(self, client: RedisCache, cache: HTTPxClient) -> None:
+    def __init__(self, client: HTTPxClient, cache: RedisCache) -> None:
         """
         Construtor.
         """
