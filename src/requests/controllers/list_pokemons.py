@@ -1,7 +1,7 @@
 from fastapi import Query, Header
 from fastapi.responses import Response
 from src.routes import router
-from ..repositories import ListPokemonRepository, ListXMLPokemonRepository
+from ..repositories import ListQueuePokemonRepository, ListXMLPokemonRepository
 from ..dtos import ListPokemonsOutputDTO
 
 
@@ -29,5 +29,5 @@ async def list_pokemons(
         }
         return Response(content=xml_str, media_type="application/xml", headers=headers)
     else:
-        controller = ListPokemonRepository(limit=limit, offset=offset)
+        controller = ListQueuePokemonRepository(limit=limit, offset=offset)
         return await controller.execute()

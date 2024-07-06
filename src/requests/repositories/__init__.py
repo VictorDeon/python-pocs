@@ -5,7 +5,7 @@ from .blocked_requests import (
     NotBlockingRequestAsyncRepository,
     NotBlockingRequestTaskRepository
 )
-from .list_pokemon import ListPokemonRepository
+from .list_queue_pokemon import ListQueuePokemonRepository
 from .list_xml_pokemon import ListXMLPokemonRepository
 from .retrieve_pokemon import RetrievePokemonRepository
 
@@ -15,7 +15,7 @@ __all__ = [
     "NotBlockingRequestAsyncWithSyncRepository",
     "NotBlockingRequestAsyncRepository",
     "NotBlockingRequestTaskRepository",
-    "ListPokemonRepository",
     "ListXMLPokemonRepository",
-    "RetrievePokemonRepository"
+    "RetrievePokemonRepository",
+    "ListQueuePokemonRepository"
 ]

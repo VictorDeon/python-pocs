@@ -7,7 +7,7 @@ from src.engines.clients import HTTPxClient
 from src.engines.requests import PokemonQueueRequestRepository
 
 
-class ListPokemonRepository:
+class ListQueuePokemonRepository:
     """
     Constroladora para listar todos os pokemons.
     """
