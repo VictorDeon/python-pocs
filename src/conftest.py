@@ -8,8 +8,8 @@ from pyinstrument import Profiler
 from faker import Faker
 from datetime import datetime, timedelta
 from sqlalchemy import delete, Delete
-from src.infrastructure.logger import ProjectLoggerSingleton
-from src.infrastructure.databases import DBConnectionHandler, models
+from src.engines.logger import ProjectLoggerSingleton
+from src.engines.databases import DBConnectionHandler, models
 
 
 @pytest.fixture(scope="session")
