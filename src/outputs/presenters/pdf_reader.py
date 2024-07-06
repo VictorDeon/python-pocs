@@ -1,5 +1,4 @@
-from ..dtos import PDFReaderOutputDTO
-from src.domains.entities import ReaderInvoices
+from ..dtos import PDFReaderOutputDTO, ReaderInvoices
 
 
 class PDFReaderPresenter:

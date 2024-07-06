@@ -37,10 +37,10 @@ app = FastAPI(
 
 @app.middleware("http")
 async def profile_request(request: Request, call_next):
-    logger.info(f"########################## {request.method.upper()} {str(request.url)} #######################")
+    logger.info(f"########## {request.method.upper()} {str(request.url)}")
     PROFILE = int(os.environ.get("PROFILE", 0))
     if PROFILE:
-        logger.info("Iniciando o profiling das requisições.")
+        logger.debug("Iniciando o profiling das requisições.")
         profiler = Profiler(interval=0.001, async_mode="enabled")
         profiler.start()
         response = await call_next(request)
@@ -50,7 +50,7 @@ async def profile_request(request: Request, call_next):
         full_path = profile_path / "profile.html"
         string_path = str(full_path.resolve())
         profiler.write_html(string_path)
-        logger.info(f"Finalizando o profiling da requisição {request.url} e salvando em {string_path}.")
+        logger.debug(f"Finalizando o profiling da requisição {request.url} e salvando em {string_path}.")
         return response
     else:
         return await call_next(request)

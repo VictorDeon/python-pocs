@@ -19,8 +19,8 @@ def before_cursor_execute(conn, cursor, statement, parameters, context, executem
     """
 
     context._query_start_time = time.time()
-    logger.info("Start Query:\n%s" % statement)
-    logger.info("Parameters: %r" % (parameters,))
+    logger.debug("Start Query:\n%s" % statement)
+    logger.debug("Parameters: %r" % (parameters,))
 
 
 @event.listens_for(Engine, "after_cursor_execute")
@@ -30,7 +30,7 @@ def after_cursor_execute(conn, cursor, statement, parameters, context, executema
     """
 
     total = time.time() - context._query_start_time
-    logger.info("Query Complete! Total Time: %.02fms" % (total * 1000))
+    logger.debug("Query Complete! Total Time: %.02fms" % (total * 1000))
 
 
 class DBConnectionHandler:

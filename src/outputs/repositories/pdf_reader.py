@@ -1,6 +1,6 @@
+from src.engines.storage import LocalStorageSingleton
 from ..dtos import PDFReaderInputDTO, ReaderInvoices
 from ..presenters import PDFReaderPresenter
-from src.engines.storage import LocalStorageSingleton
 
 
 class PDFReaderRepository:
