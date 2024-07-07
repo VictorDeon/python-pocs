@@ -9,7 +9,8 @@ from .poc_requests import (
     PocHTTPxConnectionPoolRepository,
     PocHTTPxSingletonConnectionPoolRepository,
     PocCacheConnectionPoolRepository,
-    PocCacheSingletonConnectionPoolRepository
+    PocCacheSingletonConnectionPoolRepository,
+    PocHTTPxSingletonSemaphoreConnectionPoolRepository
 )
 from .list_queue_pokemon import ListQueuePokemonRepository
 from .list_xml_pokemon import ListXMLPokemonRepository
@@ -27,5 +28,6 @@ __all__ = [
     "PocHTTPxConnectionPoolRepository",
     "PocHTTPxSingletonConnectionPoolRepository",
     "PocCacheConnectionPoolRepository",
-    "PocCacheSingletonConnectionPoolRepository"
+    "PocCacheSingletonConnectionPoolRepository",
+    "PocHTTPxSingletonSemaphoreConnectionPoolRepository"
 ]

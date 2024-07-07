@@ -1,4 +1,6 @@
 from time import time
+import asyncio
+import os
 from src.engines.logger import ProjectLoggerSingleton
 from src.engines.constants import POKEAPI_URL
 from src.engines.clients import HTTPxClient, HTTPxSingleton
@@ -23,7 +25,7 @@ class PocHTTPxConnectionPoolRepository:
 
     async def execute(self) -> PocRequestsOutputDTO:
         """
-        Essa requisição executa códigos de forma assincrona usando tasks
+        Executa o teste
         """
 
         ProjectLoggerSingleton.change_log_level_to_console('httpcore.connection')
@@ -59,7 +61,7 @@ class PocHTTPxSingletonConnectionPoolRepository:
 
     async def execute(self) -> PocRequestsOutputDTO:
         """
-        Essa requisição executa códigos de forma assincrona usando tasks
+        Executa o teste
         """
 
         ProjectLoggerSingleton.change_log_level_to_console('httpcore.connection')
@@ -73,6 +75,36 @@ class PocHTTPxSingletonConnectionPoolRepository:
         logger.info(f"Quantidade retornada da segunda requisição: {len(r2['results'])}")
         r3 = await client.get(f'{POKEAPI_URL}/pokemon?limit=20')
         logger.info(f"Quantidade retornada da ultima requisição: {len(r3['results'])}")
+
+        end_time = time() - start_time
+        logger.info(f"Requisição executada em {round(end_time, 2)} segundos")
+        return PocRequestsOutputDTO(result=f"Requisição executada em {round(end_time, 2)} segundos")
+
+
+class PocHTTPxSingletonSemaphoreConnectionPoolRepository:
+    """
+    Testando o uso do pool de conexões do httpx com singleton e semaforo.
+    """
+
+    def __init__(self):
+        """
+        Construtor.
+        """
+
+        self.command = "HTTPxSingletonSemaphoreConnectionPool"
+
+    async def execute(self) -> PocRequestsOutputDTO:
+        """
+        Executa o teste
+        """
+
+        client = await HTTPxSingleton.get_instance()
+        start_time = time()
+        logger.info(f"Iniciando a chamada {self.command}")
+
+        async with asyncio.Semaphore(int(os.environ.get("SEMAPHORE", 5))):
+            r1 = await client.get(f'{POKEAPI_URL}/pokemon?limit=100')
+            logger.info(f"Quantidade retornada: {len(r1['results'])}")
 
         end_time = time() - start_time
         logger.info(f"Requisição executada em {round(end_time, 2)} segundos")
@@ -93,7 +125,7 @@ class PocCacheConnectionPoolRepository:
 
     async def execute(self) -> PocRequestsOutputDTO:
         """
-        Essa requisição executa códigos de forma assincrona usando tasks
+        Executa o teste
         """
 
         start_time = time()
@@ -127,7 +159,7 @@ class PocCacheSingletonConnectionPoolRepository:
 
     async def execute(self) -> PocRequestsOutputDTO:
         """
-        Essa requisição executa códigos de forma assincrona usando tasks
+        Executa o teste
         """
 
         start_time = time()
