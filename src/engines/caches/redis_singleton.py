@@ -1,5 +1,6 @@
 import os
 import json
+import time
 from typing import Any, Union
 from fastapi import HTTPException
 from redis.asyncio import Redis
@@ -14,6 +15,7 @@ class RedisSingleton:
     """
 
     __instance = None
+    cache_connection_pool_expire = 60
 
     def __init__(self) -> None:
         """
@@ -23,6 +25,9 @@ class RedisSingleton:
         if self.__instance:
             raise HTTPException(status_code=500, detail="Não se pode instânciar uma classe singleton.")
 
+        self.logger = ProjectLoggerSingleton.get_logger()
+        self.logger.info("Instanciando o pool de conexões do cache")
+        self.connection_pool_started = time.time()
         self.cache = Redis(
             host=os.environ.get("CACHE_HOST"),
             port=os.environ.get("CACHE_PORT"),
@@ -30,15 +35,21 @@ class RedisSingleton:
             socket_keepalive=True,
             max_connections=int(os.environ.get("CACHE_MAX_CONNECTIONS", 20))
         )
-        self.logger = ProjectLoggerSingleton.get_logger()
 
     @classmethod
-    def get_instance(cls) -> "RedisSingleton":
+    async def get_instance(cls) -> "RedisSingleton":
         """
         Realiza a conexão do singleton e retorna sua instância.
         """
 
         if not cls.__instance:
+            cls.__instance = RedisSingleton()
+
+        connection_pool_time = time.time() - cls.__instance.connection_pool_started
+        cls.__instance.logger.info(f"Ja se passaram {connection_pool_time:.2f} ms no pool de conexões do cache.")
+        if connection_pool_time >= cls.cache_connection_pool_expire:
+            await cls.__instance.cache.close()
+            cls.__instance = None
             cls.__instance = RedisSingleton()
 
         return cls.__instance

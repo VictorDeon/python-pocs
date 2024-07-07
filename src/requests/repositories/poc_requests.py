@@ -62,7 +62,7 @@ class PocHTTPxSingletonConnectionPoolRepository:
         """
 
         ProjectLoggerSingleton.change_log_level_to_console('httpcore.connection')
-        client = HTTPxSingleton.get_instance()
+        client = await HTTPxSingleton.get_instance()
 
         start_time = time()
         logger.info(f"Iniciando a chamada {self.command}")

@@ -20,8 +20,6 @@ class HTTPxSingleton:
         if self.__instance:
             raise HTTPException(status_code=500, detail="Não se pode instânciar uma classe singleton.")
 
-        self.logger = ProjectLoggerSingleton.get_logger()
-        self.logger.info("Instanciando o pool de conexões http")
         self.client: httpx.AsyncClient = httpx.AsyncClient(
             limits=httpx.Limits(
                 # Número de conexões que podem ser abertas ao mesmo tempo
@@ -34,9 +32,10 @@ class HTTPxSingleton:
                 keepalive_expiry=int(os.environ.get("HTTP_KEEP_ALIVE_EXPIRE", 600))
             )
         )
+        self.logger = ProjectLoggerSingleton.get_logger()
 
     @classmethod
-    def get_instance(cls) -> "HTTPxSingleton":
+    async def get_instance(cls) -> "HTTPxSingleton":
         """
         Realiza a conexão do singleton e retorna sua instância.
         """

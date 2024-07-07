@@ -14,7 +14,6 @@ asyncpg==0.29.0
 aioredis==2.0.1
 redis==5.0.5
 httpx==0.26.0
-memory-profiler==0.61.0
 # development dependencies
 ipython==8.25.0
 flake8==7.0.0
@@ -25,3 +24,5 @@ freezegun==1.5.1
 coverage==7.5.3
 debugpy==1.8.2
 pyinstrument==4.6.2
+memory-profiler==0.61.0
+locust==2.29.1
