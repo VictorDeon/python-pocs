@@ -34,23 +34,25 @@ Nas proximas vezes só precisa executar os emuladores `docker compose --profile 
 ### TODO:
 
 #### Requests
-* Desenvolver vários tipos de consumos de APIs usando corotines, queues, threads e processos usando o pokemon como base
-* Validar o uso de pool de conexões no redis, httpx e banco de dados
+* 1º Validar o uso de pool de conexões no redis, httpx e banco de dados
+* 2º Desenvolver vários tipos de consumos de APIs usando corotines, queues, threads e processos usando o pokemon como base
 * Retornar pokemon em YAML e CSV
 
 #### Engines
-* Uso do lacost para teste de carga
-* Instrumentalização com o new relic
-* Tarefas distribuidas com celery e habbitmq
+* 3º Uso do lacost para teste de carga
+* 4º Instrumentalização com o new relic
+* 5º Tarefas distribuidas com celery e habbitmq
 
 #### Outputs
 * Finalizar o leitor de PDF
 * Criar um interface com o tkinter para o CRUD de usuários definir via header.
-* Script que consume todos os arquivos CSV da pasta de upload, pegar os dados de usuários e armazenar no banco de dados e enviar o excel para outra pasta de processados.
+* Script que recebe os dados dos usuários por fila, valida os dados e enviar para outra fila para armazenamento no banco de dados.
+* Script que consume todos os arquivos CSV da pasta de upload, pegar os dados de usuários valida os dados, salva no banco e enviar o excel para outra pasta de processados.
 * Receber dados de registro de usuários por XML, CSV, TXT, GRAPHQL e outros
+* Conectar o storage e pubsub com o GCP, Local e AWS
 
 #### CRUD
-* Autenticação e Autorização - vwauth
+* 6º Autenticação e Autorização - vwauth
 * Criar no repository os CRUD usando NoSQL MongoDb
 * Deleção lógica:
     - Na criação, se o objeto já existir ao inves de criar, coloque is_deleted False e atualize os dados
@@ -62,8 +64,8 @@ Nas proximas vezes só precisa executar os emuladores `docker compose --profile 
 
 #### Projects
 * Implementar blockchain
-* Desenvolver padrões de projetos
-* Criando estruturas de dados e gerando um pacote python
+* 7º Desenvolver padrões de projetos
+* 8º Criando estruturas de dados e gerando um pacote python
 * Chatbot com openAI
 * Criar um jogo com pygames
 * Visão computacional

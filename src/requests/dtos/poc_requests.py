@@ -1,9 +1,9 @@
 from pydantic import BaseModel, Field
 
 
-class BlockedRequestsOutputDTO(BaseModel):
+class PocRequestsOutputDTO(BaseModel):
     """
-    Dados de saída para requisições de bloqueio
+    Dados de saída para pocs de requisições
     """
 
     result: str = Field(..., description="Resultado dos testes de desempenho.")

@@ -1,7 +1,7 @@
 import time
 import asyncio
 import asyncer
-from ..dtos import BlockedRequestsOutputDTO
+from ..dtos import PocRequestsOutputDTO
 from src.engines.logger import ProjectLoggerSingleton
 
 SLEEP = 5
@@ -30,7 +30,7 @@ class BlockingRequestSyncRepository:
 
         self.command = "BlockingRequestSync"
 
-    def execute(self) -> BlockedRequestsOutputDTO:
+    def execute(self) -> PocRequestsOutputDTO:
         """
         Essa requisição executa códigos de forma assincrona usando tasks
         """
@@ -39,7 +39,7 @@ class BlockingRequestSyncRepository:
         logger.info(f"Iniciando a chamada {self.command}")
         io_bound_method(SLEEP)
         end_time = time.time() - start_time
-        return BlockedRequestsOutputDTO(result=f"Requisição executada em {round(end_time, 2)} segundos")
+        return PocRequestsOutputDTO(result=f"Requisição executada em {round(end_time, 2)} segundos")
 
 
 class BlockingRequestAsyncWithSyncRepository:
@@ -55,7 +55,7 @@ class BlockingRequestAsyncWithSyncRepository:
 
         self.command = "BlockingRequestAsyncWithSync"
 
-    async def execute(self) -> BlockedRequestsOutputDTO:
+    async def execute(self) -> PocRequestsOutputDTO:
         """
         Lida com a entrada e saida dos dados.
         """
@@ -64,7 +64,7 @@ class BlockingRequestAsyncWithSyncRepository:
         logger.info(f"Iniciando a chamada {self.command}")
         io_bound_method(SLEEP)
         end_time = time.time() - start_time
-        return BlockedRequestsOutputDTO(result=f"Requisição executada em {round(end_time, 2)} segundos")
+        return PocRequestsOutputDTO(result=f"Requisição executada em {round(end_time, 2)} segundos")
 
 
 class NotBlockingRequestAsyncWithSyncRepository:
@@ -80,7 +80,7 @@ class NotBlockingRequestAsyncWithSyncRepository:
 
         self.command = "NotBlockingRequestAsyncWithSync"
 
-    async def execute(self) -> BlockedRequestsOutputDTO:
+    async def execute(self) -> PocRequestsOutputDTO:
         """
         Lida com a entrada e saida dos dados.
         """
@@ -89,7 +89,7 @@ class NotBlockingRequestAsyncWithSyncRepository:
         logger.info(f"Iniciando a chamada {self.command}")
         await asyncer.asyncify(io_bound_method)(SLEEP)
         end_time = time.time() - start_time
-        return BlockedRequestsOutputDTO(result=f"Requisição executada em {round(end_time, 2)} segundos")
+        return PocRequestsOutputDTO(result=f"Requisição executada em {round(end_time, 2)} segundos")
 
 
 class NotBlockingRequestAsyncRepository:
@@ -104,7 +104,7 @@ class NotBlockingRequestAsyncRepository:
 
         self.command = "NotBlockingRequestAsync"
 
-    async def execute(self) -> BlockedRequestsOutputDTO:
+    async def execute(self) -> PocRequestsOutputDTO:
         """
         Lida com a entrada e saida dos dados.
         """
@@ -113,7 +113,7 @@ class NotBlockingRequestAsyncRepository:
         logger.info(f"Iniciando a chamada {self.command}")
         await asyncio.sleep(SLEEP)
         end_time = time.time() - start_time
-        return BlockedRequestsOutputDTO(result=f"Requisição executada em {round(end_time, 2)} segundos")
+        return PocRequestsOutputDTO(result=f"Requisição executada em {round(end_time, 2)} segundos")
 
 
 class NotBlockingRequestTaskRepository:
@@ -129,7 +129,7 @@ class NotBlockingRequestTaskRepository:
 
         self.command = "NotBlockingRequestTask"
 
-    async def execute(self) -> BlockedRequestsOutputDTO:
+    async def execute(self) -> PocRequestsOutputDTO:
         """
         Essa requisição executa códigos de forma assincrona usando tasks
         """
@@ -138,4 +138,4 @@ class NotBlockingRequestTaskRepository:
         logger.info(f"Iniciando a chamada {self.command}")
         asyncio.create_task(asyncio.sleep(SLEEP))
         end_time = time.time() - start_time
-        return BlockedRequestsOutputDTO(result=f"Requisição executada em {round(end_time, 2)} segundos")
+        return PocRequestsOutputDTO(result=f"Requisição executada em {round(end_time, 2)} segundos")

@@ -7,22 +7,24 @@ from ..repositories import (
     NotBlockingRequestAsyncRepository,
     NotBlockingRequestTaskRepository
 )
-from ..dtos import BlockedRequestsOutputDTO
+from ..dtos import PocRequestsOutputDTO
 from src.engines.mediator import Mediator
 
 
 @router.get(
-    "/blocked-requests",
+    "/poc-requests",
     tags=["Requests"],
-    response_model=BlockedRequestsOutputDTO,
-    summary="Realiza requisições bloqueantes."
+    response_model=PocRequestsOutputDTO,
+    summary="Realiza pocs de requisições."
 )
-async def blocked_requests(command: str = Header(..., description="Comando de requisição.")):
+async def poc_requests(command: str = Header(..., description="Comando de requisição.")):
     """
     Quando executamos a requisição http para algum endpoint sync ele bloqueia
     os outros endpoints até a finalização de sua execução devido ao time.sleep
     ou qualquer outro método sync bloqueante. Já os endpoint totalmente async ele
     roda os métodos async de forma que não bloqueie a execução dos coleguinhas.
+
+    Temos vários outros tipos de pocs aqui tb.
 
     Rode o endpoint uma vez com cada um dos headers "command" a seguir um em seguida do outro para verificar
     os que bloqueia a execução do outro, utilize o curl para fazer isso.
