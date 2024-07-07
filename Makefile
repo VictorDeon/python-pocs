@@ -8,7 +8,7 @@ down:
 
 locust:
 	# Rodar o locust para teste de carga com 4 workers
-	docker compose --profile locust up --scale locust-worker=${workers} -d
+	docker compose --profile locust up --scale locust-worker=${workers}
 
 locust-down:
 	# Derrubando o locust e seus workers
