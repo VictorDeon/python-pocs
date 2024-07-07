@@ -13,9 +13,9 @@ class HTTPxClient:
         Constructor.
         """
 
-        self.client = None
+        self.client: httpx.AsyncClient = None
 
-    async def __aenter__(self) -> None:
+    async def __aenter__(self) -> "HTTPxClient":
         """
         Iniciando o poll de conexões.
         """

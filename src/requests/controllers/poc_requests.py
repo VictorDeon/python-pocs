@@ -5,7 +5,9 @@ from ..repositories import (
     BlockingRequestAsyncWithSyncRepository,
     NotBlockingRequestAsyncWithSyncRepository,
     NotBlockingRequestAsyncRepository,
-    NotBlockingRequestTaskRepository
+    NotBlockingRequestTaskRepository,
+    PocHTTPxConnectionPoolRepository,
+    PocHTTPxSingletonConnectionPoolRepository
 )
 from ..dtos import PocRequestsOutputDTO
 from src.engines.mediator import Mediator
@@ -36,6 +38,8 @@ async def poc_requests(command: str = Header(..., description="Comando de requis
     * NotBlockingRequestAsyncWithSync
     * NotBlockingRequestAsync
     * NotBlockingRequestTask
+    * HTTPxConnectionPool
+    * HTTPxSingletonConnectionPool
     """
 
     mediator = Mediator()
@@ -44,5 +48,7 @@ async def poc_requests(command: str = Header(..., description="Comando de requis
     mediator.add(NotBlockingRequestAsyncWithSyncRepository())
     mediator.add(NotBlockingRequestAsyncRepository())
     mediator.add(NotBlockingRequestTaskRepository())
+    mediator.add(PocHTTPxConnectionPoolRepository())
+    mediator.add(PocHTTPxSingletonConnectionPoolRepository())
 
     return await mediator.send(command)

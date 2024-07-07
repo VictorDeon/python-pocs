@@ -56,7 +56,7 @@ async def profile_request(request: Request, call_next):
         return await call_next(request)
 
 
-@app.get("/")
+@app.get("/", tags=["Health Check"])
 def health_check():
     """
     Health check da aplicação.

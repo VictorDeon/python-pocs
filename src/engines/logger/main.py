@@ -98,6 +98,17 @@ class ProjectLoggerSingleton:
 
         return cls.__instance.__logger
 
+    @classmethod
+    def change_log_level_to_console(cls, log_name: str) -> None:
+        """
+        Modifica o level de algum log específico.
+        """
+
+        console_handler = logging.StreamHandler()
+        log = logging.getLogger(log_name)
+        log.setLevel(logging.DEBUG)
+        log.addHandler(console_handler)
+
     def __get_log_level(self) -> int:
         """
         Instancia o level do log.
