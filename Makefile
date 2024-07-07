@@ -6,6 +6,14 @@ down:
 	# Desliga a ferramente em desenvolvimento
 	docker compose --profile api down
 
+locust:
+	# Rodar o locust para teste de carga com 4 workers
+	docker compose --profile locust up --scale locust-worker=${workers} -d
+
+locust-down:
+	# Derrubando o locust e seus workers
+	docker compose --profile locust down
+
 install:
 	# Instala uma dependencia dentro do container remove flag user do docker compose
 	docker compose exec --user root api pip install ${pkg}
