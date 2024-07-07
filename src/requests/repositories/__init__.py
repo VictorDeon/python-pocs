@@ -7,7 +7,9 @@ from .blocked_requests import (
 )
 from .poc_requests import (
     PocHTTPxConnectionPoolRepository,
-    PocHTTPxSingletonConnectionPoolRepository
+    PocHTTPxSingletonConnectionPoolRepository,
+    PocCacheConnectionPoolRepository,
+    PocCacheSingletonConnectionPoolRepository
 )
 from .list_queue_pokemon import ListQueuePokemonRepository
 from .list_xml_pokemon import ListXMLPokemonRepository
@@ -23,5 +25,7 @@ __all__ = [
     "RetrievePokemonRepository",
     "ListQueuePokemonRepository",
     "PocHTTPxConnectionPoolRepository",
-    "PocHTTPxSingletonConnectionPoolRepository"
+    "PocHTTPxSingletonConnectionPoolRepository",
+    "PocCacheConnectionPoolRepository",
+    "PocCacheSingletonConnectionPoolRepository"
 ]

@@ -17,9 +17,9 @@ class RedisCache:
         Construtor.
         """
 
-        self.cache = None
+        self.cache: Redis = None
 
-    async def __aenter__(self) -> None:
+    async def __aenter__(self) -> "RedisCache":
         """
         Cria a instância de cache.
         """
