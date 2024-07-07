@@ -26,6 +26,7 @@ class DBTask(SequentialTaskSet):
     """
     Realiza a autenticação e a execução do endpoint de
     forma sequencial.
+    TODO: Popular as permissões com um arquivo csv
     """
 
     def __init__(self, *args, **kwargs):
@@ -43,28 +44,15 @@ class DBTask(SequentialTaskSet):
     @task
     def poc_request(self):
         """
-        Teste de carga no endpoint de poc de requisições.
+        Teste de carga no endpoint de CRUD de permissões.
         """
 
-        print(f"[{datetime.now()}] Sou a requisição pela pagina web")
+        print(f"[{datetime.now()}] Sou a requisição para criar uma permissão")
         print(f"Token: {self.token}")
 
-        self.client.post("/users", json={
-            "email": "fulano01@gmail.com",
-            "groups": [
-                226
-            ],
-            "name": "Fulano 01",
-            "password": "Django1234",
-            "permissions": [
-                "permission_create",
-                "permission_update"
-            ],
-            "profile": {
-                "address": "Rua ABC bairro Ipanema N 244, Sorocaba, SP. CEP: 7059483",
-                "phone": "61998283934"
-            },
-            "work_company_cnpj": "11111111111111"
+        self.client.post("/permissions", json={
+            "code": "permission_create",
+            "name": "Permissão para criar permissões"
         }, headers={"accept": "application/json"})
 
     def on_stop(self):

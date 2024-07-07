@@ -176,7 +176,7 @@ services:
     ports:
      - "8089:8089"
     volumes:
-      - ./src/scripts/locusts:/mnt/locust
+      - ./locusts:/mnt/locust
     command: [
       "-f", "/mnt/locust/requests.py",
       "--master",
@@ -194,7 +194,7 @@ services:
       - all
       - locust
     volumes:
-      - ./src/scripts/locusts:/mnt/locust
+      - ./locusts:/mnt/locust
     command: -f /mnt/locust/requests.py --worker --master-host locust
     networks:
         - vksoftware
