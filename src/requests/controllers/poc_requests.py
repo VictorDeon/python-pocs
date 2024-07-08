@@ -12,7 +12,15 @@ from ..repositories import (
     PocHTTPxSingletonSemaphoreConnectionPoolRepository,
     PocAIOHTTPConnectionPoolRepository,
     PocAIOHTTPSingletonConnectionPoolRepository,
-    PocAIOHTTPCustomConnectionPoolRepository
+    PocAIOHTTPCustomConnectionPoolRepository,
+    PocCPUBoundRequestRepository,
+    PocSimplethreadCPUBoundRequestRepository,
+    PocMultiplethreadCPUBoundRequestRepository,
+    PocMultiThreadBackgroundCPUBoundRequestRepository,
+    PocCacheConnectionPoolRepository,
+    PocCacheSingletonConnectionPoolRepository,
+    PocDBConnectionPoolRepository,
+    PocDBSingletonConnectionPoolRepository
 )
 from ..dtos import PocRequestsOutputDTO
 from src.engines.mediator import Mediator
@@ -36,7 +44,7 @@ async def poc_requests(command: str = Header(..., description="Comando de requis
     Rode o endpoint uma vez com cada um dos headers "command" a seguir um em seguida do outro para verificar
     os que bloqueia a execução do outro, utilize o curl para fazer isso.
 
-    `curl -X GET http://localhost:8000/blocked-requests -H 'accept: application/json' -H 'command: ...'`
+    `curl -X GET http://localhost:8000/poc-requests -H 'accept: application/json' -H 'command: ...'`
 
     * BlockingRequestSync
     * BlockingRequestAsyncWithSync
@@ -50,6 +58,14 @@ async def poc_requests(command: str = Header(..., description="Comando de requis
     * AIOHTTPConnectionPool
     * AIOHTTPCustomConnectionPool
     * AIOHTTPSingletonConnectionPool
+    * CacheConnectionPool
+    * CacheSingletonConnectionPool
+    * DBConnectionPool
+    * DBSingletonConnectionPool
+    * CPUBoundRequests
+    * SimpleThreadCPUBoundRequests
+    * MultiThreadCPUBoundRequests
+    * MultiThreadBackgroundCPUBoundRequests
     """
 
     mediator = Mediator()
@@ -65,5 +81,13 @@ async def poc_requests(command: str = Header(..., description="Comando de requis
     mediator.add(PocAIOHTTPConnectionPoolRepository())
     mediator.add(PocAIOHTTPCustomConnectionPoolRepository())
     mediator.add(PocAIOHTTPSingletonConnectionPoolRepository())
+    mediator.add(PocCPUBoundRequestRepository())
+    mediator.add(PocSimplethreadCPUBoundRequestRepository())
+    mediator.add(PocMultiplethreadCPUBoundRequestRepository())
+    mediator.add(PocMultiThreadBackgroundCPUBoundRequestRepository())
+    mediator.add(PocCacheConnectionPoolRepository())
+    mediator.add(PocCacheSingletonConnectionPoolRepository())
+    mediator.add(PocDBConnectionPoolRepository())
+    mediator.add(PocDBSingletonConnectionPoolRepository())
 
     return await mediator.send(command)

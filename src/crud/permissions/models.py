@@ -11,8 +11,8 @@ class Permission(BaseModel):
     __tablename__ = "permissions"
 
     id: Mapped[int] = mapped_column(BIGINT, primary_key=True, autoincrement=True)
-    name: Mapped[str] = mapped_column(VARCHAR(50), nullable=False)
-    code: Mapped[str] = mapped_column(VARCHAR(20), unique=True, nullable=False)
+    name: Mapped[str] = mapped_column(VARCHAR(100), nullable=False)
+    code: Mapped[str] = mapped_column(VARCHAR(50), unique=True, nullable=False)
 
     def __repr__(self) -> str:
         """
