@@ -1,50 +1,29 @@
 import json
-import os
-import httpx
-from fastapi.exceptions import HTTPException
+import aiohttp
+from aiohttp.web import HTTPError
 from src.engines.logger import ProjectLoggerSingleton
 
 
-class HTTPxSingleton:
+class AIOHTTPClient:
     """
-    Client HTTP Singleton.
+    Client HTTP aio.
     """
 
-    __instance = None
-
-    def __init__(self) -> None:
+    def __init__(self):
         """
-        Construtor.
+        Constructor.
         """
 
-        if self.__instance:
-            raise HTTPException(status_code=500, detail="Não se pode instânciar uma classe singleton.")
+        self.client: aiohttp.ClientSession = None
 
+    async def __aenter__(self) -> "AIOHTTPClient":
+        """
+        Iniciando o poll de conexões.
+        """
+
+        self.client = aiohttp.ClientSession()
         self.logger = ProjectLoggerSingleton.get_logger()
-        self.logger.info("Abrindo a pool de conexões")
-        self.client: httpx.AsyncClient = httpx.AsyncClient(
-            limits=httpx.Limits(
-                # Número de conexões que podem ser abertas ao mesmo tempo
-                max_connections=int(os.environ.get("HTTP_MAX_CONNECTIONS", 100)),
-                # Número máximo de conexões já finalizadas que queremos manter conectado e esperandos
-                # para ser usado novamente antes de ser fechado.
-                max_keepalive_connections=int(os.environ.get("HTTP_MAX_KEEP_ALIVE_CONNECTONS", 20)),
-                # Tempo em segundos que as conexões já finalizas ficam esperando antes de ser fechadas
-                # caso ninguem as solicite.
-                keepalive_expiry=int(os.environ.get("HTTP_KEEP_ALIVE_EXPIRE", 120))
-            )
-        )
-
-    @classmethod
-    async def get_instance(cls) -> "HTTPxSingleton":
-        """
-        Realiza a conexão do singleton e retorna sua instância.
-        """
-
-        if not cls.__instance:
-            cls.__instance = HTTPxSingleton()
-
-        return cls.__instance
+        return self
 
     async def get(self, url: str, params: dict = None, headers: dict = None, timeout: int = 600) -> dict:
         """
@@ -52,10 +31,10 @@ class HTTPxSingleton:
         """
 
         try:
-            response = await self.client.get(url, params=params, headers=headers, timeout=timeout)
-            response.raise_for_status()
-            result = response.json()
-        except (httpx.HTTPStatusError, httpx.RequestError) as error:
+            async with self.client.get(url, params=params, headers=headers, timeout=timeout) as response:
+                response.raise_for_status()
+                result = await response.json()
+        except HTTPError as error:
             self.logger.error(f"Ocorreu um error na requisição a GET url {url}: {error}")
             result = None
         except json.JSONDecodeError as error:
@@ -70,10 +49,10 @@ class HTTPxSingleton:
         """
 
         try:
-            response = await self.client.post(url, json=data, params=params, headers=headers, timeout=timeout)
-            response.raise_for_status()
-            result = response.json()
-        except (httpx.HTTPStatusError, httpx.RequestError) as error:
+            async with self.client.post(url, json=data, params=params, headers=headers, timeout=timeout) as response:
+                response.raise_for_status()
+                result = await response.json()
+        except HTTPError as error:
             self.logger.error(f"Ocorreu um error na requisição a POST url {url}: {error}")
             result = None
         except json.JSONDecodeError as error:
@@ -88,10 +67,10 @@ class HTTPxSingleton:
         """
 
         try:
-            response = await self.client.put(url, json=data, params=params, headers=headers, timeout=timeout)
-            response.raise_for_status()
-            result = response.json()
-        except (httpx.HTTPStatusError, httpx.RequestError) as error:
+            async with self.client.put(url, json=data, params=params, headers=headers, timeout=timeout) as response:
+                response.raise_for_status()
+                result = await response.json()
+        except HTTPError as error:
             self.logger.error(f"Ocorreu um error na requisição a PUT url {url}: {error}")
             result = None
         except json.JSONDecodeError as error:
@@ -106,10 +85,10 @@ class HTTPxSingleton:
         """
 
         try:
-            response = await self.client.patch(url, json=data, params=params, headers=headers, timeout=timeout)
-            response.raise_for_status()
-            result = response.json()
-        except (httpx.HTTPStatusError, httpx.RequestError) as error:
+            async with self.client.patch(url, json=data, params=params, headers=headers, timeout=timeout) as response:
+                response.raise_for_status()
+                result = await response.json()
+        except HTTPError as error:
             self.logger.error(f"Ocorreu um error na requisição a PATCH url {url}: {error}")
             result = None
         except json.JSONDecodeError as error:
@@ -124,10 +103,10 @@ class HTTPxSingleton:
         """
 
         try:
-            response = await self.client.delete(url, params=params, headers=headers, timeout=timeout)
-            response.raise_for_status()
-            result = response.json()
-        except (httpx.HTTPStatusError, httpx.RequestError) as error:
+            async with self.client.delete(url, params=params, headers=headers, timeout=timeout) as response:
+                response.raise_for_status()
+                result = await response.json()
+        except HTTPError as error:
             self.logger.error(f"Ocorreu um error na requisição a DELETE url {url}: {error}")
             result = None
         except json.JSONDecodeError as error:
@@ -135,3 +114,10 @@ class HTTPxSingleton:
             result = None
 
         return result
+
+    async def __aexit__(self, exc_type, exc_val, exc_tb):
+        """
+        Fecha a conexão.
+        """
+
+        await self.client.close()

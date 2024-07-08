@@ -5,12 +5,14 @@ from .blocked_requests import (
     NotBlockingRequestAsyncRepository,
     NotBlockingRequestTaskRepository
 )
-from .poc_requests import (
+from .io_requests import (
     PocHTTPxConnectionPoolRepository,
+    PocHTTPxCustomConnectionPoolRepository,
     PocHTTPxSingletonConnectionPoolRepository,
-    PocCacheConnectionPoolRepository,
-    PocCacheSingletonConnectionPoolRepository,
-    PocHTTPxSingletonSemaphoreConnectionPoolRepository
+    PocHTTPxSingletonSemaphoreConnectionPoolRepository,
+    PocAIOHTTPConnectionPoolRepository,
+    PocAIOHTTPCustomConnectionPoolRepository,
+    PocAIOHTTPSingletonConnectionPoolRepository
 )
 from .list_queue_pokemon import ListQueuePokemonRepository
 from .list_xml_pokemon import ListXMLPokemonRepository
@@ -26,8 +28,10 @@ __all__ = [
     "RetrievePokemonRepository",
     "ListQueuePokemonRepository",
     "PocHTTPxConnectionPoolRepository",
+    "PocHTTPxCustomConnectionPoolRepository",
     "PocHTTPxSingletonConnectionPoolRepository",
-    "PocCacheConnectionPoolRepository",
-    "PocCacheSingletonConnectionPoolRepository",
-    "PocHTTPxSingletonSemaphoreConnectionPoolRepository"
+    "PocHTTPxSingletonSemaphoreConnectionPoolRepository",
+    "PocAIOHTTPConnectionPoolRepository",
+    "PocAIOHTTPCustomConnectionPoolRepository",
+    "PocAIOHTTPSingletonConnectionPoolRepository"
 ]
