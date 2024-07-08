@@ -34,14 +34,13 @@ Nas proximas vezes só precisa executar os emuladores `docker compose --profile 
 ### TODO:
 
 #### Requests
-* 1º Validar o uso de pool de conexões no redis, httpx e banco de dados
-* 2º Desenvolver vários tipos de consumos de APIs usando corotines, queues, threads e processos usando o pokemon como base
+* 1º Validar o uso de pool de conexões no redis, httpx e banco de dados e testa-lo usando locust
+* 2º Desenvolver vários tipos de consumos de APIs usando corotines, queues, threads e processos usando o pokemon como base e testa-los com o locust
 * Retornar pokemon em YAML e CSV
 
 #### Engines
-* 3º Uso do lacost para teste de carga
-* 4º Instrumentalização com o new relic
-* 5º Tarefas distribuidas com celery e habbitmq
+* 3º Instrumentalização com o new relic
+* Tarefas distribuidas com celery e habbitmq
 
 #### Outputs
 * Finalizar o leitor de PDF
@@ -52,7 +51,7 @@ Nas proximas vezes só precisa executar os emuladores `docker compose --profile 
 * Conectar o storage e pubsub com o GCP, Local e AWS
 
 #### CRUD
-* 6º Autenticação e Autorização - vwauth
+* Autenticação e Autorização - vwauth
 * Criar no repository os CRUD usando NoSQL MongoDb
 * Deleção lógica:
     - Na criação, se o objeto já existir ao inves de criar, coloque is_deleted False e atualize os dados
@@ -64,13 +63,17 @@ Nas proximas vezes só precisa executar os emuladores `docker compose --profile 
 
 #### Projects
 * Implementar blockchain
-* 7º Desenvolver padrões de projetos
-* 8º Criando estruturas de dados e gerando um pacote python
+* Desenvolver padrões de projetos
+* Criando estruturas de dados e gerando um pacote python
 * Chatbot com openAI
 * Criar um jogo com pygames
 * Visão computacional
 * Machine learning
 * Data-Science
+* Web Scraping
 
 #### Quality
 * Testes automatizados
+* Popular as requisições do locust com arquivos csv ou yaml e desenvolver testes de carga para varios endpoint e scripts
+* Incrementar o locust com novos clients (SFTP, AMQP) e novos handlers inserindo novos dados nos eventos de sucesso e falha
+usar como base o curso de locust da udemy
