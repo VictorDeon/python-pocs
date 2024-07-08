@@ -1,6 +1,8 @@
 import math
 import threading
+import multiprocessing
 import random
+import queue
 from time import time, sleep
 from src.engines.logger import ProjectLoggerSingleton
 from ..dtos import PocRequestsOutputDTO
@@ -67,7 +69,7 @@ class PocSimplethreadCPUBoundRequestRepository:
         Realiza o pode computacional.
         """
 
-        logger.info("Iniciando o cálculo cpu-bound")
+        logger.info("Iniciando o cálculo cpu-bound com")
 
         i = start
         factor = 1000 * 1000
@@ -91,6 +93,65 @@ class PocSimplethreadCPUBoundRequestRepository:
         sleep(5)
         logger.info(f"Aguardando até a {thread.name} ser executada e finalizada.")
         thread.join()
+
+        end_time = time() - start_time
+        logger.info(f"Requisição executada em {round(end_time, 2)} segundos")
+        return PocRequestsOutputDTO(result=f"Requisição executada em {round(end_time, 2)} segundos")
+
+
+class PocMultiThreadCPUBoundRequestRepository:
+    """
+    Testando o uso de multi threads em cpu bound
+    """
+
+    def __init__(self):
+        """
+        Construtor.
+        """
+
+        self.command = "MultiThreadCPUBoundRequests"
+        self.qtd_cores = multiprocessing.cpu_count()
+
+    def computer(self, start: int, end: int) -> None:
+        """
+        Realiza o pode computacional.
+        """
+
+        logger.info("Iniciando o cálculo")
+
+        i = start
+        factor = 1000 * 1000
+        while i < end:
+            i += 1
+            math.sqrt((i - factor) * (i - factor))
+
+        logger.info("Finalizando calculo")
+
+    async def execute(self) -> PocRequestsOutputDTO:
+        """
+        Executa o teste
+        """
+
+        start_time = time()
+        logger.info(f"Iniciando a chamada {self.command} com {self.qtd_cores} core(s).")
+
+        logger.info("Criando a threads e inserindo-as na pool de threads prontas para execução do processador.")
+        threads: list[threading.Thread] = []
+        for n in range(1, self.qtd_cores + 1):
+            initial = 10_000_000 * (n - 1) / self.qtd_cores
+            end = 10_000_000 * n / self.qtd_cores
+            logger.info(f"Core {n} processando de {initial} até {end}")
+            threads.append(
+                threading.Thread(
+                    name=f"cpu-bound-core-{n}",
+                    daemon=True,
+                    target=self.computer,
+                    kwargs={"start": initial, "end": end}
+                ),
+            )
+
+        [thread.start() for thread in threads]
+        [thread.join() for thread in threads]
 
         end_time = time() - start_time
         logger.info(f"Requisição executada em {round(end_time, 2)} segundos")
@@ -122,9 +183,11 @@ class BankAccount:
         destination_account.saldo += value
 
 
-class PocMultiplethreadCPUBoundRequestRepository:
+class PocMultiThreadWithLockRequestRepository:
     """
-    Testando o uso de multi threads em cpu bound
+    Testando o uso de multi threads em cpu bound com lock para
+    que as threads não utilizem recursos compatilhados ao mesmo tempo,
+    por exemplo BackAccount.saldo ou self.qtd_inconsistent
     """
 
     def __init__(self):
@@ -132,7 +195,7 @@ class PocMultiplethreadCPUBoundRequestRepository:
         Construtor.
         """
 
-        self.command = "MultiThreadCPUBoundRequests"
+        self.command = "MultiThreadWithLockRequests"
         self.lock = threading.RLock()
         self.qtd_inconsistent = 0
 
@@ -225,9 +288,10 @@ class PocMultiplethreadCPUBoundRequestRepository:
         return PocRequestsOutputDTO(result=f"Requisição executada em {round(end_time, 2)} segundos")
 
 
-class PocMultiThreadBackgroundCPUBoundRequestRepository:
+class PocMultiThreadWithQueueRequestRepository:
     """
-    Testando o uso de multi threads em cpu bound em background
+    Realizando a comunicação entre threads que dependem uma das outras
+    usando queue.
     """
 
     def __init__(self):
@@ -235,22 +299,26 @@ class PocMultiThreadBackgroundCPUBoundRequestRepository:
         Construtor.
         """
 
-        self.command = "MultiThreadBackgroundCPUBoundRequests"
+        self.command = "MultiThreadWithQueueRequests"
 
-    def computer(self, start: int, end: int) -> None:
+    def generate_data(self, queue: queue.Queue) -> None:
         """
-        Realiza o pode computacional.
+        Gera os dados e insere na queue.
         """
 
-        logger.info("Iniciando o cálculo cpu-bound")
+        for i in range(1, 11):
+            logger.info(f"Dado {i} gerado.")
+            queue.put(i)
 
-        i = start
-        factor = 1000 * 1000
-        while i < end:
-            i += 1
-            math.sqrt((i - factor) * (i - factor))
+    def process_data(self, queue: queue.Queue) -> None:
+        """
+        Processa os dados recebidos.
+        """
 
-        logger.info("Finalizando calculo")
+        while queue.qsize() > 0:
+            value = queue.get()
+            logger.info(f"Dado {value * 2} processado.")
+            queue.task_done()
 
     async def execute(self) -> PocRequestsOutputDTO:
         """
@@ -258,19 +326,17 @@ class PocMultiThreadBackgroundCPUBoundRequestRepository:
         """
 
         start_time = time()
+        data_queue = queue.Queue()
         logger.info(f"Iniciando a chamada {self.command}")
 
-        logger.info("Criando a threads e inserindo-as na pool de threads prontas para execução do processador.")
-        self.threads = [
-            threading.Thread(name="cpu-bound01", daemon=True, target=self.computer, args=(1, 10_000_000)),
-            threading.Thread(name="cpu-bound02", daemon=True, target=self.computer, args=(1, 10_000_000)),
-            threading.Thread(name="cpu-bound03", daemon=True, target=self.computer, args=(1, 10_000_000))
-        ]
-        [thread.start() for thread in self.threads]
+        thread_generator = threading.Thread(target=self.generate_data, args=(data_queue,))
+        thread_processor = threading.Thread(target=self.process_data, args=(data_queue,))
 
-        logger.info("Processando outras coisas")
-        sleep(5)
-        logger.info("Aguardando até as threads serem executadas e finalizadas.")
+        thread_generator.start()
+        thread_generator.join()
+
+        thread_processor.start()
+        thread_processor.join()
 
         end_time = time() - start_time
         logger.info(f"Requisição executada em {round(end_time, 2)} segundos")

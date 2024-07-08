@@ -25,8 +25,9 @@ from .io_requests import (
 from .cpu_requests import (
     PocCPUBoundRequestRepository,
     PocSimplethreadCPUBoundRequestRepository,
-    PocMultiplethreadCPUBoundRequestRepository,
-    PocMultiThreadBackgroundCPUBoundRequestRepository
+    PocMultiThreadCPUBoundRequestRepository,
+    PocMultiThreadWithLockRequestRepository,
+    PocMultiThreadWithQueueRequestRepository
 )
 from .list_queue_pokemon import ListQueuePokemonRepository
 from .list_xml_pokemon import ListXMLPokemonRepository
@@ -54,6 +55,7 @@ __all__ = [
     "PocDBSingletonConnectionPoolRepository",
     "PocCPUBoundRequestRepository",
     "PocSimplethreadCPUBoundRequestRepository",
-    "PocMultiplethreadCPUBoundRequestRepository",
-    "PocMultiThreadBackgroundCPUBoundRequestRepository"
+    "PocMultiThreadCPUBoundRequestRepository",
+    "PocMultiThreadWithLockRequestRepository",
+    "PocMultiThreadWithQueueRequestRepository"
 ]

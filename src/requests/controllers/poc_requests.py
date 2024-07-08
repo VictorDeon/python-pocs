@@ -15,8 +15,9 @@ from ..repositories import (
     PocAIOHTTPCustomConnectionPoolRepository,
     PocCPUBoundRequestRepository,
     PocSimplethreadCPUBoundRequestRepository,
-    PocMultiplethreadCPUBoundRequestRepository,
-    PocMultiThreadBackgroundCPUBoundRequestRepository,
+    PocMultiThreadCPUBoundRequestRepository,
+    PocMultiThreadWithLockRequestRepository,
+    PocMultiThreadWithQueueRequestRepository,
     PocCacheConnectionPoolRepository,
     PocCacheSingletonConnectionPoolRepository,
     PocDBConnectionPoolRepository,
@@ -65,7 +66,8 @@ async def poc_requests(command: str = Header(..., description="Comando de requis
     * CPUBoundRequests
     * SimpleThreadCPUBoundRequests
     * MultiThreadCPUBoundRequests
-    * MultiThreadBackgroundCPUBoundRequests
+    * MultiThreadWithLockRequests
+    * MultiThreadWithQueueRequests
     """
 
     mediator = Mediator()
@@ -83,8 +85,9 @@ async def poc_requests(command: str = Header(..., description="Comando de requis
     mediator.add(PocAIOHTTPSingletonConnectionPoolRepository())
     mediator.add(PocCPUBoundRequestRepository())
     mediator.add(PocSimplethreadCPUBoundRequestRepository())
-    mediator.add(PocMultiplethreadCPUBoundRequestRepository())
-    mediator.add(PocMultiThreadBackgroundCPUBoundRequestRepository())
+    mediator.add(PocMultiThreadCPUBoundRequestRepository())
+    mediator.add(PocMultiThreadWithLockRequestRepository())
+    mediator.add(PocMultiThreadWithQueueRequestRepository())
     mediator.add(PocCacheConnectionPoolRepository())
     mediator.add(PocCacheSingletonConnectionPoolRepository())
     mediator.add(PocDBConnectionPoolRepository())
