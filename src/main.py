@@ -1,5 +1,7 @@
 import os
 from pathlib import Path
+from datetime import datetime
+from time import time
 from contextlib import asynccontextmanager
 from fastapi import Request, status, HTTPException
 from fastapi.responses import JSONResponse
@@ -39,18 +41,24 @@ app = FastAPI(
 async def profile_request(request: Request, call_next):
     logger.info(f"########## {request.method.upper()} {str(request.url)}")
     PROFILE = int(os.environ.get("PROFILE", 0))
+    PROFILE_CONDITION = float(os.environ.get("PROFILE_CONDITION", 0.2))
     if PROFILE:
         logger.debug("Iniciando o profiling das requisições.")
         profiler = Profiler(interval=0.001, async_mode="enabled")
         profiler.start()
+        start_time = time()
         response = await call_next(request)
+        end_time = time() - start_time
+        now = datetime.now().strftime('%Y-%m-%d %H:%M:%S.%f')
+        logger.info(f"Requisição executada em {end_time:.4f} ms")
         profiler.stop()
-        profile_path = Path("/software/assets/profiles")
-        profile_path.mkdir(parents=True, exist_ok=True)
-        full_path = profile_path / "profile.html"
-        string_path = str(full_path.resolve())
-        profiler.write_html(string_path)
-        logger.debug(f"Finalizando o profiling da requisição {request.url} e salvando em {string_path}.")
+        if end_time > PROFILE_CONDITION:
+            profile_path = Path("/software/assets/profiles")
+            profile_path.mkdir(parents=True, exist_ok=True)
+            full_path = profile_path / f"profile-{now}.html"
+            string_path = str(full_path.resolve())
+            profiler.write_html(string_path)
+            logger.debug(f"Finalizando o profiling da requisição {request.url} e salvando em {string_path}.")
         return response
     else:
         return await call_next(request)
