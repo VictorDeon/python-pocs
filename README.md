@@ -34,7 +34,7 @@ Nas proximas vezes só precisa executar os emuladores `docker compose --profile 
 ### TODO:
 
 #### Requests
-* 1º Validar o uso de pool de conexões no redis, httpx e banco de dados e testa-lo usando locust
+* 1º Configurar o profile para rodar junto com o locust com uma condição de ms das requisições
 * 2º Desenvolver vários tipos de consumos de APIs usando corotines, queues, threads e processos usando o pokemon como base e testa-los com o locust
 * Retornar pokemon em YAML e CSV
 
