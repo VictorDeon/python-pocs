@@ -24,7 +24,7 @@ class PocSimplethreadCPUBoundRequestRepository:
         Realiza o pode computacional.
         """
 
-        logger.info("Iniciando o cálculo cpu-bound com")
+        logger.info(f"Iniciando o cálculo {threading.current_thread().name}")
 
         i = start
         factor = 1000 * 1000
