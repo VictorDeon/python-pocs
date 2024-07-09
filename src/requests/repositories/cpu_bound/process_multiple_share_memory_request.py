@@ -1,4 +1,5 @@
-from multiprocessing import Process, current_process, Manager, Value
+from multiprocessing import Process, current_process, Manager, Value, RLock as ProcessLock
+from multiprocessing.synchronize import RLock
 from time import time
 import ctypes
 import random
@@ -8,16 +9,17 @@ from ...dtos import PocRequestsOutputDTO
 logger = ProjectLoggerSingleton.get_logger()
 
 
-def modify_data(counter: ctypes.c_int, results: list[bool], objs: dict) -> None:
+def modify_data(counter: ctypes.c_int, results: list[bool], objs: dict, lock: RLock) -> None:
     """
     Incrementa o contador e adicionar randomicamente um valor booleano na lista.
     """
 
-    results.append(random.choice([True, False]))
-    counter.value = counter.value + 1
-    objs[f"{counter.value}^2"] = counter.value ** 2
-    process_name = current_process().name
-    logger.info(f"No processo [{process_name}] obtivemos: {counter.value}) {results[:]} e {objs}")
+    with lock:
+        results.append(random.choice([True, False]))
+        counter.value = counter.value + 1
+        objs[f"{counter.value}^2"] = counter.value ** 2
+        process_name = current_process().name
+        logger.info(f"No processo [{process_name}] obtivemos: {counter.value}) {results[:]} e {objs}")
 
 
 class PocMultiProcessShareMemoryRequestRepository:
@@ -40,16 +42,17 @@ class PocMultiProcessShareMemoryRequestRepository:
         start_time = time()
         logger.info(f"Iniciando a chamada {self.command} no processo {current_process().name}")
         manager = Manager()
+        lock = ProcessLock()
 
         counter = Value(ctypes.c_int, 0)
         results: list[bool] = manager.list()
         objs: dict = manager.dict()
 
-        p1 = Process(target=modify_data, args=(counter, results, objs))
-        p2 = Process(target=modify_data, args=(counter, results, objs))
-        p3 = Process(target=modify_data, args=(counter, results, objs))
-        p4 = Process(target=modify_data, args=(counter, results, objs))
-        p5 = Process(target=modify_data, args=(counter, results, objs))
+        p1 = Process(target=modify_data, args=(counter, results, objs, lock))
+        p2 = Process(target=modify_data, args=(counter, results, objs, lock))
+        p3 = Process(target=modify_data, args=(counter, results, objs, lock))
+        p4 = Process(target=modify_data, args=(counter, results, objs, lock))
+        p5 = Process(target=modify_data, args=(counter, results, objs, lock))
 
         p1.start()
         p2.start()
