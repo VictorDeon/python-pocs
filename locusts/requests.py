@@ -1,5 +1,25 @@
-from locust import HttpUser, task, constant
+from locust import HttpUser, task, constant, events
 from datetime import datetime
+
+
+@events.test_start.add_listener
+def script_start(*args, **kwargs):
+    """
+    Executado antes dos testes iniciarem.
+    """
+
+    print("Realizando algum login, conexão com banco ou arquivo de configuração.")
+    print(args, kwargs)
+
+
+@events.test_stop.add_listener
+def script_end(*args, **kwargs):
+    """
+    Executado depois dos testes finalizarem
+    """
+
+    print("Fechando alguma conexão, logout ou armazenando algo em algum arquivo.")
+    print(args, kwargs)
 
 
 class PocRequest(HttpUser):

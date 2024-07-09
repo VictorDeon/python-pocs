@@ -1,4 +1,6 @@
 from locust import HttpUser, SequentialTaskSet, task, between, events
+from .csv_reader import CSVReader
+import random
 from datetime import datetime
 
 
@@ -26,7 +28,6 @@ class DBTask(SequentialTaskSet):
     """
     Realiza a autenticação e a execução do endpoint de
     forma sequencial.
-    TODO: Popular as permissões com um arquivo csv
     """
 
     def __init__(self, *args, **kwargs):
@@ -39,6 +40,7 @@ class DBTask(SequentialTaskSet):
         """
 
         print(f"[{datetime.now()}] Autenticando no sistema")
+        self.data = CSVReader("/software/locusts/populate_db.csv").read()
         self.token = "abcd1234"
 
     @task
@@ -48,12 +50,16 @@ class DBTask(SequentialTaskSet):
         """
 
         print(f"[{datetime.now()}] Sou a requisição para criar uma permissão")
-        print(f"Token: {self.token}")
 
-        self.client.post("/permissions", json={
-            "code": "permission_create",
-            "name": "Permissão para criar permissões"
-        }, headers={"accept": "application/json"})
+        permission = random.choice(self.data)
+        self.client.post(
+            "/permissions",
+            json=permission,
+            headers={
+                "accept": "application/json",
+                "Authorize": f"Bearer {self.token}"
+            }
+        )
 
     def on_stop(self):
         """
