@@ -1,43 +1,81 @@
-import multiprocessing
+from multiprocessing import Process, Pipe, current_process, Event as MultiprocessingEvent
+from multiprocessing.synchronize import Event
+from multiprocessing.connection import Connection
+import time
 
 
-def ping(connection):
+def ping(pipe: Connection, stop_event: Event) -> None:
+    """
+    Envia e recebe mensagem
+    """
+
+    process_name = current_process().name
+
+    while not stop_event.is_set():
+        message: str = pipe.recv()
+        if message.lower() == 'sair':
+            pipe.send('sair')
+            break
+
+        pipe.send(message)
+        print(f"Processo {process_name} enviou:", message)
+
+
+def pong(pipe: Connection, stop_event: Event) -> None:
     """
     Envia e recebe mensagem.
     """
 
-    msg = input("PING escreva a msg: ")
-    connection.send(msg)
-    received_msg = connection.recv()
-    print(f"PING recebeu a msg: {received_msg}")
+    process_name = current_process().name
+
+    while not stop_event.is_set():
+        message: str = pipe.recv()
+        if message.lower() == 'sair':
+            pipe.send('sair')
+            break
+
+        pipe.send(message)
+        print(f"Processo {process_name} enviou:", message)
 
 
-def pong(connection):
-    """
-    Envia e recebe mensagem.
-    """
-
-    received_msg = connection.recv()
-    print(f"PONG recebeu a msg: {received_msg}")
-    msg = input("PONG escreva a msg: ")
-    connection.send(msg)
-
-
-def main():
+def main() -> None:
     """
     Função de execução.
     """
 
-    connection_ping, connection_pong = multiprocessing.Pipe(duplex=True)
+    parent_ping, child_ping = Pipe()
+    parent_pong, child_pong = Pipe()
+    stop_event = MultiprocessingEvent()
 
-    process_ping = multiprocessing.Process(target=ping, args=(connection_ping,))
-    process_pong = multiprocessing.Process(target=pong, args=(connection_pong,))
+    process_ping = Process(name="ping", target=ping, args=(child_ping, stop_event))
+    process_pong = Process(name="pong", target=pong, args=(child_pong, stop_event))
 
-    while True:
-        process_ping.start()
-        process_pong.start()
-        process_ping.join()
-        process_pong.join()
+    process_ping.start()
+    process_pong.start()
+
+    while not stop_event.is_set():
+        time.sleep(2)
+        ping_input = input(f"Digite uma mensagem para enviar ao {process_ping.name} (ou 'sair' para terminar): ")
+        if ping_input.lower() == 'sair':
+            parent_ping.send('sair')
+            parent_pong.send('sair')
+            stop_event.set()
+        else:
+            parent_ping.send(ping_input)
+
+        time.sleep(2)
+        pong_input = input(f"Digite uma mensagem para enviar ao {process_pong.name} (ou 'sair' para terminar): ")
+        if pong_input.lower() == 'sair':
+            parent_ping.send('sair')
+            parent_pong.send('sair')
+            stop_event.set()
+        else:
+            parent_pong.send(pong_input)
+
+    process_ping.join()
+    process_pong.join()
+
+    print("Ping Pong concluido.")
 
 
 if __name__ == '__main__':

@@ -38,6 +38,10 @@ bash:
 	# Entrar no shell
 	docker compose exec api bash
 
+run:
+	# Executa algum script do container.
+	docker compose exec api python3 ./src/scripts/${script}
+
 packages:
 	# Inserir o site-packages dentro do .ignore
 	sudo docker cp api:/opt/venv/lib/python3.10/site-packages .ignore/site-packages
