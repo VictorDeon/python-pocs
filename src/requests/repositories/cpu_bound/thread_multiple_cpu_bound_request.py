@@ -1,6 +1,6 @@
 import math
-import threading
 import multiprocessing
+from concurrent.futures.thread import ThreadPoolExecutor as Executor
 from time import time
 from src.engines.logger import ProjectLoggerSingleton
 from ...dtos import PocRequestsOutputDTO
@@ -26,16 +26,11 @@ class PocMultiThreadCPUBoundRequestRepository:
         Realiza o pode computacional.
         """
 
-        thread_name = threading.current_thread().name
-        logger.info(f"Iniciando o cálculo na {thread_name}")
-
         i = start
         factor = 1000 * 1000
         while i < end:
             i += 1
             math.sqrt((i - factor) * (i - factor))
-
-        logger.info(f"Finalizando o cálculo na {thread_name}")
 
     async def execute(self) -> PocRequestsOutputDTO:
         """
@@ -46,22 +41,12 @@ class PocMultiThreadCPUBoundRequestRepository:
         logger.info(f"Iniciando a chamada {self.command} com {self.qtd_cores} core(s).")
 
         logger.info("Criando a threads e inserindo-as na pool de threads prontas para execução do processador.")
-        threads: list[threading.Thread] = []
-        for n in range(1, self.qtd_cores + 1):
-            initial = 10_000_000 * (n - 1) / self.qtd_cores
-            end = 10_000_000 * n / self.qtd_cores
-            logger.info(f"Core {n} processando de {initial} até {end}")
-            threads.append(
-                threading.Thread(
-                    name=f"thread-cpu-bound-core-{n}",
-                    daemon=True,
-                    target=self.computer,
-                    kwargs={"start": initial, "end": end}
-                ),
-            )
-
-        [thread.start() for thread in threads]
-        [thread.join() for thread in threads]
+        with Executor(max_workers=self.qtd_cores) as executor:
+            for n in range(1, self.qtd_cores + 1):
+                initial = 50_000_000 * (n - 1) / self.qtd_cores
+                end = 50_000_000 * n / self.qtd_cores
+                logger.info(f"Core {n} processando de {initial} até {end} usando threads")
+                executor.submit(self.computer, start=initial, end=end)
 
         end_time = time() - start_time
         logger.info(f"Requisição executada em {round(end_time, 2)} segundos")

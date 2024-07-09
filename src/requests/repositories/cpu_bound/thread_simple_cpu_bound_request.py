@@ -1,6 +1,7 @@
 import math
-import threading
 from time import time
+import threading
+from concurrent.futures.thread import ThreadPoolExecutor as Executor
 from src.engines.logger import ProjectLoggerSingleton
 from ...dtos import PocRequestsOutputDTO
 
@@ -44,11 +45,8 @@ class PocSimplethreadCPUBoundRequestRepository:
         logger.info(f"Iniciando a chamada {self.command} na thread {threading.current_thread().name}")
 
         logger.info("Criando a thread e inserindo na pool de threads prontas para execução do processador.")
-        thread = threading.Thread(name="thread-cpu-bound", target=self.computer, args=(1, 10_000_000))
-        thread.start()
-
-        logger.info(f"Aguardando até a {thread.name} ser executada e finalizada.")
-        thread.join()
+        with Executor() as executor:
+            executor.submit(self.computer, start=1, end=10_000_000)
 
         end_time = time() - start_time
         logger.info(f"Requisição executada em {round(end_time, 2)} segundos")

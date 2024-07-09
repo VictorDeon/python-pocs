@@ -1,6 +1,7 @@
 import math
-import multiprocessing
 from time import time
+import multiprocessing
+from concurrent.futures.process import ProcessPoolExecutor as Executor
 from src.engines.logger import ProjectLoggerSingleton
 from ...dtos import PocRequestsOutputDTO
 
@@ -44,12 +45,8 @@ class PocSimpleProcessCPUBoundRequestRepository:
         start_time = time()
         logger.info(f"Iniciando a chamada {self.command} no processo {multiprocessing.current_process().name}")
 
-        process = multiprocessing.Process(name="cpu-bound", target=self.computer, args=(1, 10_000_000))
-        logger.info(f"Iniciando o processo {process.name} e colocando na pool de execução.")
-        process.start()
-
-        logger.info(f"Aguardando até a {process.name} ser executada e finalizada.")
-        process.join()
+        with Executor() as executor:
+            executor.submit(self.computer, start=1, end=10_000_000)
 
         end_time = time() - start_time
         logger.info(f"Requisição executada em {round(end_time, 2)} segundos")
