@@ -58,7 +58,7 @@ class ProjectLoggerSingleton:
 
         # Formatar a saída de dados do log
         formatter = logging.Formatter(
-            fmt="%(asctime)s %(levelname)s File %(pathname)s, line %(lineno)d, in %(funcName)s:\n '%(message)s'",
+            fmt="%(asctime)s %(levelname)s File %(filename)s, line %(lineno)d, in %(funcName)s:\n '%(message)s'",
             datefmt="%d/%m/%Y %H:%M:%S"
         )
         sp = timezone("America/Sao_Paulo")

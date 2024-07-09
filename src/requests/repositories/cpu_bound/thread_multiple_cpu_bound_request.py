@@ -26,7 +26,8 @@ class PocMultiThreadCPUBoundRequestRepository:
         Realiza o pode computacional.
         """
 
-        logger.info(f"Iniciando o cálculo {threading.current_thread().name}")
+        thread_name = threading.current_thread().name
+        logger.info(f"Iniciando o cálculo na {thread_name}")
 
         i = start
         factor = 1000 * 1000
@@ -34,7 +35,7 @@ class PocMultiThreadCPUBoundRequestRepository:
             i += 1
             math.sqrt((i - factor) * (i - factor))
 
-        logger.info("Finalizando calculo")
+        logger.info(f"Finalizando o cálculo na {thread_name}")
 
     async def execute(self) -> PocRequestsOutputDTO:
         """
@@ -52,7 +53,7 @@ class PocMultiThreadCPUBoundRequestRepository:
             logger.info(f"Core {n} processando de {initial} até {end}")
             threads.append(
                 threading.Thread(
-                    name=f"cpu-bound-core-{n}",
+                    name=f"thread-cpu-bound-core-{n}",
                     daemon=True,
                     target=self.computer,
                     kwargs={"start": initial, "end": end}

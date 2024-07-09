@@ -25,6 +25,8 @@ class PocMultiThreadWithQueueRequestRepository:
         Gera os dados e insere na queue.
         """
 
+        logger.info(f"Gerando dados na {threading.current_thread().name}")
+
         for i in range(1, 11):
             logger.info(f"Dado {i} gerado.")
             queue.put(i)
@@ -33,6 +35,7 @@ class PocMultiThreadWithQueueRequestRepository:
         """
         Processa os dados recebidos.
         """
+        logger.info(f"Processando dados na {threading.current_thread().name}")
 
         while queue.qsize() > 0:
             value = queue.get()
@@ -46,7 +49,7 @@ class PocMultiThreadWithQueueRequestRepository:
 
         start_time = time()
         data_queue = queue.Queue()
-        logger.info(f"Iniciando a chamada {self.command}")
+        logger.info(f"Iniciando a chamada {self.command} na {threading.current_thread().name}")
 
         thread_generator = threading.Thread(target=self.generate_data, args=(data_queue,))
         thread_processor = threading.Thread(target=self.process_data, args=(data_queue,))

@@ -1,6 +1,6 @@
 import math
 import threading
-from time import time, sleep
+from time import time
 from src.engines.logger import ProjectLoggerSingleton
 from ...dtos import PocRequestsOutputDTO
 
@@ -24,7 +24,8 @@ class PocSimplethreadCPUBoundRequestRepository:
         Realiza o pode computacional.
         """
 
-        logger.info(f"Iniciando o cálculo {threading.current_thread().name}")
+        thread_name = threading.current_thread().name
+        logger.info(f"Iniciando o cálculo na {thread_name}")
 
         i = start
         factor = 1000 * 1000
@@ -32,20 +33,20 @@ class PocSimplethreadCPUBoundRequestRepository:
             i += 1
             math.sqrt((i - factor) * (i - factor))
 
+        logger.info(f"Finalizando o cálculo na {thread_name}")
+
     async def execute(self) -> PocRequestsOutputDTO:
         """
         Executa o teste
         """
 
         start_time = time()
-        logger.info(f"Iniciando a chamada {self.command}")
+        logger.info(f"Iniciando a chamada {self.command} na thread {threading.current_thread().name}")
 
         logger.info("Criando a thread e inserindo na pool de threads prontas para execução do processador.")
-        thread = threading.Thread(name="cpu-bound", target=self.computer, args=(1, 10_000_000))
+        thread = threading.Thread(name="thread-cpu-bound", target=self.computer, args=(1, 10_000_000))
         thread.start()
 
-        logger.info("Processando outras coisas")
-        sleep(5)
         logger.info(f"Aguardando até a {thread.name} ser executada e finalizada.")
         thread.join()
 

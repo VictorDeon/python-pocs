@@ -32,6 +32,8 @@ class PocSimpleProcessCPUBoundRequestRepository:
             i += 1
             math.sqrt((i - factor) * (i - factor))
 
+        logger.info(f"Finalizando o cálculo {multiprocessing.current_process().name}")
+
     async def execute(self) -> PocRequestsOutputDTO:
         """
         Executa o teste.

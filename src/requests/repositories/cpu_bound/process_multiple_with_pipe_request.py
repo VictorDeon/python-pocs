@@ -1,4 +1,4 @@
-from multiprocessing import Pipe, Process
+from multiprocessing import Pipe, Process, current_process
 from multiprocessing.connection import Connection
 from time import time
 from src.engines.logger import ProjectLoggerSingleton
@@ -12,7 +12,7 @@ def sender(connection: Connection) -> None:
     Envia msg
     """
 
-    logger.info("Enviando a mensagem.")
+    logger.info(f"Enviando a mensagem pelo processo {current_process().name}.")
     connection.send('Hello')
 
 
@@ -22,7 +22,7 @@ def receiver(connection: Connection) -> None:
     """
 
     msg = connection.recv()
-    logger.info(f"{msg} World")
+    logger.info(f"Mensagem recebida no processo {current_process().name}: {msg} World")
 
 
 class PocMultiProcessWithPipeRequestRepository:
@@ -43,7 +43,7 @@ class PocMultiProcessWithPipeRequestRepository:
         """
 
         start_time = time()
-        logger.info(f"Iniciando a chamada {self.command}")
+        logger.info(f"Iniciando a chamada {self.command} no processo {current_process().name}")
         # Queremos uma conexão enviar e a outra só receber por isso duplex=False
         # Se quisermos ambas enviar e receber usamos o duplex=True
         connection_receiver, connection_sender = Pipe(duplex=False)

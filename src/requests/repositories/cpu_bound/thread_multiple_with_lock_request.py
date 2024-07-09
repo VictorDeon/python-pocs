@@ -1,6 +1,6 @@
 import threading
 import random
-from time import time, sleep
+from time import time
 from src.engines.logger import ProjectLoggerSingleton
 from ...dtos import PocRequestsOutputDTO
 
@@ -28,7 +28,6 @@ class BankAccount:
             return
 
         self.saldo -= value
-        sleep(0.001)
         destination_account.saldo += value
 
 
@@ -96,6 +95,8 @@ class PocMultiThreadWithLockRequestRepository:
         Realiza as transferências.
         """
 
+        logger.info(f"Iniciando services na thread {threading.current_thread().name}")
+
         for _ in range(1, 2_000):
             origin_account, destination_account = self.get_random_accounts(accounts)
             value = random.randint(1, 100)
@@ -110,7 +111,7 @@ class PocMultiThreadWithLockRequestRepository:
         """
 
         start_time = time()
-        logger.info(f"Iniciando a chamada {self.command}")
+        logger.info(f"Iniciando a chamada {self.command} na {threading.current_thread().name}")
 
         bank_accounts = self.create_bank_accounts()
         with self.lock:

@@ -1,5 +1,5 @@
-from multiprocessing import Process, Queue
 from time import time
+from multiprocessing import Process, Queue, current_process
 from src.engines.logger import ProjectLoggerSingleton
 from ...dtos import PocRequestsOutputDTO
 
@@ -11,7 +11,7 @@ def sender(queue: Queue) -> None:
     Envia msg
     """
 
-    logger.info("Enviando a mensagem.")
+    logger.info(f"Enviando a mensagem pelo processo {current_process().name}.")
     queue.put('Hello')
 
 
@@ -21,7 +21,7 @@ def receiver(queue: Queue) -> None:
     """
 
     msg = queue.get()
-    logger.info(f"{msg} World")
+    logger.info(f"Recebendo mensagem no processo {current_process().name}: {msg} World")
 
 
 class PocMultiProcessWithQueueRequestRepository:
@@ -42,7 +42,7 @@ class PocMultiProcessWithQueueRequestRepository:
         """
 
         start_time = time()
-        logger.info(f"Iniciando a chamada {self.command}")
+        logger.info(f"Iniciando a chamada {self.command} no processo: {current_process().name}")
         queue = Queue()
 
         proccess_sender = Process(target=sender, args=(queue,))
