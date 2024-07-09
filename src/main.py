@@ -41,8 +41,8 @@ app = FastAPI(
 async def profile_request(request: Request, call_next):
     logger.info(f"########## {request.method.upper()} {str(request.url)}")
     PROFILE = int(os.environ.get("PROFILE", 0))
-    PROFILE_CONDITION = float(os.environ.get("PROFILE_CONDITION", 0.2))
     if PROFILE:
+        PROFILE_CONDITION = float(os.environ.get("PROFILE_CONDITION", 0.2))
         logger.debug("Iniciando o profiling das requisições.")
         profiler = Profiler(interval=0.001, async_mode="enabled")
         profiler.start()
@@ -53,9 +53,10 @@ async def profile_request(request: Request, call_next):
         logger.info(f"Requisição executada em {end_time:.4f} ms")
         profiler.stop()
         if end_time > PROFILE_CONDITION:
+            url = str(request.url).split("/")[-1]
             profile_path = Path("/software/assets/profiles")
             profile_path.mkdir(parents=True, exist_ok=True)
-            full_path = profile_path / f"profile-{now}.html"
+            full_path = profile_path / f"profile-{url}-{now}.html"
             string_path = str(full_path.resolve())
             profiler.write_html(string_path)
             logger.debug(f"Finalizando o profiling da requisição {request.url} e salvando em {string_path}.")
