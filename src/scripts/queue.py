@@ -45,6 +45,7 @@ async def get_messages_from_pubsub_and_put_in_queue(message_queue: Queue, pubsub
     logger.debug(f"Pegando {messages_to_get} mensagens do pubsub")
 
     if messages_to_get <= 0:
+        logger.debug("Fila lotada...")
         return
 
     try:

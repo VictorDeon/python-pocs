@@ -16,5 +16,5 @@ from .not_blocking_async_request import NotBlockingRequestAsyncRepository
 from .not_blocking_async_with_sync_request import NotBlockingRequestAsyncWithSyncRepository
 from .not_blocking_task_request import NotBlockingRequestTaskRepository
 from .corotines_generator import GeneratorRepository
-from .corotines import CorotineRepository
-from .corotines_tasks import CorotineTasksRepository
+from .aiohttp_singleton_corotines import CorotineRepository
+from .aiohttp_singleton_corotines_tasks import CorotineTasksRepository

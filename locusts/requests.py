@@ -19,5 +19,5 @@ class PocRequest(HttpUser):
 
         self.client.get("/poc-requests", headers={
             "accept": "application/json",
-            "command": "AIOHTTPSingletonConnectionPool"
+            "command": "CorotineTaskRequests"
         })
