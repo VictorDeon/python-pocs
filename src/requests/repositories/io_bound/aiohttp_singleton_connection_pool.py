@@ -39,7 +39,7 @@ class PocAIOHTTPSingletonConnectionPoolRepository:
         for response in responses:
             results += response['results']
 
-        logger.info(f"Quantidade retornada requisição: {len(results)}")
+        logger.info(f"Quantidade de pokemons retornados: {len(results)}")
 
         end_time = time() - start_time
         logger.info(f"Requisição executada em {round(end_time, 2)} segundos")

@@ -40,7 +40,7 @@ bash:
 
 run:
 	# Executa algum script do container.
-	docker compose exec api python3 ./src/scripts/${script}
+	docker compose exec debuger python3 ./src/scripts/${script}
 
 packages:
 	# Inserir o site-packages dentro do .ignore

@@ -26,7 +26,9 @@ from ..repositories import (
     PocMultiProcessCPUBoundRequestRepository,
     PocMultiProcessWithPipeRequestRepository,
     PocMultiProcessWithQueueRequestRepository,
-    PocMultiProcessShareMemoryRequestRepository
+    PocMultiProcessShareMemoryRequestRepository,
+    GeneratorRepository, CorotineRepository,
+    CorotineTasksRepository
 )
 from ..dtos import PocRequestsOutputDTO
 from src.engines.mediator import Mediator
@@ -78,6 +80,9 @@ async def poc_requests(command: str = Header(..., description="Comando de requis
     * MultiProcessWithPipeRequests
     * MultiProcessWithQueueRequests
     * MultiProcessShareMemoryRequests
+    * GeneratorRequest
+    * CorotineRequests
+    * CorotineTaskRequests
     """
 
     mediator = Mediator()
@@ -107,5 +112,8 @@ async def poc_requests(command: str = Header(..., description="Comando de requis
     mediator.add(PocMultiProcessWithPipeRequestRepository())
     mediator.add(PocMultiProcessWithQueueRequestRepository())
     mediator.add(PocMultiProcessShareMemoryRequestRepository())
+    mediator.add(GeneratorRepository())
+    mediator.add(CorotineRepository())
+    mediator.add(CorotineTasksRepository())
 
     return await mediator.send(command)
