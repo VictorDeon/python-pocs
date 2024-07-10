@@ -15,6 +15,7 @@ from ..repositories import (
     PocAIOHTTPCustomConnectionPoolRepository,
     PocCPUBoundRequestRepository,
     PocSimplethreadCPUBoundRequestRepository,
+    PocMultiThreadBackgroundRequestRepository,
     PocMultiThreadCPUBoundRequestRepository,
     PocMultiThreadWithLockRequestRepository,
     PocMultiThreadWithQueueRequestRepository,
@@ -72,6 +73,7 @@ async def poc_requests(command: str = Header(..., description="Comando de requis
     * DBSingletonConnectionPool
     * CPUBoundRequests
     * SimpleThreadCPUBoundRequests
+    * MultiThreadBackgroundRequests
     * MultiThreadCPUBoundRequests
     * MultiThreadWithLockRequests
     * MultiThreadWithQueueRequests
@@ -101,6 +103,7 @@ async def poc_requests(command: str = Header(..., description="Comando de requis
     mediator.add(PocCPUBoundRequestRepository())
     mediator.add(PocSimplethreadCPUBoundRequestRepository())
     mediator.add(PocMultiThreadCPUBoundRequestRepository())
+    mediator.add(PocMultiThreadBackgroundRequestRepository())
     mediator.add(PocMultiThreadWithLockRequestRepository())
     mediator.add(PocMultiThreadWithQueueRequestRepository())
     mediator.add(PocCacheConnectionPoolRepository())
