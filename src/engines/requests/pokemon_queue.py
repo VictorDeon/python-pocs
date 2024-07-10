@@ -75,13 +75,6 @@ class PokemonQueueRequestRepository:
         # Espera todos os itens da fila ser processados.
         await url_queue.join()
 
-        # Enviar None para os 20 trabalhadores finalizar o processo.
-        for _ in range(self.qtd_workers):
-            await url_queue.put(None)
-
-        # Dispara os trabalhadores de forma concorrent.
-        await asyncio.gather(*worker_tasks)
-
         return [Pokemon.from_dict(pokemon) for pokemon in responses]
 
     async def get_by_id(self, _id: int) -> Pokemon:

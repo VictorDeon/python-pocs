@@ -34,9 +34,7 @@ Nas proximas vezes só precisa executar os emuladores `docker compose --profile 
 ### TODO:
 
 #### Requests
-* 1º Configurar o profile para rodar junto com o locust com uma condição de ms das requisições
-* 2º Desenvolver vários tipos de consumos de APIs usando corotines, queues, threads e processos usando o pokemon como base e testa-los com o locust
-* Retornar pokemon em YAML e CSV
+* Web Scraping
 
 #### Engines
 * 3º Instrumentalização com o new relic
@@ -44,11 +42,14 @@ Nas proximas vezes só precisa executar os emuladores `docker compose --profile 
 
 #### Outputs
 * Finalizar o leitor de PDF
+* Implementar inserçao de arquivos PDF, XML, PNG, TXT, CSV, YAML, ZIP e etc via endpoint, ler seus dados e retornar via JSON
+* Receber dados de registro de usuários por SOAP, GRAPHQL e outros protocolos
+
+#### Scripts
 * Criar um interface com o tkinter para o CRUD de usuários definir via header.
-* Script que recebe os dados dos usuários por fila, valida os dados e enviar para outra fila para armazenamento no banco de dados.
-* Script que consume todos os arquivos CSV da pasta de upload, pegar os dados de usuários valida os dados, salva no banco e enviar o excel para outra pasta de processados.
-* Receber dados de registro de usuários por XML, CSV, TXT, GRAPHQL e outros
-* Conectar o storage e pubsub com o GCP, Local e AWS
+* Script que recebe os dados dos usuários por fila, valida os dados e enviar para outra fila para armazenamento no banco de dados (pubsub, rabitmq, sqs, local).
+* Script que consume todos os arquivos CSV da pasta de upload, pegar os dados de usuários valida os dados, salva no banco e enviar o excel para outra pasta de processados (cloud storage, S3, local).
+* Mudar de serviços pubsub/storage só pela instanciação do singleton.
 
 #### CRUD
 * Autenticação e Autorização - vwauth
@@ -64,16 +65,16 @@ Nas proximas vezes só precisa executar os emuladores `docker compose --profile 
 #### Projects
 * Implementar blockchain
 * Desenvolver padrões de projetos
-* Criando estruturas de dados e gerando um pacote python
+* Criando estruturas de dados
+* Projeto com SFTP
+* Gerar lib python
 * Chatbot com openAI
 * Criar um jogo com pygames
 * Visão computacional
 * Machine learning
 * Data-Science
-* Web Scraping
 
 #### Quality
 * Testes automatizados
-* Popular as requisições do locust com arquivos csv ou yaml e desenvolver testes de carga para varios endpoint e scripts
 * Incrementar o locust com novos clients (SFTP, AMQP) e novos handlers inserindo novos dados nos eventos de sucesso e falha
 usar como base o curso de locust da udemy
