@@ -65,10 +65,11 @@ class CorotineTasksRepository:
         t1 = event_loop.create_task(self.make_requests(queue, 10, 0))
         t2 = event_loop.create_task(self.make_requests(queue, 10, 0))
         t3 = event_loop.create_task(self.make_requests(queue, 10, 0))
-        t4 = event_loop.create_task(self.process_request(queue, session))
-        results = await asyncio.gather(t1, t2, t3, t4)
+        await asyncio.gather(t1, t2, t3)
 
-        logger.info(f"Quantidade de pokemons retornados: {len(results[-1])}")
+        results = await self.process_request(queue, session)
+
+        logger.info(f"Quantidade de pokemons retornados: {len(results)}")
 
         end_time = time.time() - start_time
         return PocRequestsOutputDTO(result=f"Requisição executada em {round(end_time, 2)} segundos")

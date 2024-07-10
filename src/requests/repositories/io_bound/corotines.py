@@ -53,9 +53,12 @@ class CorotineRepository:
         session = await AIOHTTPSingleton.get_instance()
         queue = asyncio.Queue()
 
-        await self.make_requests(queue, 10, 0)
-        await self.make_requests(queue, 10, 10)
-        await self.make_requests(queue, 10, 20)
+        tasks = [
+            self.make_requests(queue, 10, 0),
+            self.make_requests(queue, 10, 10),
+            self.make_requests(queue, 10, 20)
+        ]
+        await asyncio.gather(*tasks)
         results = await self.process_request(queue, session)
         logger.info(f"Quantidade de pokemons retornados: {len(results)}")
 
