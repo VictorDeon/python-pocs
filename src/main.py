@@ -3,6 +3,8 @@ from pathlib import Path
 from datetime import datetime
 from pytz import timezone
 from time import time
+from celery.schedules import crontab
+from multiprocessing import Process
 from contextlib import asynccontextmanager
 from fastapi import Request, status, HTTPException
 from fastapi.responses import JSONResponse
@@ -12,8 +14,33 @@ from fastapi import FastAPI
 from pyinstrument import Profiler
 from src.routes import router
 from src.engines.logger import ProjectLoggerSingleton
+from src.requests.repositories.tasks import celery_app
+
 
 logger = ProjectLoggerSingleton.get_logger()
+
+
+def run_celery_worker():
+    """
+    Executa o worker do celery
+    """
+
+    celery_app.conf.update(broker_connection_retry_on_startup=True)
+    celery_app.worker_main(argv=['worker', '--loglevel=error'])
+
+
+def run_celery_beat():
+    """
+    Executa o celery beat
+    """
+
+    celery_app.conf.beat_schedule = {
+        'alarm': {
+            'task': 'tasks.alarm',
+            'schedule': crontab(hour=3)
+        },
+    }
+    celery_app.Beat(loglevel='error').run()
 
 
 @asynccontextmanager
@@ -23,10 +50,16 @@ async def lifespan(_: FastAPI):
     """
 
     logger.debug("Iniciando o projeto.")
+    celery_worker = Process(target=run_celery_worker, name='celery-worker')
+    celery_worker.start()
+    celery_beat = Process(target=run_celery_beat, name='celery-beat')
+    celery_beat.start()
 
     yield
 
     logger.debug("Finalizando o projeto.")
+    celery_worker.terminate()
+    celery_beat.terminate()
 
 
 app = FastAPI(
