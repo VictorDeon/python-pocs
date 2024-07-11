@@ -34,6 +34,7 @@ def run_celery_beat():
     Executa o celery beat
     """
 
+    celery_app.conf.timezone = 'America/Sao_Paulo'
     celery_app.conf.beat_schedule = {
         'alarm': {
             'task': 'tasks.alarm',
